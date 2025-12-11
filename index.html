@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html>
+<html lang="tr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SONSUZ.AY | Ana Sayfa Doğrulama</title>
+    <title>SONSUZ.AY | Ana Sayfa ve Oyunlar</title>
     
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1819947444660683"
          crossorigin="anonymous"></script>
@@ -13,16 +13,64 @@
             font-family: Arial, sans-serif;
             text-align: center;
             padding-top: 50px;
-            background-color: #0d0d1a;
+            background-color: #0d0d1e; /* Neon temasına uygun koyu renk */
             color: #d1d1f0;
+            margin: 0;
         }
         h1 {
-            color: #00ff7f;
+            color: #39FF14; /* Neon Yeşil */
+            text-shadow: 0 0 10px #39FF14;
+        }
+        p {
+            margin-bottom: 40px;
+        }
+        .buttons-container {
+            margin-top: 20px;
+            padding: 20px;
+        }
+        .btn {
+            padding: 15px 30px; 
+            color: #0d0d1e;
+            border: none; 
+            border-radius: 8px; 
+            font-size: 1.1em;
+            font-weight: bold; 
+            cursor: pointer;
+            margin: 10px;
+            transition: transform 0.2s;
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+        /* Oyunlar Butonu Stili */
+        .btn-oyunlar {
+            background-color: #39FF14; /* Neon Yeşil */
+            box-shadow: 0 0 10px #39FF14;
+        }
+        /* APK Butonu Stili */
+        .btn-apk {
+            background-color: #FF00FF; /* Neon Pembe/Mor */
+            box-shadow: 0 0 10px #FF00FF;
         }
     </style>
 </head>
 <body>
+    
     <h1>SONSUZ.AY Ana Sayfa</h1>
     <p>Bu sayfa, AdSense doğrulaması için oluşturulmuştur. Oyunlarımızın adresi: /neon-gezgin</p>
+
+    <div class="buttons-container">
+        <a href="oyunlar.html" style="text-decoration: none;">
+            <button class="btn btn-oyunlar">
+                🎮 TÜM OYUNLARIMIZ
+            </button>
+        </a>
+        <a href="indir.html" style="text-decoration: none;">
+            <button class="btn btn-apk">
+                MOBİL UYGULAMAYI İNDİR 🚀
+            </button>
+        </a>
+    </div>
+
 </body>
 </html>
