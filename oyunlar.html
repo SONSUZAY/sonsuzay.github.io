@@ -16,6 +16,10 @@
             margin: 0;
             padding: 30px 20px;
             text-align: center;
+            /* YENİ: Merkezleme düzeltmesi için esnek ekran yapısı */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
         h1 {
             color: #39FF14;
@@ -41,6 +45,10 @@
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(57, 255, 20, 0.3); 
             transition: transform 0.2s;
+            /* RESMİN ORTALANMASI İÇİN */
+            display: flex; 
+            flex-direction: column;
+            align-items: center;
         }
         .game-card:hover {
             transform: translateY(-5px);
@@ -61,15 +69,19 @@
             font-weight: bold;
             margin-top: 15px;
             transition: background-color 0.2s;
+            width: 90%; /* Buton genişliğini korumak için */
+            max-width: 250px;
         }
         .game-card a:hover {
              background-color: #00cccc;
         }
+        /* YENİ: Resim boyutunu küçültme ve ortalama */
         .game-card img {
-            width: 100%;
+            width: 70%; /* Kart genişliğinin %70'i kadar yer kaplasın */
             height: auto;
             border-radius: 5px;
             margin-bottom: 15px;
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.5); /* Hafif neon parlama eklendi */
         }
     </style>
 </head>
