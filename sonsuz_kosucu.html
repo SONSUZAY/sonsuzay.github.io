@@ -147,7 +147,8 @@
         
         // --- BUTON KONTROLLERİ ---
         baslaButonu.addEventListener('click', oyunuBaslat);
-        baslaButolu.addEventListener('touchstart', function(e) {
+        // HATA DÜZELTİLDİ: baslaButonu olarak düzeltildi
+        baslaButonu.addEventListener('touchstart', function(e) {
             e.stopPropagation(); 
             e.preventDefault(); 
             oyunuBaslat();
@@ -347,7 +348,7 @@
             let platformaTemasEtti = false;
 
             for (let e of engeller) {
-                // Platform üzerindeki durma mantığı (ÇÖZÜM)
+                // Platform üzerindeki durma mantığı
                 if (
                     e.platform &&
                     oyuncu.x < e.x + e.w &&
@@ -425,7 +426,7 @@
                     oyuncu.y < e.y + e.h - 5 &&
                     oyuncu.y + oyuncu.h > e.y + 5
                 ) {
-                    // YENİ ÇÖZÜM: Eğer oyuncu bir platformun tam üzerine iniyorsa (birkaç piksel toleransla), çarpışma sayma.
+                    // Platformun tam üzerine inme kontrolü
                     let ustuneIniyor = false;
                     if (e.platform && oyuncu.y + oyuncu.h <= e.y + 5 && oyuncu.dy >= 0) {
                          ustuneIniyor = true;
