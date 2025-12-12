@@ -18,17 +18,14 @@
             font-family: 'Verdana', sans-serif;
             overflow: hidden;
             touch-action: none;
-            /* YENİ: Vh (viewport height) sorunu için tam ekran düzeltmesi */
-            height: 100%; /* Sayfa içeriğini doldur */
-            min-height: 100vh; /* En az görüntü alanı kadar ol */
+            height: 100%; 
+            min-height: 100vh; 
         }
 
         #oyunKutusu {
             position: relative;
-            /* YATAY Boyutlar */
             width: 640px; 
             height: 320px; 
-            /* Ekranı doldurması için max boyutlar */
             max-width: 95vw; 
             max-height: calc(95vh - 20px); 
             aspect-ratio: 2 / 1; 
@@ -111,7 +108,7 @@
         const skorEl = document.getElementById('skorKutusu');
         const bilgiMesaji = document.getElementById('bilgiMesaji');
         const baslaButonu = document.getElementById('baslaButonu');
-        const oyunKutusu = document.getElementById('oyunKutusu'); // Yeni: Oyun kutusu elementi
+        const oyunKutusu = document.getElementById('oyunKutusu'); 
 
         // YENİ OYUN BOYUTLARI
         const ZEMIN_YUKSEKLIGI = canvas.height * 0.9; 
@@ -150,13 +147,13 @@
         
         // --- BUTON KONTROLLERİ ---
         baslaButonu.addEventListener('click', oyunuBaslat);
-        baslaButonu.addEventListener('touchstart', function(e) {
+        baslaButolu.addEventListener('touchstart', function(e) {
             e.stopPropagation(); 
             e.preventDefault(); 
             oyunuBaslat();
         });
 
-        // --- OYUN KONTROLLERİ (GELİŞTİRİLDİ) ---
+        // --- OYUN KONTROLLERİ ---
         function zipla() {
             if (!oyunAktif) return;
             
@@ -168,16 +165,14 @@
             }
         }
         
-        // Oyun kutusunun dışına dokunmayı dinleyen olay dinleyicisi
+        // Genişletilmiş Zıplama Alanı
         document.body.addEventListener('touchstart', (e) => {
-            // Eğer dokunuş oyun kutusu içinde değilse
             if (oyunAktif && !oyunKutusu.contains(e.target)) {
                  e.preventDefault(); 
                  zipla(); 
             }
         }, {passive: false});
 
-        // Eğer dokunuş canvas içindeyse (eski davranış)
         canvas.addEventListener('touchstart', (e) => { 
             if(oyunAktif) { e.preventDefault(); zipla(); }
         }, {passive: false});
@@ -186,7 +181,7 @@
             if(oyunAktif) zipla(); 
         });
 
-        // --- ENGEL ÜRETİM MANTIĞI (DEĞİŞMEDİ) ---
+        // --- ENGEL ÜRETİM MANTIĞI ---
         function engelUret() {
             let rastgeleTip = Math.floor(Math.random() * 10); 
             
@@ -256,7 +251,7 @@
             } else if (rastgeleTip >= 8 && skor > 80) { // %20: ASILI KÖPRÜ PLATFORMU
                 
                 let platformY = zeminY - 60; 
-                let platformW = 100;
+                let platformW = 150; // PLATFORM UZUNLUĞU 150'ye ÇIKARILDI
                 
                 // Asılı Platform
                 engeller.push({
@@ -352,7 +347,7 @@
             let platformaTemasEtti = false;
 
             for (let e of engeller) {
-                // Oyuncu platformun üstünde mi?
+                // Platform üzerindeki durma mantığı (ÇÖZÜM)
                 if (
                     e.platform &&
                     oyuncu.x < e.x + e.w &&
@@ -430,8 +425,13 @@
                     oyuncu.y < e.y + e.h - 5 &&
                     oyuncu.y + oyuncu.h > e.y + 5
                 ) {
-                    // Platform üstüne basma çarpışma sayılmamalı
-                    if (!(e.platform && oyuncu.y + oyuncu.h <= e.y + 5 && oyuncu.dy >= 0)) {
+                    // YENİ ÇÖZÜM: Eğer oyuncu bir platformun tam üzerine iniyorsa (birkaç piksel toleransla), çarpışma sayma.
+                    let ustuneIniyor = false;
+                    if (e.platform && oyuncu.y + oyuncu.h <= e.y + 5 && oyuncu.dy >= 0) {
+                         ustuneIniyor = true;
+                    }
+                    
+                    if (!ustuneIniyor) {
                          oyunBitti();
                          return;
                     }
