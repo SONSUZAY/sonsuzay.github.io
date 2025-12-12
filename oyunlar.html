@@ -3,123 +3,110 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SONSUZ.AY | Tüm Oyunlar</title>
-    
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1819947444660683"
-         crossorigin="anonymous"></script>
-    
+    <title>SONSUZ.AY - Oyunlar</title>
     <style>
+        /* Genel Stil Ayarları (Neon Tema) */
         body {
-            background-color: #0d0d1e;
-            color: #fff;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #0d001a; /* Koyu mor/siyah arka plan */
+            color: #ffffff;
+            font-family: Arial, sans-serif;
             margin: 0;
-            padding: 20px 10px; 
-            text-align: center;
+            padding: 20px;
         }
-        h1 {
-            color: #39FF14;
-            font-size: 2.3em; 
-            margin-bottom: 5px;
-            text-shadow: 0 0 10px #39FF14;
-        }
-        .subtitle {
-            font-size: 1em;
-            color: #bbb;
-            margin-bottom: 25px;
-        }
-        .game-grid {
-            /* Kompakt dikey liste görünümü */
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
-            gap: 15px; 
-            max-width: 1200px;
+        .oyun-listesi {
+            max-width: 600px;
             margin: 0 auto;
         }
-        .game-card {
-            background-color: #1a1a38;
-            padding: 12px; 
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(57, 255, 20, 0.3); 
-            transition: transform 0.2s;
+        
+        /* Oyun Kartı Stili */
+        .oyun-karti {
+            background-color: #1a0033; /* Daha açık mor arka plan */
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            text-align: center;
+            box-shadow: 0 0 15px rgba(128, 0, 128, 0.5); /* Hafif neon gölge */
         }
-        .game-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 5px 20px rgba(57, 255, 20, 0.6);
+        
+        /* Logo ve Başlık Stilleri */
+        .oyun-logo {
+            width: 150px; /* Logo boyutu */
+            height: 150px;
+            object-fit: cover;
+            border-radius: 15px;
+            margin-bottom: 15px;
+            /* Neon Çerçeve Efekti (Logolarınıza daha fütüristik bir hava katmak için) */
+            box-shadow: 0 0 10px #00ffff, 0 0 20px #9900ff; 
         }
-        .game-card h2 {
-            color: #FF00FF; 
-            font-size: 1.3em; 
+        .oyun-adi {
+            color: #00ffff; /* Açık mavi neon renk */
+            font-size: 1.8em;
             margin-top: 0;
-            margin-bottom: 5px;
         }
-        .game-card p {
-            font-size: 0.9em; 
-            margin-top: 5px;
-            margin-bottom: 10px;
+        .oyun-aciklama {
+            color: #cccccc;
+            margin-bottom: 15px;
         }
-        .game-card a {
-            display: block;
-            background-color: #39FF14;
-            color: #0d0d1e;
-            padding: 8px 10px; 
-            border-radius: 5px;
-            text-decoration: none;
+        .yakinda-slogan {
+            font-style: italic;
+            color: #ff00ff; /* Pembe neon renk */
             font-weight: bold;
-            margin-top: 10px;
-            transition: background-color 0.2s;
+            margin-top: 5px;
         }
-        .game-card a:hover {
-             background-color: #00cccc;
+        
+        /* Buton Stilleri */
+        .oyna-butonu {
+            display: block;
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-weight: bold;
+            text-decoration: none;
+            margin-top: 15px;
+            transition: background-color 0.3s;
         }
-        /* Resim boyutunu küçültme ve ortalama */
-        .game-card img {
-            width: 50%; 
-            height: auto;
-            border-radius: 5px;
-            margin-bottom: 10px;
-            box-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
-            display: block; 
-            margin-left: auto; 
-            margin-right: auto; 
+        .yesil-buton {
+            background-color: #00ff00; /* Neon yeşili */
+            color: #000000;
+        }
+        .yesil-buton:hover {
+            background-color: #00cc00;
+        }
+        .mavi-buton {
+            background-color: #00cccc; /* Neon turkuaz */
+            color: #000000;
+        }
+        .mavi-buton:hover {
+            background-color: #009999;
         }
     </style>
 </head>
 <body>
 
-    <h1>🎮 SONSUZ.AY OYUN GALERİSİ</h1>
-    <p class="subtitle">30'dan fazla mobil ve web oyunumuzla tanışın! Keyifli keşifler.</p>
-    
-    <div class="game-grid">
+    <div class="oyun-listesi">
         
-        <div class="game-card">
-            <img src="kosucu_simge_yeni.jpg" alt="Sonsuz Koşucu Oyunu">
-            <h2>SONSUZ KOŞUCU</h2>
-            <p>Zorlu neon engelleri aşmak için çift zıplama yeteneğinizi kullanın. Yatay görünümle tam ekran oynama deneyimi! (YENİ)</p>
-            <a href="sonsuz_kosucu.html">HEMEN OYNA</a> 
+        <div class="oyun-karti">
+            <img src="sonsuz_yilan_logo.png" alt="Sonsuz Yılan Logosu" class="oyun-logo"> 
+            <h2 class="oyun-adi">SONSUZ YILAN</h2>
+            <p class="oyun-aciklama">Klasik yılan oyunu, zorluk seviyeleri ve can moduluyla neon temasına uyarlandı. Tamamen özgün kod.</p>
+            <a href="#" class="oyna-butonu yesil-buton">HEMEN OYNA</a>
         </div>
 
-        <div class="game-card">
-            <img src="yilan_simge_yeni.jpg" alt="Sonsuz Yılan Oyunu">
-            <h2>SONSUZ YILAN</h2>
-            <p>Klasik yılan oyunu, zorluk seviyeleri ve can moduyla neon temasına uyarlandı. Tamamen özgün kod.</p>
-            <a href="sonsuz-yilan.html">HEMEN OYNA</a> 
+        <div class="oyun-karti">
+            <img src="neon_gezgin_logo.jpg" alt="Neon Gezgin Logosu" class="oyun-logo"> 
+            <h2 class="oyun-adi">Neon Gezgin</h2>
+            <p class="oyun-aciklama">Fütüristik dünyada geçen hızlı tempolu bir macera.</p>
+            <p class="oyun-aciklama">Çok Yakında Güncelleme.</p>
+            <a href="#" class="oyna-butonu mavi-buton">HEMEN OYNA</a>
         </div>
 
-        <div class="game-card">
-             <img src="neongezgin_simge_yeni.jpg" alt="Neon Gezgin Oyunu">
-            <h2>Neon Gezgin</h2>
-            <p>Fütüristik dünyada geçen hızlı tempolu bir macera. Çok Yakında Güncelleme.</p>
-            <a href="neon-gezgin.html">HEMEN OYNA</a>
+        <div class="oyun-karti">
+            <img src="siber_savas_simge.jpg" alt="Siber Savaş Oyunu Logosu" class="oyun-logo"> 
+            <h2 class="oyun-adi">Siber Savaş</h2>
+            <p class="oyun-aciklama">Çok oyunculu rekabetçi nişancı oyunu (Çok Yakında!).</p>
+            <p class="yakinda-slogan">Savaş Alanı Değişti. Veri Çekirdeğini Savun.</p>
+            <a href="#" class="oyna-butonu yesil-buton">ÇOK YAKINDA</a>
         </div>
-        
-        <div class="game-card">
-             <img src="https://via.placeholder.com/300x150?text=SIBER+SAVAS" alt="Siber Savaş Oyunu">
-            <h2>Siber Savaş</h2>
-            <p>Çok oyunculu rekabetçi nişancı oyunu (Çok Yakında!).</p>
-            <a href="#">ÇOK YAKINDA</a>
-        </div>
-        
+
     </div>
 
 </body>
