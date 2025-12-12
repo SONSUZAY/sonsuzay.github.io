@@ -17,7 +17,7 @@
             height: 100vh;
             font-family: 'Arial', sans-serif;
             overflow: hidden;
-            touch-action: none; /* Sayfa kaydırmayı engeller */
+            touch-action: none; 
             color: #fff;
         }
 
@@ -35,7 +35,7 @@
         canvas {
             width: 100%;
             height: 100%;
-            border: 2px solid #ff00ff; /* Mor Neon Çerçeve */
+            border: 2px solid #ff00ff; 
             background: #000;
             box-shadow: 0 0 40px rgba(255, 0, 255, 0.4);
             border-radius: 5px;
@@ -68,7 +68,7 @@
             text-align: center;
         }
 
-        #baslaButonu {
+        #baslaButonu, #tekrarButonu {
             background: #0ff; 
             border: none; 
             padding: 15px 30px; 
@@ -80,14 +80,14 @@
             margin-top: 20px;
             touch-action: manipulation; 
         }
-        #baslaButonu:active { transform: scale(0.95); }
+        #baslaButonu:active, #tekrarButonu:active { transform: scale(0.95); }
     </style>
 </head>
 <body>
 
     <div id="oyunKutusu">
         <canvas id="oyunAlani" width="320" height="480"></canvas>
-        <div id="skorBilgi">SKOR: 0 | CAN: 3</div>
+        <div id="skorBilgi">SKOR: 0 | EN İYİ: 0 | CAN: 3</div>
 
         <div id="bilgiMesaji">
             <h2 style="margin-top:0; color:#ff00ff; text-shadow: 0 0 10px #ff00ff;">SONSUZ UZAY DARBESİ</h2>
@@ -108,6 +108,7 @@
 
         let oyunAktif = false;
         let skor = 0;
+        let yuksekSkor = localStorage.getItem('uzayYuksekSkor') || 0; // Local Storage'dan yükle
         let can = 3;
         let animasyonId;
 
@@ -117,45 +118,42 @@
             y: canvas.height - 40,
             w: 30,
             h: 30,
-            hiz: 7, // Hız artık sadece maksimum sınırı temsil ediyor
             renk: '#0ff'
         };
 
         // --- Mermi Ayarları ---
         let mermiler = [];
         let mermiHizi = 10;
-        let atesSikligi = 10; // Her 10 karede bir ateş
+        let atesSikligi = 10; 
         let atesSayaci = 0;
 
         // --- Düşman ve Engeller ---
         let dusmanlar = [];
         let dusmanHizi = 2;
-        let dusmanOlusumHizi = 150; // Düşman oluşturma aralığı (kare)
+        let dusmanOlusumHizi = 150; 
         let dusmanSayaci = 0;
+        const DUSMAN_GENISLIK = 25;
+        const DUSMAN_YUKSEKLIK = 25;
 
-        // --- Kontrol (Güncellenmiş Bölüm) ---
-        let mevcutHiz = 0; // Geminin anlık hızı (kaydırma hassasiyetini sağlar)
+        // --- Kontrol ---
+        let mevcutHiz = 0; 
         
         // Mobil Kontrol
         canvas.addEventListener('touchstart', (e) => {
-            e.preventDefault(); // Varsayılan kaydırmayı engelle
-            // Başlangıç x pozisyonunu kaydetmeye gerek yok, sadece move'u dinleyeceğiz
-            mevcutHiz = 0; // Yeni dokunuşta hızı sıfırla
+            e.preventDefault(); 
+            mevcutHiz = 0; 
         }, { passive: false });
 
         canvas.addEventListener('touchmove', (e) => {
             e.preventDefault();
             
-            // Dokunma değişimi hesaplanırken, geminin hareketini dokunulan x pozisyonuna doğru kaydıracağız
             let rect = canvas.getBoundingClientRect();
             let canvasX = e.touches[0].clientX - rect.left;
             
-            // Yeni hedef x pozisyonunu, parmak pozisyonunun geminin merkezine ayarlar
             let hedefX = (canvasX / rect.width) * canvas.width - gemi.w / 2;
             
-            // Gemiyi hedefe doğru hareket ettir (Yumuşak hareket için hız sınırı koyabiliriz)
             let farkX = hedefX - gemi.x;
-            gemi.x += farkX * 0.2; // 0.2 çarpanı yumuşaklığı ve hassasiyeti ayarlar
+            gemi.x += farkX * 0.2; 
 
         }, { passive: false });
 
@@ -163,9 +161,9 @@
             mevcutHiz = 0;
         });
 
-        // Mouse Kontrolü (Daha basit tutulur, tıklanan yöne hareket eder)
+        // Mouse Kontrolü 
         let fareBasili = false;
-        let hareketYonu = 0; // -1: Sol, 1: Sağ, 0: Dur
+        let hareketYonu = 0; 
         
         canvas.addEventListener('mousedown', (e) => {
             fareBasili = true;
@@ -211,23 +209,60 @@
             }
         }
 
+        // --- DÜŞMAN ÜRETİMİ (GÜNCELLENMİŞ: RASTGELE ZORLUK İLE) ---
         function dusmanUret() {
             if (oyunAktif && dusmanSayaci >= dusmanOlusumHizi) {
-                dusmanlar.push({
-                    x: Math.random() * (canvas.width - 30),
-                    y: -30,
-                    w: 25,
-                    h: 25,
-                    hiz: dusmanHizi + Math.random() * 1.5,
-                    renk: '#f00' // Kırmızı düşman
-                });
+                
+                const hiz = dusmanHizi + Math.random() * 1.5;
+                
+                // Rastgele düşman sayısı: 1, 2 veya %10 ihtimalle 4
+                let dusmanSayisi;
+                if (Math.random() < 0.1) {
+                    dusmanSayisi = 4; // Nadiren 4'lü zorluk salvosu
+                } else {
+                    dusmanSayisi = Math.floor(Math.random() * 3) + 1; // 1, 2 veya 3
+                }
+                
+                const baslangicY = -50; 
+                
+                // İlk düşmanın X pozisyonunu belirle
+                // Boşluk bırakmak için maksimum genişliği ayarla
+                const maxGrupGenisligi = dusmanSayisi * DUSMAN_GENISLIK + (dusmanSayisi - 1) * (Math.random() * 20 + 10);
+                let mevcutX = Math.random() * (canvas.width - maxGrupGenisligi); 
+
+                for (let i = 0; i < dusmanSayisi; i++) {
+                    
+                    // Rastgele düşey ofset (Kademeli ve rastgele düşüş)
+                    const ofsetY = Math.random() * 30 * (i * 0.5); 
+                    
+                    // Rastgele yatay aralık (10 ile 40 arasında)
+                    const aralikX = Math.random() * 30 + 10; 
+                    
+                    // Düşmanı ekle
+                    dusmanlar.push({
+                        x: mevcutX,
+                        y: baslangicY - ofsetY, 
+                        w: DUSMAN_GENISLIK,
+                        h: DUSMAN_YUKSEKLIK,
+                        hiz: hiz,
+                        renk: '#f00' 
+                    });
+                    
+                    // Bir sonraki düşmanın X pozisyonunu güncelle
+                    mevcutX += DUSMAN_GENISLIK + aralikX;
+
+                    // Eğer canvas'ın dışına çıkıyorsa döngüyü durdur (Güvenlik)
+                    if (mevcutX > canvas.width - DUSMAN_GENISLIK) break;
+                }
+                
                 dusmanSayaci = 0;
                 
                 // Zorluğu yavaşça artır
                 if (dusmanOlusumHizi > 30) dusmanOlusumHizi -= 1; 
-                if (dusmanHizi < 5) dusmanHizi += 0.005; // Daha yavaş artış
+                if (dusmanHizi < 5) dusmanHizi += 0.005; 
             }
         }
+        // --- DÜŞMAN ÜRETİMİ SONU ---
 
         function guncelle() {
             if (!oyunAktif) return;
@@ -236,9 +271,9 @@
             atesSayaci++;
             dusmanSayaci++;
 
-            // 1. Mouse Kontrolü ile hareket (Mobil kontrol touchmove içinde hallediliyor)
+            // 1. Mouse Kontrolü ile hareket
             if (fareBasili) {
-                 gemi.x += hareketYonu * 5; // Mouse hızını biraz düşürdük
+                 gemi.x += hareketYonu * 5; 
             }
             
             // 2. Gemi Sınır Kontrolü
@@ -250,6 +285,7 @@
             // 4. Düşman Üret ve Hareket Ettir
             dusmanUret();
             
+            // Düşman hareketini güncelle
             dusmanlar.forEach((d, i) => {
                 d.y += d.hiz;
                 // Düşman alttan çıkarsa can kaybet
@@ -282,19 +318,22 @@
             });
 
             // Gemi ve Düşman Çarpışması
+            let gemiVuruldu = false;
             dusmanlar.forEach((d, dIdx) => {
                 if (gemi.x < d.x + d.w && gemi.x + gemi.w > d.x && gemi.y < d.y + d.h && gemi.y + gemi.h > d.y) {
                     // Çarpışma oldu!
                     dusmanlar.splice(dIdx, 1);
                     can--;
+                    gemiVuruldu = true;
                 }
             });
             
             // 7. Skor ve Can Güncelleme
-            skorBilgiEl.innerText = `SKOR: ${skor} | CAN: ${can}`;
+            skorBilgiEl.innerText = `SKOR: ${skor} | EN İYİ: ${yuksekSkor} | CAN: ${can}`;
 
             if (can <= 0) {
                 oyunBitti();
+                return; // Önemli: Oyun bittiyse animasyon döngüsünü durdurmak için döngüden çık
             }
         }
 
@@ -335,6 +374,8 @@
         }
 
         function loop() {
+            if (!oyunAktif) return; // Oyun aktif değilse döngüyü durdur (Donma hatası çözüldü)
+            
             guncelle();
             cizim();
             animasyonId = requestAnimationFrame(loop);
@@ -342,22 +383,36 @@
 
         function oyunBitti() {
             oyunAktif = false;
+            
+            // Yüksek skoru kaydet
+            if (skor > yuksekSkor) {
+                yuksekSkor = skor;
+                localStorage.setItem('uzayYuksekSkor', yuksekSkor);
+            }
+            
             bilgiMesaji.style.display = 'flex';
             bilgiMesaji.innerHTML = `
                 <h2 style="color:red; margin-top:0; text-shadow:0 0 10px red;">OYUN BİTTİ!</h2>
                 <p style="font-size:24px; color:white;">Son Skorun: ${skor}</p>
-                <button id="tekrarButonu" style="background:#0ff; border:none; padding:15px 30px; font-weight:bold; font-size:22px; cursor:pointer; box-shadow:0 0 15px #0ff; border-radius:50px; margin-top:20px;">TEKRAR DENE</button>
+                <p style="font-size:18px; color:#ff0;">EN İYİ SKOR: ${yuksekSkor}</p>
+                <button id="tekrarButonu">TEKRAR DENE</button>
             `;
             
+            // Tekrar Dene Butonuna güncel CSS ayarlarını ekle
             const tekrarBtn = document.getElementById('tekrarButonu');
+            tekrarBtn.style.cssText = baslaButonu.style.cssText; // Stili kopyala
+            
             tekrarBtn.addEventListener('click', oyunuBaslat);
             tekrarBtn.addEventListener('touchstart', function(e){
                 e.stopPropagation(); e.preventDefault(); oyunuBaslat();
             });
         }
         
+        // Skor bilgisini başlangıçta güncelle
+        skorBilgiEl.innerText = `SKOR: 0 | EN İYİ: ${yuksekSkor} | CAN: 3`;
+
         baslaButonu.addEventListener('click', oyunuBaslat);
-        baslaBututu.addEventListener('touchstart', function(e) {
+        baslaButonu.addEventListener('touchstart', function(e) {
             e.stopPropagation(); 
             e.preventDefault(); 
             oyunuBaslat();
