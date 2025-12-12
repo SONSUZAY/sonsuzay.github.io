@@ -16,36 +16,34 @@
             margin: 0;
             padding: 30px 20px;
             text-align: center;
-            /* YENİ: Merkezleme düzeltmesi için esnek ekran yapısı */
             display: flex;
             flex-direction: column;
             align-items: center;
         }
         h1 {
             color: #39FF14;
-            font-size: 2.8em;
-            margin-bottom: 10px;
+            font-size: 2.5em; /* Başlık boyutu da küçültüldü */
+            margin-bottom: 8px;
             text-shadow: 0 0 10px #39FF14;
         }
         .subtitle {
-            font-size: 1.2em;
+            font-size: 1.1em;
             color: #bbb;
-            margin-bottom: 40px;
+            margin-bottom: 30px;
         }
         .game-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
-            gap: 20px;
+            gap: 15px; /* Boşluklar azaltıldı */
             max-width: 1200px;
             margin: 0 auto;
         }
         .game-card {
             background-color: #1a1a38;
-            padding: 20px;
+            padding: 15px; /* KART DOLGUSU AZALTILDI */
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(57, 255, 20, 0.3); 
             transition: transform 0.2s;
-            /* RESMİN ORTALANMASI İÇİN */
             display: flex; 
             flex-direction: column;
             align-items: center;
@@ -56,32 +54,35 @@
         }
         .game-card h2 {
             color: #FF00FF; 
-            font-size: 1.5em;
+            font-size: 1.4em; /* Başlık boyutu küçültüldü */
             margin-top: 0;
+        }
+        .game-card p {
+            font-size: 0.9em; /* Paragraf boyutu küçültüldü */
         }
         .game-card a {
             display: block;
             background-color: #39FF14;
             color: #0d0d1e;
-            padding: 10px;
+            padding: 8px 10px; /* Buton dolgusu azaltıldı */
             border-radius: 5px;
             text-decoration: none;
             font-weight: bold;
-            margin-top: 15px;
+            margin-top: 10px;
             transition: background-color 0.2s;
-            width: 90%; /* Buton genişliğini korumak için */
+            width: 90%; 
             max-width: 250px;
         }
         .game-card a:hover {
              background-color: #00cccc;
         }
-        /* YENİ: Resim boyutunu küçültme ve ortalama */
+        /* YENİ: Resim boyutunu daha da küçültme */
         .game-card img {
-            width: 70%; /* Kart genişliğinin %70'i kadar yer kaplasın */
+            width: 60%; /* %60'a düşürüldü */
             height: auto;
             border-radius: 5px;
-            margin-bottom: 15px;
-            box-shadow: 0 0 15px rgba(0, 255, 255, 0.5); /* Hafif neon parlama eklendi */
+            margin-bottom: 10px; /* Boşluk azaltıldı */
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
         }
     </style>
 </head>
