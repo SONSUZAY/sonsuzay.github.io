@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Neon Koşucu - SonsuzAY</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link rel="icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAABmNLR0QA/wD/AP+gvaeTAAAAdklEQVRogcYyQRCAMAwD8w/8SAU60IE+8g88EAIG3E1m93iH3ZtU3a76iY+4Y48/G2KPP/7YY48/9thjjz/22GOPP/bYY48/9thjjz/22GOPP/bYY48/9thjjz/22GOPP/bYY48/9thjjz/22GOPP/bYEwE+sR9X9YJ7eQAAAABJRU5ErkJggg==">
+
+    <style>
+        body {
+            background-color: #050510;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            font-family: 'Verdana', sans-serif;
+            overflow: hidden;
+            touch-action: none;
+            /* YENİ: Vh (viewport height) sorunu için tam ekran düzeltmesi */
+            height: 100%; /* Sayfa içeriğini doldur */
+            min-height: 100vh; /* En az görüntü alanı kadar ol */
+        }
+
+        #oyunKutusu {
+            position: relative;
+            /* YATAY Boyutlar */
+            width: 640px; 
+            height: 320px; 
+            /* Ekranı doldurması için max boyutlar */
+            max-width: 95vw; 
+            max-height: calc(95vh - 20px); 
+            aspect-ratio: 2 / 1; 
+            width: min(640px, 95vw);
+            height: min(320px, calc(95vw / 2));
+        }
+
+        canvas {
+            width: 100%;
+            height: 100%;
+            border: 2px solid #0ff;
+            background: linear-gradient(to bottom, #000022, #000044);
+            box-shadow: 0 0 30px rgba(0, 255, 255, 0.3);
+            border-radius: 5px;
+            display: block;
+        }
+
+        #skorKutusu {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            color: #0ff;
+            font-size: 20px;
+            font-weight: bold;
+            text-shadow: 0 0 10px #0ff;
+            z-index: 10;
+        }
+
+        #bilgiMesaji {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.85);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 20;
+            border-radius: 5px;
+        }
+
+        #baslaButonu {
+            background: #0ff; 
+            border: none; 
+            padding: 15px 30px; 
+            font-weight: bold; 
+            font-size: 22px; 
+            cursor: pointer; 
+            box-shadow: 0 0 15px #0ff;
+            border-radius: 50px;
+            margin-top: 20px;
+            touch-action: manipulation; 
+        }
+        #baslaButonu:active { transform: scale(0.95); background: #00cccc; }
+
+    </style>
+</head>
+<body>
+
+    <div id="oyunKutusu">
+        <canvas id="oyunAlani" width="640" height="320"></canvas> 
+        <div id="skorKutusu">0</div>
+        
+        <div id="bilgiMesaji">
+            <h2 style="margin-top:0; color:#0f0; text-shadow: 0 0 10px #0f0;">HAZIR MISIN?</h2>
+            <p style="color:white; text-align:center;">
+                Zıplamak için dokun.<br>
+                Havada tekrar dokunursan<br>
+                <span style="color:#ff0; font-weight:bold;">ÇİFT ZIPLARSIN!</span>
+            </p>
+            <button id="baslaButonu">KOŞ!</button>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('oyunAlani');
+        const ctx = canvas.getContext('2d');
+        const skorEl = document.getElementById('skorKutusu');
+        const bilgiMesaji = document.getElementById('bilgiMesaji');
+        const baslaButonu = document.getElementById('baslaButonu');
+        const oyunKutusu = document.getElementById('oyunKutusu'); // Yeni: Oyun kutusu elementi
+
+        // YENİ OYUN BOYUTLARI
+        const ZEMIN_YUKSEKLIGI = canvas.height * 0.9; 
+        const CANVAS_GENISLIK = canvas.width; 
+        
+        // Oyun Durumu
+        let oyunAktif = false;
+        let skor = 0;
+        let kareSayisi = 0;
+        let oyunHizi = 5;
+        let animasyonId;
+
+        // Oyuncu (Neon Kutusu)
+        let oyuncu = {
+            x: 50,
+            y: ZEMIN_YUKSEKLIGI - 30, 
+            w: 30,
+            h: 30,
+            dy: 0, 
+            yerde: true,
+            ziplamaHakki: 2, 
+            renk: '#0f0'
+        };
+
+        // Fizik
+        const yerCekimi = 0.6;
+        const ziplamaGucu = -10;
+        const zeminY = ZEMIN_YUKSEKLIGI; 
+
+        // Engeller ve Arka Plan
+        let engeller = [];
+        let zeminCizgileri = [];
+        for(let i=0; i<20; i++) zeminCizgileri.push(i * 40); 
+        
+        const dusenEngelY = 0; 
+        
+        // --- BUTON KONTROLLERİ ---
+        baslaButonu.addEventListener('click', oyunuBaslat);
+        baslaButonu.addEventListener('touchstart', function(e) {
+            e.stopPropagation(); 
+            e.preventDefault(); 
+            oyunuBaslat();
+        });
+
+        // --- OYUN KONTROLLERİ (GELİŞTİRİLDİ) ---
+        function zipla() {
+            if (!oyunAktif) return;
+            
+            if (oyuncu.ziplamaHakki > 0) {
+                oyuncu.dy = ziplamaGucu;
+                oyuncu.ziplamaHakki--;
+                oyuncu.yerde = false;
+                oyuncu.renk = oyuncu.ziplamaHakki === 1 ? '#0f0' : '#ff0';
+            }
+        }
+        
+        // Oyun kutusunun dışına dokunmayı dinleyen olay dinleyicisi
+        document.body.addEventListener('touchstart', (e) => {
+            // Eğer dokunuş oyun kutusu içinde değilse
+            if (oyunAktif && !oyunKutusu.contains(e.target)) {
+                 e.preventDefault(); 
+                 zipla(); 
+            }
+        }, {passive: false});
+
+        // Eğer dokunuş canvas içindeyse (eski davranış)
+        canvas.addEventListener('touchstart', (e) => { 
+            if(oyunAktif) { e.preventDefault(); zipla(); }
+        }, {passive: false});
+        
+        canvas.addEventListener('mousedown', () => { 
+            if(oyunAktif) zipla(); 
+        });
+
+        // --- ENGEL ÜRETİM MANTIĞI (DEĞİŞMEDİ) ---
+        function engelUret() {
+            let rastgeleTip = Math.floor(Math.random() * 10); 
+            
+            if (rastgeleTip < 5) { // %50: Yerdeki Tekli/Çoklu Engel
+                let engelSayisi = (Math.random() < 0.7) ? 1 : 2; 
+                if (skor > 200 && Math.random() < 0.2) engelSayisi = 3; 
+                
+                for(let i = 0; i < engelSayisi; i++) {
+                    let tip = Math.floor(Math.random() * 3);
+                    let engel = { 
+                        x: CANVAS_GENISLIK + i * 35, 
+                        w: 30, 
+                        h: 30, 
+                        y: zeminY - 30, 
+                        dy: 0, 
+                        dusen: false, 
+                        renk: '#f00',
+                        yereTemas: false 
+                    };
+
+                    if (tip === 1) { // Büyük Engel
+                        engel.h = 50;
+                        engel.y = zeminY - 50;
+                    } else if (tip === 2) { // Uçan Engel
+                        engel.y = zeminY - 75; 
+                        engel.renk = '#f0f'; 
+                    }
+                    engeller.push(engel);
+                }
+            } else if (rastgeleTip >= 5 && rastgeleTip < 7 && skor > 50) { // %20: Düşen Engel
+                let engel = { 
+                    x: CANVAS_GENISLIK + 10, 
+                    w: 30, 
+                    h: 30, 
+                    y: dusenEngelY, 
+                    dy: 1, 
+                    dusen: true,
+                    renk: '#ff0',
+                    yereTemas: false
+                };
+                engeller.push(engel);
+            } else if (rastgeleTip >= 7 && rastgeleTip < 8 && skor > 150) { // %10: Orta Boşluklu Engel Bloğu
+                
+                // Üst Engel Bloğu 
+                engeller.push({ 
+                    x: CANVAS_GENISLIK + 5, 
+                    w: 80, 
+                    h: 30, 
+                    y: zeminY - 90, 
+                    dy: 0, 
+                    dusen: false, 
+                    renk: '#ff0',
+                    yereTemas: true 
+                });
+                
+                // Alt Engel Bloğu 
+                engeller.push({ 
+                    x: CANVAS_GENISLIK + 5, 
+                    w: 80, 
+                    h: 30, 
+                    y: zeminY - 30, 
+                    dy: 0, 
+                    dusen: false, 
+                    renk: '#f00',
+                    yereTemas: true 
+                });
+            } else if (rastgeleTip >= 8 && skor > 80) { // %20: ASILI KÖPRÜ PLATFORMU
+                
+                let platformY = zeminY - 60; 
+                let platformW = 100;
+                
+                // Asılı Platform
+                engeller.push({
+                    x: CANVAS_GENISLIK + 5, 
+                    w: platformW, 
+                    h: 10, 
+                    y: platformY, 
+                    dy: 0, 
+                    dusen: false, 
+                    renk: '#0ff', 
+                    yereTemas: true, 
+                    platform: true 
+                });
+                
+                // Platformun Altına Engel (Gizli)
+                engeller.push({
+                    x: CANVAS_GENISLIK + 5, 
+                    w: platformW, 
+                    h: zeminY - platformY, 
+                    y: platformY, 
+                    dy: 0, 
+                    dusen: false, 
+                    renk: 'rgba(0, 255, 255, 0.1)', 
+                    yereTemas: true,
+                    platform: false,
+                    gizli: true
+                });
+            }
+        }
+
+        // --- OYUN MANTIĞI ---
+        function oyunuBaslat() {
+            bilgiMesaji.style.display = 'none';
+            oyunAktif = true;
+            skor = 0;
+            skorEl.innerText = '0';
+            kareSayisi = 0;
+            oyunHizi = 5;
+            engeller = [];
+            
+            oyuncu.y = zeminY - oyuncu.h;
+            oyuncu.dy = 0;
+            oyuncu.ziplamaHakki = 2;
+            oyuncu.renk = '#0f0';
+
+            if(animasyonId) cancelAnimationFrame(animasyonId);
+            loop();
+        }
+        
+        function cizEngel(e) {
+             if (e.gizli) return; 
+             
+             ctx.fillStyle = e.renk;
+             ctx.shadowBlur = 10;
+             ctx.shadowColor = (e.platform && !e.gizli) ? '#0ff' : e.renk;
+             ctx.fillRect(e.x, e.y, e.w, e.h);
+             ctx.shadowBlur = 0;
+        }
+
+        function loop() {
+            if (!oyunAktif) return;
+
+            // Temizle ve Arka Plan Çizim Kodu (Değişmedi)
+            ctx.fillStyle = '#050510';
+            ctx.fillRect(0, 0, CANVAS_GENISLIK, canvas.height);
+
+            // Zemin Çizgisi ve Efekti (YATAY UYUM)
+            ctx.beginPath();
+            ctx.moveTo(0, zeminY);
+            ctx.lineTo(CANVAS_GENISLIK, zeminY);
+            ctx.strokeStyle = '#0ff';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+
+            ctx.strokeStyle = 'rgba(0, 255, 255, 0.2)';
+            ctx.lineWidth = 1;
+            for(let i=0; i<zeminCizgileri.length; i++) {
+                zeminCizgileri[i] -= oyunHizi;
+                if(zeminCizgileri[i] < 0) zeminCizgileri[i] = CANVAS_GENISLIK;
+                
+                ctx.beginPath();
+                ctx.moveTo(zeminCizgileri[i], zeminY);
+                ctx.lineTo(zeminCizgileri[i] - 100, canvas.height);
+                ctx.stroke();
+            }
+
+            // Oyuncu Fiziği
+            oyuncu.dy += yerCekimi;
+            oyuncu.y += oyuncu.dy;
+            
+            // Platform Çarpışma ve Yer Kontrolü
+            let zemineTemasEtti = oyuncu.y + oyuncu.h >= zeminY;
+            let platformaTemasEtti = false;
+
+            for (let e of engeller) {
+                // Oyuncu platformun üstünde mi?
+                if (
+                    e.platform &&
+                    oyuncu.x < e.x + e.w &&
+                    oyuncu.x + oyuncu.w > e.x &&
+                    oyuncu.y + oyuncu.h <= e.y + 5 && 
+                    oyuncu.y + oyuncu.h > e.y && 
+                    oyuncu.dy >= 0 
+                ) {
+                    oyuncu.y = e.y - oyuncu.h;
+                    oyuncu.dy = 0;
+                    oyuncu.yerde = true;
+                    oyuncu.ziplamaHakki = 2;
+                    oyuncu.renk = '#0f0';
+                    platformaTemasEtti = true;
+                    break;
+                }
+            }
+
+            // Normal Zemin Kontrolü (Platforma basmıyorsa)
+            if (zemineTemasEtti && !platformaTemasEtti) {
+                oyuncu.y = zeminY - oyuncu.h;
+                oyuncu.dy = 0;
+                oyuncu.yerde = true;
+                oyuncu.ziplamaHakki = 2;
+                oyuncu.renk = '#0f0';
+            } else if (!platformaTemasEtti) {
+                oyuncu.yerde = false;
+            }
+
+
+            // Oyuncuyu Çiz
+            ctx.fillStyle = oyuncu.renk;
+            ctx.shadowBlur = 15;
+            ctx.shadowColor = oyuncu.renk;
+            ctx.fillRect(oyuncu.x, oyuncu.y, oyuncu.w, oyuncu.h);
+            ctx.shadowBlur = 0;
+
+            // Engeller
+            kareSayisi++;
+            let uretimAraligi = Math.max(45, 80 - Math.floor(skor/100)); 
+            
+            if (kareSayisi % uretimAraligi === 0) { 
+                engelUret();
+            }
+
+            for (let i = 0; i < engeller.length; i++) {
+                let e = engeller[i];
+                
+                // DÜŞEN ENGEL FİZİĞİ
+                if (e.dusen && !e.yereTemas) {
+                    e.dy += yerCekimi * 0.8; 
+                    e.y += e.dy;
+
+                    if (e.y + e.h >= zeminY) {
+                        e.y = zeminY - e.h;
+                        e.dy = 0;
+                        e.dusen = false; 
+                        e.yereTemas = true; 
+                        e.renk = '#f00'; 
+                    }
+                }
+                
+                // Yatay hareket
+                if (!e.dusen || e.yereTemas) {
+                    e.x -= oyunHizi;
+                }
+                
+                // Çizim
+                cizEngel(e);
+
+                // Çarpışma
+                if (
+                    oyuncu.x < e.x + e.w - 5 &&
+                    oyuncu.x + oyuncu.w > e.x + 5 &&
+                    oyuncu.y < e.y + e.h - 5 &&
+                    oyuncu.y + oyuncu.h > e.y + 5
+                ) {
+                    // Platform üstüne basma çarpışma sayılmamalı
+                    if (!(e.platform && oyuncu.y + oyuncu.h <= e.y + 5 && oyuncu.dy >= 0)) {
+                         oyunBitti();
+                         return;
+                    }
+                }
+
+                // Skor ve Silme (Değişmedi)
+                if (e.x + e.w < 0) {
+                    engeller.splice(i, 1);
+                    i--;
+                    skor += 10;
+                    skorEl.innerText = skor;
+                    
+                    if(skor % 100 === 0) oyunHizi += 0.5;
+                }
+            }
+
+            animasyonId = requestAnimationFrame(loop);
+        }
+
+        function oyunBitti() {
+            oyunAktif = false;
+            bilgiMesaji.style.display = 'flex';
+            bilgiMesaji.innerHTML = `
+                <h2 style="color:red; margin-top:0; text-shadow:0 0 10px red;">YANDIN!</h2>
+                <p style="font-size:24px; color:white;">SKOR: ${skor}</p>
+                <button id="tekrarButonu" style="background:#0ff; border:none; padding:15px 30px; font-weight:bold; font-size:22px; cursor:pointer; box-shadow:0 0 15px #0ff; border-radius:50px; margin-top:20px;">TEKRAR DENE</button>
+            `;
+            
+            const tekrarBtn = document.getElementById('tekrarButonu');
+            tekrarBtn.addEventListener('click', oyunuBaslat);
+            tekrarBtn.addEventListener('touchstart', function(e){
+                e.stopPropagation(); e.preventDefault(); oyunuBaslat();
+            });
+        }
+
+    </script>
+</body>
+</html>
