@@ -14,39 +14,34 @@
             color: #fff;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
-            padding: 30px 20px;
+            padding: 20px 10px; /* Padding azaltıldı */
             text-align: center;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
         }
         h1 {
             color: #39FF14;
-            font-size: 2.5em; /* Başlık boyutu da küçültüldü */
-            margin-bottom: 8px;
+            font-size: 2.3em; /* Başlık boyutu küçültüldü */
+            margin-bottom: 5px;
             text-shadow: 0 0 10px #39FF14;
         }
         .subtitle {
-            font-size: 1.1em;
+            font-size: 1em;
             color: #bbb;
-            margin-bottom: 30px;
+            margin-bottom: 25px;
         }
         .game-grid {
+            /* Dikey (default) liste görünümü için grid ayarları korundu */
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
-            gap: 15px; /* Boşluklar azaltıldı */
+            gap: 15px; 
             max-width: 1200px;
             margin: 0 auto;
         }
         .game-card {
             background-color: #1a1a38;
-            padding: 15px; /* KART DOLGUSU AZALTILDI */
+            padding: 12px; /* KART DOLGUSU DAHA DA AZALTILDI */
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(57, 255, 20, 0.3); 
             transition: transform 0.2s;
-            display: flex; 
-            flex-direction: column;
-            align-items: center;
         }
         .game-card:hover {
             transform: translateY(-5px);
@@ -54,35 +49,39 @@
         }
         .game-card h2 {
             color: #FF00FF; 
-            font-size: 1.4em; /* Başlık boyutu küçültüldü */
+            font-size: 1.3em; /* Başlık boyutu küçültüldü */
             margin-top: 0;
+            margin-bottom: 5px;
         }
         .game-card p {
-            font-size: 0.9em; /* Paragraf boyutu küçültüldü */
+            font-size: 0.9em; 
+            margin-top: 5px;
+            margin-bottom: 10px;
         }
         .game-card a {
             display: block;
             background-color: #39FF14;
             color: #0d0d1e;
-            padding: 8px 10px; /* Buton dolgusu azaltıldı */
+            padding: 8px 10px; 
             border-radius: 5px;
             text-decoration: none;
             font-weight: bold;
             margin-top: 10px;
             transition: background-color 0.2s;
-            width: 90%; 
-            max-width: 250px;
         }
         .game-card a:hover {
              background-color: #00cccc;
         }
-        /* YENİ: Resim boyutunu daha da küçültme */
+        /* GÜNCELLENDİ: Resim boyutunu daha da küçültme ve ortalama */
         .game-card img {
-            width: 60%; /* %60'a düşürüldü */
+            width: 50%; /* %50'ye düşürüldü */
             height: auto;
             border-radius: 5px;
-            margin-bottom: 10px; /* Boşluk azaltıldı */
+            margin-bottom: 10px;
             box-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
+            display: block; /* Ortalamak için */
+            margin-left: auto; /* Resmi ortalar */
+            margin-right: auto; /* Resmi ortalar */
         }
     </style>
 </head>
