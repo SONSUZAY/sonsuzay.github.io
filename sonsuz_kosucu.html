@@ -2,55 +2,53 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Neon Koşucu - SonsuzAY</title>
+    <title>SONSUZ UZAY DARBESİ - SONSUZ.AY</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <link rel="icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAABmNLR0QA/wD/AP+gvaeTAAAAdklEQVRogcYyQRCAMAwD8w/8SAU60IE+8g88EAIG3E1m93iH3ZtU3a76iY+4Y48/G2KPP/7YY48/9thjjz/22GOPP/bYY48/9thjjz/22GOPP/bYY48/9thjjz/22GOPP/bYY48/9thjjz/22GOPP/bYEwE+sR9X9YJ7eQAAAABJRU5ErkJggg==">
+    <link rel="icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAABmJLR0QA/wD/AP+gvaeTAAAAdklEQVRogcYyQRCAMAwD8w/8SAU60IE+8g88EAIG3E1m93iH3ZtU3a76iY+4Y48/G2KPP/7YY48/9thjjz/22GOPP/bYYY8/9thjjz/22GOPP/bYY48/9thjjz/22GOPP/bYY48/9thjjz/22GOPP/bYEwE+sR9XfWJ3eQAAAABJRU5ErkJggg==">
 
     <style>
         body {
-            background-color: #050510;
+            background-color: #00001a;
             margin: 0;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             height: 100vh;
-            font-family: 'Verdana', sans-serif;
+            font-family: 'Arial', sans-serif;
             overflow: hidden;
-            touch-action: none;
-            height: 100%; 
-            min-height: 100vh; 
+            touch-action: none; 
+            color: #fff;
         }
 
         #oyunKutusu {
             position: relative;
-            width: 640px; 
-            height: 320px; 
-            max-width: 95vw; 
-            max-height: calc(95vh - 20px); 
-            aspect-ratio: 2 / 1; 
-            width: min(640px, 95vw);
-            height: min(320px, calc(95vw / 2));
+            width: 320px;
+            height: 480px;
+            max-width: 95vw;
+            max-height: 95vh;
+            aspect-ratio: 2 / 3;
+            width: min(320px, 95vw);
+            height: min(480px, 95vh);
         }
 
         canvas {
             width: 100%;
             height: 100%;
-            border: 2px solid #0ff;
-            background: linear-gradient(to bottom, #000022, #000044);
-            box-shadow: 0 0 30px rgba(0, 255, 255, 0.3);
+            border: 2px solid #ff00ff; 
+            background: #000;
+            box-shadow: 0 0 40px rgba(255, 0, 255, 0.4);
             border-radius: 5px;
             display: block;
         }
 
-        #skorKutusu {
+        #skorBilgi {
             position: absolute;
             top: 10px;
-            right: 10px;
-            color: #0ff;
-            font-size: 20px;
+            left: 10px;
+            color: #ff0;
+            font-size: 16px;
             font-weight: bold;
-            text-shadow: 0 0 10px #0ff;
             z-index: 10;
         }
 
@@ -60,16 +58,17 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0,0,0,0.85);
+            background-color: rgba(0,0,26,0.95);
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             z-index: 20;
             border-radius: 5px;
+            text-align: center;
         }
 
-        #baslaButonu {
+        #baslaButonu, #tekrarButonu {
             background: #0ff; 
             border: none; 
             padding: 15px 30px; 
@@ -81,393 +80,345 @@
             margin-top: 20px;
             touch-action: manipulation; 
         }
-        #baslaButonu:active { transform: scale(0.95); background: #00cccc; }
-
+        #baslaButonu:active, #tekrarButonu:active { transform: scale(0.95); }
     </style>
 </head>
 <body>
 
     <div id="oyunKutusu">
-        <canvas id="oyunAlani" width="640" height="320"></canvas> 
-        <div id="skorKutusu">0</div>
-        
+        <canvas id="oyunAlani" width="320" height="480"></canvas>
+        <div id="skorBilgi">SKOR: 0 | EN İYİ: 0 | CAN: 3</div>
+
         <div id="bilgiMesaji">
-            <h2 style="margin-top:0; color:#0f0; text-shadow: 0 0 10px #0f0;">HAZIR MISIN?</h2>
-            <p style="color:white; text-align:center;">
-                Zıplamak için dokun.<br>
-                Havada tekrar dokunursan<br>
-                <span style="color:#ff0; font-weight:bold;">ÇİFT ZIPLARSIN!</span>
+            <h2 style="margin-top:0; color:#ff00ff; text-shadow: 0 0 10px #ff00ff;">SONSUZ UZAY DARBESİ</h2>
+            <p style="color:white; padding:0 15px;">
+                Düşman uzay gemilerini vur, engellere dikkat et.<br>
+                <span style="color:#0ff; font-weight:bold;">Ekranı sürükleyerek gemiyi hareket ettir!</span>
             </p>
-            <button id="baslaButonu">KOŞ!</button>
+            <button id="baslaButonu">BAŞLA</button>
         </div>
     </div>
 
     <script>
         const canvas = document.getElementById('oyunAlani');
         const ctx = canvas.getContext('2d');
-        const skorEl = document.getElementById('skorKutusu');
+        const skorBilgiEl = document.getElementById('skorBilgi');
         const bilgiMesaji = document.getElementById('bilgiMesaji');
         const baslaButonu = document.getElementById('baslaButonu');
-        const oyunKutusu = document.getElementById('oyunKutusu'); 
 
-        // YENİ OYUN BOYUTLARI
-        const ZEMIN_YUKSEKLIGI = canvas.height * 0.9; 
-        const CANVAS_GENISLIK = canvas.width; 
-        
-        // Oyun Durumu
         let oyunAktif = false;
         let skor = 0;
-        let kareSayisi = 0;
-        let oyunHizi = 5;
+        let yuksekSkor = localStorage.getItem('uzayYuksekSkor') || 0; // Local Storage'dan yükle
+        let can = 3;
         let animasyonId;
 
-        // Oyuncu (Neon Kutusu)
-        let oyuncu = {
-            x: 50,
-            y: ZEMIN_YUKSEKLIGI - 30, 
+        // --- Oyuncu (Gemi) Ayarları ---
+        let gemi = {
+            x: canvas.width / 2 - 15,
+            y: canvas.height - 40,
             w: 30,
             h: 30,
-            dy: 0, 
-            yerde: true,
-            ziplamaHakki: 2, 
-            renk: '#0f0'
+            renk: '#0ff'
         };
 
-        // Fizik
-        const yerCekimi = 0.6;
-        const ziplamaGucu = -10;
-        const zeminY = ZEMIN_YUKSEKLIGI; 
+        // --- Mermi Ayarları ---
+        let mermiler = [];
+        let mermiHizi = 10;
+        let atesSikligi = 10; 
+        let atesSayaci = 0;
 
-        // Engeller ve Arka Plan
-        let engeller = [];
-        let zeminCizgileri = [];
-        for(let i=0; i<20; i++) zeminCizgileri.push(i * 40); 
+        // --- Düşman ve Engeller ---
+        let dusmanlar = [];
+        let dusmanHizi = 2;
+        let dusmanOlusumHizi = 150; 
+        let dusmanSayaci = 0;
+        const DUSMAN_GENISLIK = 25;
+        const DUSMAN_YUKSEKLIK = 25;
+
+        // --- Kontrol ---
+        let mevcutHiz = 0; 
         
-        const dusenEngelY = 0; 
+        // Mobil Kontrol
+        canvas.addEventListener('touchstart', (e) => {
+            e.preventDefault(); 
+            mevcutHiz = 0; 
+        }, { passive: false });
+
+        canvas.addEventListener('touchmove', (e) => {
+            e.preventDefault();
+            
+            let rect = canvas.getBoundingClientRect();
+            let canvasX = e.touches[0].clientX - rect.left;
+            
+            let hedefX = (canvasX / rect.width) * canvas.width - gemi.w / 2;
+            
+            let farkX = hedefX - gemi.x;
+            gemi.x += farkX * 0.2; 
+
+        }, { passive: false });
+
+        canvas.addEventListener('touchend', () => {
+            mevcutHiz = 0;
+        });
+
+        // Mouse Kontrolü 
+        let fareBasili = false;
+        let hareketYonu = 0; 
         
-        // --- BUTON KONTROLLERİ ---
+        canvas.addEventListener('mousedown', (e) => {
+            fareBasili = true;
+            let rect = canvas.getBoundingClientRect();
+            let relativeX = e.clientX - rect.left;
+            hareketYonu = (relativeX < rect.width / 2) ? -1 : 1;
+        });
+
+        canvas.addEventListener('mouseup', () => {
+            fareBasili = false;
+            hareketYonu = 0;
+        });
+        
+        // --- Oyun Fonksiyonları ---
+
+        function oyunuBaslat() {
+            bilgiMesaji.style.display = 'none';
+            oyunAktif = true;
+            skor = 0;
+            can = 3;
+            gemi.x = canvas.width / 2 - gemi.w / 2;
+            mermiler = [];
+            dusmanlar = [];
+            
+            // Zorluk ayarlarını sıfırla
+            dusmanOlusumHizi = 150; 
+            dusmanHizi = 2;
+            
+            if (animasyonId) cancelAnimationFrame(animasyonId);
+            loop();
+        }
+
+        function atesEt() {
+            if (oyunAktif && atesSayaci >= atesSikligi) {
+                mermiler.push({
+                    x: gemi.x + gemi.w / 2 - 2,
+                    y: gemi.y,
+                    w: 4,
+                    h: 8,
+                    renk: '#ff0'
+                });
+                atesSayaci = 0;
+            }
+        }
+
+        // --- DÜŞMAN ÜRETİMİ (GÜNCELLENMİŞ: RASTGELE ZORLUK İLE) ---
+        function dusmanUret() {
+            if (oyunAktif && dusmanSayaci >= dusmanOlusumHizi) {
+                
+                const hiz = dusmanHizi + Math.random() * 1.5;
+                
+                // Rastgele düşman sayısı: 1, 2 veya %10 ihtimalle 4
+                let dusmanSayisi;
+                if (Math.random() < 0.1) {
+                    dusmanSayisi = 4; // Nadiren 4'lü zorluk salvosu
+                } else {
+                    dusmanSayisi = Math.floor(Math.random() * 3) + 1; // 1, 2 veya 3
+                }
+                
+                const baslangicY = -50; 
+                
+                // İlk düşmanın X pozisyonunu belirle
+                // Boşluk bırakmak için maksimum genişliği ayarla
+                const maxGrupGenisligi = dusmanSayisi * DUSMAN_GENISLIK + (dusmanSayisi - 1) * (Math.random() * 20 + 10);
+                let mevcutX = Math.random() * (canvas.width - maxGrupGenisligi); 
+
+                for (let i = 0; i < dusmanSayisi; i++) {
+                    
+                    // Rastgele düşey ofset (Kademeli ve rastgele düşüş)
+                    const ofsetY = Math.random() * 30 * (i * 0.5); 
+                    
+                    // Rastgele yatay aralık (10 ile 40 arasında)
+                    const aralikX = Math.random() * 30 + 10; 
+                    
+                    // Düşmanı ekle
+                    dusmanlar.push({
+                        x: mevcutX,
+                        y: baslangicY - ofsetY, 
+                        w: DUSMAN_GENISLIK,
+                        h: DUSMAN_YUKSEKLIK,
+                        hiz: hiz,
+                        renk: '#f00' 
+                    });
+                    
+                    // Bir sonraki düşmanın X pozisyonunu güncelle
+                    mevcutX += DUSMAN_GENISLIK + aralikX;
+
+                    // Eğer canvas'ın dışına çıkıyorsa döngüyü durdur (Güvenlik)
+                    if (mevcutX > canvas.width - DUSMAN_GENISLIK) break;
+                }
+                
+                dusmanSayaci = 0;
+                
+                // Zorluğu yavaşça artır
+                if (dusmanOlusumHizi > 30) dusmanOlusumHizi -= 1; 
+                if (dusmanHizi < 5) dusmanHizi += 0.005; 
+            }
+        }
+        // --- DÜŞMAN ÜRETİMİ SONU ---
+
+        function guncelle() {
+            if (!oyunAktif) return;
+
+            // Sayaçları artır
+            atesSayaci++;
+            dusmanSayaci++;
+
+            // 1. Mouse Kontrolü ile hareket
+            if (fareBasili) {
+                 gemi.x += hareketYonu * 5; 
+            }
+            
+            // 2. Gemi Sınır Kontrolü
+            gemi.x = Math.max(0, Math.min(gemi.x, canvas.width - gemi.w));
+            
+            // 3. Ateş et
+            atesEt();
+
+            // 4. Düşman Üret ve Hareket Ettir
+            dusmanUret();
+            
+            // Düşman hareketini güncelle
+            dusmanlar.forEach((d, i) => {
+                d.y += d.hiz;
+                // Düşman alttan çıkarsa can kaybet
+                if (d.y > canvas.height) {
+                    dusmanlar.splice(i, 1);
+                    can--;
+                }
+            });
+            
+            // 5. Mermi Hareketi
+            mermiler.forEach((m, i) => {
+                m.y -= mermiHizi;
+                if (m.y < 0) {
+                    mermiler.splice(i, 1);
+                }
+            });
+
+            // 6. Çarpışma Kontrolü
+            
+            // Mermi ve Düşman Çarpışması
+            mermiler.forEach((m, mIdx) => {
+                dusmanlar.forEach((d, dIdx) => {
+                    if (m.x < d.x + d.w && m.x + m.w > d.x && m.y < d.y + d.h && m.y + m.h > d.y) {
+                        // Çarpışma oldu!
+                        mermiler.splice(mIdx, 1);
+                        dusmanlar.splice(dIdx, 1);
+                        skor += 10;
+                    }
+                });
+            });
+
+            // Gemi ve Düşman Çarpışması
+            let gemiVuruldu = false;
+            dusmanlar.forEach((d, dIdx) => {
+                if (gemi.x < d.x + d.w && gemi.x + gemi.w > d.x && gemi.y < d.y + d.h && gemi.y + gemi.h > d.y) {
+                    // Çarpışma oldu!
+                    dusmanlar.splice(dIdx, 1);
+                    can--;
+                    gemiVuruldu = true;
+                }
+            });
+            
+            // 7. Skor ve Can Güncelleme
+            skorBilgiEl.innerText = `SKOR: ${skor} | EN İYİ: ${yuksekSkor} | CAN: ${can}`;
+
+            if (can <= 0) {
+                oyunBitti();
+                return; // Önemli: Oyun bittiyse animasyon döngüsünü durdurmak için döngüden çık
+            }
+        }
+
+        function cizim() {
+            // Arka planı temizle
+            ctx.fillStyle = '#00001a';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Yıldızlar (Basit hareketli arka plan)
+            for (let i = 0; i < 50; i++) {
+                ctx.fillStyle = '#fff';
+                ctx.fillRect(i * 10 % canvas.width, (i * 15 + skor * 0.1) % canvas.height, 1, 1);
+            }
+            
+            // Düşmanları Çiz
+            ctx.fillStyle = '#f00';
+            ctx.shadowBlur = 10;
+            ctx.shadowColor = '#f00';
+            dusmanlar.forEach(d => {
+                ctx.fillRect(d.x, d.y, d.w, d.h);
+            });
+
+            // Mermileri Çiz
+            ctx.fillStyle = '#ff0';
+            ctx.shadowBlur = 10;
+            ctx.shadowColor = '#ff0';
+            mermiler.forEach(m => {
+                ctx.fillRect(m.x, m.y, m.w, m.h);
+            });
+
+            // Gemiyi Çiz
+            ctx.fillStyle = gemi.renk;
+            ctx.shadowBlur = 15;
+            ctx.shadowColor = gemi.renk;
+            ctx.fillRect(gemi.x, gemi.y, gemi.w, gemi.h);
+            
+            ctx.shadowBlur = 0;
+        }
+
+        function loop() {
+            if (!oyunAktif) return; // Oyun aktif değilse döngüyü durdur (Donma hatası çözüldü)
+            
+            guncelle();
+            cizim();
+            animasyonId = requestAnimationFrame(loop);
+        }
+
+        function oyunBitti() {
+            oyunAktif = false;
+            
+            // Yüksek skoru kaydet
+            if (skor > yuksekSkor) {
+                yuksekSkor = skor;
+                localStorage.setItem('uzayYuksekSkor', yuksekSkor);
+            }
+            
+            bilgiMesaji.style.display = 'flex';
+            bilgiMesaji.innerHTML = `
+                <h2 style="color:red; margin-top:0; text-shadow:0 0 10px red;">OYUN BİTTİ!</h2>
+                <p style="font-size:24px; color:white;">Son Skorun: ${skor}</p>
+                <p style="font-size:18px; color:#ff0;">EN İYİ SKOR: ${yuksekSkor}</p>
+                <button id="tekrarButonu">TEKRAR DENE</button>
+            `;
+            
+            // Tekrar Dene Butonuna güncel CSS ayarlarını ekle
+            const tekrarBtn = document.getElementById('tekrarButonu');
+            tekrarBtn.style.cssText = baslaButonu.style.cssText; // Stili kopyala
+            
+            tekrarBtn.addEventListener('click', oyunuBaslat);
+            tekrarBtn.addEventListener('touchstart', function(e){
+                e.stopPropagation(); e.preventDefault(); oyunuBaslat();
+            });
+        }
+        
+        // Skor bilgisini başlangıçta güncelle
+        skorBilgiEl.innerText = `SKOR: 0 | EN İYİ: ${yuksekSkor} | CAN: 3`;
+
         baslaButonu.addEventListener('click', oyunuBaslat);
-        // HATA DÜZELTİLDİ: baslaButonu olarak düzeltildi
         baslaButonu.addEventListener('touchstart', function(e) {
             e.stopPropagation(); 
             e.preventDefault(); 
             oyunuBaslat();
         });
 
-        // --- OYUN KONTROLLERİ ---
-        function zipla() {
-            if (!oyunAktif) return;
-            
-            if (oyuncu.ziplamaHakki > 0) {
-                oyuncu.dy = ziplamaGucu;
-                oyuncu.ziplamaHakki--;
-                oyuncu.yerde = false;
-                oyuncu.renk = oyuncu.ziplamaHakki === 1 ? '#0f0' : '#ff0';
-            }
-        }
-        
-        // Genişletilmiş Zıplama Alanı
-        document.body.addEventListener('touchstart', (e) => {
-            if (oyunAktif && !oyunKutusu.contains(e.target)) {
-                 e.preventDefault(); 
-                 zipla(); 
-            }
-        }, {passive: false});
-
-        canvas.addEventListener('touchstart', (e) => { 
-            if(oyunAktif) { e.preventDefault(); zipla(); }
-        }, {passive: false});
-        
-        canvas.addEventListener('mousedown', () => { 
-            if(oyunAktif) zipla(); 
-        });
-
-        // --- ENGEL ÜRETİM MANTIĞI ---
-        function engelUret() {
-            let rastgeleTip = Math.floor(Math.random() * 10); 
-            
-            if (rastgeleTip < 5) { // %50: Yerdeki Tekli/Çoklu Engel
-                let engelSayisi = (Math.random() < 0.7) ? 1 : 2; 
-                if (skor > 200 && Math.random() < 0.2) engelSayisi = 3; 
-                
-                for(let i = 0; i < engelSayisi; i++) {
-                    let tip = Math.floor(Math.random() * 3);
-                    let engel = { 
-                        x: CANVAS_GENISLIK + i * 35, 
-                        w: 30, 
-                        h: 30, 
-                        y: zeminY - 30, 
-                        dy: 0, 
-                        dusen: false, 
-                        renk: '#f00',
-                        yereTemas: false 
-                    };
-
-                    if (tip === 1) { // Büyük Engel
-                        engel.h = 50;
-                        engel.y = zeminY - 50;
-                    } else if (tip === 2) { // Uçan Engel
-                        engel.y = zeminY - 75; 
-                        engel.renk = '#f0f'; 
-                    }
-                    engeller.push(engel);
-                }
-            } else if (rastgeleTip >= 5 && rastgeleTip < 7 && skor > 50) { // %20: Düşen Engel
-                let engel = { 
-                    x: CANVAS_GENISLIK + 10, 
-                    w: 30, 
-                    h: 30, 
-                    y: dusenEngelY, 
-                    dy: 1, 
-                    dusen: true,
-                    renk: '#ff0',
-                    yereTemas: false
-                };
-                engeller.push(engel);
-            } else if (rastgeleTip >= 7 && rastgeleTip < 8 && skor > 150) { // %10: Orta Boşluklu Engel Bloğu
-                
-                // Üst Engel Bloğu 
-                engeller.push({ 
-                    x: CANVAS_GENISLIK + 5, 
-                    w: 80, 
-                    h: 30, 
-                    y: zeminY - 90, 
-                    dy: 0, 
-                    dusen: false, 
-                    renk: '#ff0',
-                    yereTemas: true 
-                });
-                
-                // Alt Engel Bloğu 
-                engeller.push({ 
-                    x: CANVAS_GENISLIK + 5, 
-                    w: 80, 
-                    h: 30, 
-                    y: zeminY - 30, 
-                    dy: 0, 
-                    dusen: false, 
-                    renk: '#f00',
-                    yereTemas: true 
-                });
-            } else if (rastgeleTip >= 8 && skor > 80) { // %20: ASILI KÖPRÜ PLATFORMU
-                
-                let platformY = zeminY - 60; 
-                let platformW = 150; // PLATFORM UZUNLUĞU 150'ye ÇIKARILDI
-                
-                // Asılı Platform
-                engeller.push({
-                    x: CANVAS_GENISLIK + 5, 
-                    w: platformW, 
-                    h: 10, 
-                    y: platformY, 
-                    dy: 0, 
-                    dusen: false, 
-                    renk: '#0ff', 
-                    yereTemas: true, 
-                    platform: true 
-                });
-                
-                // Platformun Altına Engel (Gizli)
-                engeller.push({
-                    x: CANVAS_GENISLIK + 5, 
-                    w: platformW, 
-                    h: zeminY - platformY, 
-                    y: platformY, 
-                    dy: 0, 
-                    dusen: false, 
-                    renk: 'rgba(0, 255, 255, 0.1)', 
-                    yereTemas: true,
-                    platform: false,
-                    gizli: true
-                });
-            }
-        }
-
-        // --- OYUN MANTIĞI ---
-        function oyunuBaslat() {
-            bilgiMesaji.style.display = 'none';
-            oyunAktif = true;
-            skor = 0;
-            skorEl.innerText = '0';
-            kareSayisi = 0;
-            oyunHizi = 5;
-            engeller = [];
-            
-            oyuncu.y = zeminY - oyuncu.h;
-            oyuncu.dy = 0;
-            oyuncu.ziplamaHakki = 2;
-            oyuncu.renk = '#0f0';
-
-            if(animasyonId) cancelAnimationFrame(animasyonId);
-            loop();
-        }
-        
-        function cizEngel(e) {
-             if (e.gizli) return; 
-             
-             ctx.fillStyle = e.renk;
-             ctx.shadowBlur = 10;
-             ctx.shadowColor = (e.platform && !e.gizli) ? '#0ff' : e.renk;
-             ctx.fillRect(e.x, e.y, e.w, e.h);
-             ctx.shadowBlur = 0;
-        }
-
-        function loop() {
-            if (!oyunAktif) return;
-
-            // Temizle ve Arka Plan Çizim Kodu (Değişmedi)
-            ctx.fillStyle = '#050510';
-            ctx.fillRect(0, 0, CANVAS_GENISLIK, canvas.height);
-
-            // Zemin Çizgisi ve Efekti (YATAY UYUM)
-            ctx.beginPath();
-            ctx.moveTo(0, zeminY);
-            ctx.lineTo(CANVAS_GENISLIK, zeminY);
-            ctx.strokeStyle = '#0ff';
-            ctx.lineWidth = 2;
-            ctx.stroke();
-
-            ctx.strokeStyle = 'rgba(0, 255, 255, 0.2)';
-            ctx.lineWidth = 1;
-            for(let i=0; i<zeminCizgileri.length; i++) {
-                zeminCizgileri[i] -= oyunHizi;
-                if(zeminCizgileri[i] < 0) zeminCizgileri[i] = CANVAS_GENISLIK;
-                
-                ctx.beginPath();
-                ctx.moveTo(zeminCizgileri[i], zeminY);
-                ctx.lineTo(zeminCizgileri[i] - 100, canvas.height);
-                ctx.stroke();
-            }
-
-            // Oyuncu Fiziği
-            oyuncu.dy += yerCekimi;
-            oyuncu.y += oyuncu.dy;
-            
-            // Platform Çarpışma ve Yer Kontrolü
-            let zemineTemasEtti = oyuncu.y + oyuncu.h >= zeminY;
-            let platformaTemasEtti = false;
-
-            for (let e of engeller) {
-                // Platform üzerindeki durma mantığı
-                if (
-                    e.platform &&
-                    oyuncu.x < e.x + e.w &&
-                    oyuncu.x + oyuncu.w > e.x &&
-                    oyuncu.y + oyuncu.h <= e.y + 5 && 
-                    oyuncu.y + oyuncu.h > e.y && 
-                    oyuncu.dy >= 0 
-                ) {
-                    oyuncu.y = e.y - oyuncu.h;
-                    oyuncu.dy = 0;
-                    oyuncu.yerde = true;
-                    oyuncu.ziplamaHakki = 2;
-                    oyuncu.renk = '#0f0';
-                    platformaTemasEtti = true;
-                    break;
-                }
-            }
-
-            // Normal Zemin Kontrolü (Platforma basmıyorsa)
-            if (zemineTemasEtti && !platformaTemasEtti) {
-                oyuncu.y = zeminY - oyuncu.h;
-                oyuncu.dy = 0;
-                oyuncu.yerde = true;
-                oyuncu.ziplamaHakki = 2;
-                oyuncu.renk = '#0f0';
-            } else if (!platformaTemasEtti) {
-                oyuncu.yerde = false;
-            }
-
-
-            // Oyuncuyu Çiz
-            ctx.fillStyle = oyuncu.renk;
-            ctx.shadowBlur = 15;
-            ctx.shadowColor = oyuncu.renk;
-            ctx.fillRect(oyuncu.x, oyuncu.y, oyuncu.w, oyuncu.h);
-            ctx.shadowBlur = 0;
-
-            // Engeller
-            kareSayisi++;
-            let uretimAraligi = Math.max(45, 80 - Math.floor(skor/100)); 
-            
-            if (kareSayisi % uretimAraligi === 0) { 
-                engelUret();
-            }
-
-            for (let i = 0; i < engeller.length; i++) {
-                let e = engeller[i];
-                
-                // DÜŞEN ENGEL FİZİĞİ
-                if (e.dusen && !e.yereTemas) {
-                    e.dy += yerCekimi * 0.8; 
-                    e.y += e.dy;
-
-                    if (e.y + e.h >= zeminY) {
-                        e.y = zeminY - e.h;
-                        e.dy = 0;
-                        e.dusen = false; 
-                        e.yereTemas = true; 
-                        e.renk = '#f00'; 
-                    }
-                }
-                
-                // Yatay hareket
-                if (!e.dusen || e.yereTemas) {
-                    e.x -= oyunHizi;
-                }
-                
-                // Çizim
-                cizEngel(e);
-
-                // Çarpışma
-                if (
-                    oyuncu.x < e.x + e.w - 5 &&
-                    oyuncu.x + oyuncu.w > e.x + 5 &&
-                    oyuncu.y < e.y + e.h - 5 &&
-                    oyuncu.y + oyuncu.h > e.y + 5
-                ) {
-                    // Platformun tam üzerine inme kontrolü
-                    let ustuneIniyor = false;
-                    if (e.platform && oyuncu.y + oyuncu.h <= e.y + 5 && oyuncu.dy >= 0) {
-                         ustuneIniyor = true;
-                    }
-                    
-                    if (!ustuneIniyor) {
-                         oyunBitti();
-                         return;
-                    }
-                }
-
-                // Skor ve Silme (Değişmedi)
-                if (e.x + e.w < 0) {
-                    engeller.splice(i, 1);
-                    i--;
-                    skor += 10;
-                    skorEl.innerText = skor;
-                    
-                    if(skor % 100 === 0) oyunHizi += 0.5;
-                }
-            }
-
-            animasyonId = requestAnimationFrame(loop);
-        }
-
-        function oyunBitti() {
-            oyunAktif = false;
-            bilgiMesaji.style.display = 'flex';
-            bilgiMesaji.innerHTML = `
-                <h2 style="color:red; margin-top:0; text-shadow:0 0 10px red;">YANDIN!</h2>
-                <p style="font-size:24px; color:white;">SKOR: ${skor}</p>
-                <button id="tekrarButonu" style="background:#0ff; border:none; padding:15px 30px; font-weight:bold; font-size:22px; cursor:pointer; box-shadow:0 0 15px #0ff; border-radius:50px; margin-top:20px;">TEKRAR DENE</button>
-            `;
-            
-            const tekrarBtn = document.getElementById('tekrarButonu');
-            tekrarBtn.addEventListener('click', oyunuBaslat);
-            tekrarBtn.addEventListener('touchstart', function(e){
-                e.stopPropagation(); e.preventDefault(); oyunuBaslat();
-            });
-        }
-
+        cizim(); // Başlangıç ekranını çiz
     </script>
 </body>
 </html>
