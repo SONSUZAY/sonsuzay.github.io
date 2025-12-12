@@ -29,6 +29,7 @@
             margin-bottom: 25px;
         }
         .game-grid {
+            /* 300px'in altında 1 sütun */
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
             gap: 15px; 
@@ -71,7 +72,6 @@
         .game-card a:hover {
              background-color: #00cccc;
         }
-        /* Resim boyutunu küçültme ve ortalama */
         .game-card img {
             width: 50%; 
             height: auto;
@@ -92,6 +92,13 @@
     <div class="game-grid">
         
         <div class="game-card">
+            <img src="Space_kup_simge.jpg" alt="Sonsuz Uzay Darbesi Oyunu"> 
+            <h2>SONSUZ UZAY DARBESİ</h2>
+            <p>Hızlı ve acımasız düşman salvosundan sıyrılın. Rastgele zorlukta nişancı oyunu!</p>
+            <a href="sonsuz_uzay.html">HEMEN OYNA</a> 
+        </div>
+
+        <div class="game-card">
             <img src="kosucu_simge_yeni.jpg" alt="Sonsuz Koşucu Oyunu">
             <h2>SONSUZ KOŞUCU</h2>
             <p>Zorlu neon engelleri aşmak için çift zıplama yeteneğinizi kullanın. Yatay görünümle tam ekran oynama deneyimi! (YENİ)</p>
@@ -105,6 +112,13 @@
             <a href="sonsuz-yilan.html">HEMEN OYNA</a> 
         </div>
         
+        <div class="game-card">
+             <img src="https://via.placeholder.com/300x150?text=SONSUZ+DENGE" alt="Denge Oyunu">
+            <h2>SONSUZ DENGE</h2>
+            <p>Sallanan platform üzerinde topu düşürmeden dengelemeye çalışın! Yeni beceri testi.</p>
+            <a href="sonsuz_denge.html">HEMEN OYNA</a>
+        </div>
+
         <div class="game-card">
              <img src="tenis_simge.jpg" alt="Sonsuz Tenis Oyunu">
             <h2>SONSUZ TENİS</h2>
