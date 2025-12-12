@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Space Invaders</title>
+<style>
+  body { margin:0; background:#000; color:#0f0; font-family:monospace; }
+  canvas { display:block; margin:auto; background:#111; }
+  .hud { position:fixed; top:10px; left:0; right:0; text-align:center; font-weight:bold; color:#0f0; }
+</style>
+</head>
+<body>
+<div class="hud"><span id="score">Skor: 0</span></div>
+<canvas id="game" width="480" height="640"></canvas>
+<script>
+const c=document.getElementById("game"),ctx=c.getContext("2d");
+const scoreEl=document.getElementById("score");
+
+let player={x:c.width/2-20,y:c.height-60,w:40,h:20};
+let bullets=[],enemies=[],enemyDir=1,score=0,running=true;
+
+// Oyuncu hareketi
+const keys=new Set();
+window.addEventListener("keydown",e=>{
+  keys.add(e.key);
+  if(e.key===" "){ bullets.push({x:player.x+player.w/2-2,y:player.y,h:10}); }
+});
+window.addEventListener("keyup",e=>keys.delete(e.key));
+
+// Düşmanları oluştur
+for(let r=0;r<4;r++){
+  for(let col=0;col<8;col++){
+    enemies.push({x:60+col*40,y:60+r*40,w:30,h:20});
+  }
+}
+
+function update(){
+  // Oyuncu
+  if(keys.has("ArrowLeft")) player.x-=5;
+  if(keys.has("ArrowRight")) player.x+=5;
+  player.x=Math.max(0,Math.min(c.width-player.w,player.x));
+
+  // Mermiler
+  bullets.forEach(b=>b.y-=8);
+  bullets=bullets.filter(b=>b.y>0);
+
+  // Düşman hareketi
+  let moveDown=false;
+  enemies.forEach(e=>e.x+=enemyDir*2);
+  if(enemies.some(e=>e.x<0||e.x+e.w>c.width)) { enemyDir*=-1; moveDown=true; }
+  if(moveDown) enemies.forEach(e=>e.y+=20);
+
+  // Çarpışma kontrolü
+  bullets.forEach((b,i)=>{
+    enemies.forEach((e,j)=>{
+      if(b.x<b.x+4 && b.x+4>e.x && b.y<b.y+e.h && b.y+10>e.y){
+        enemies.splice(j,1);
+        bullets.splice(i,1);
+        score+=10;
+        scoreEl.textContent="Skor: "+score;
+      }
+    });
+  });
+
+  // Oyun bitiş
+  if(enemies.some(e=>e.y+e.h>player.y)){
+    running=false;
+  }
+}
+
+function draw(){
+  ctx.clearRect(0,0,c.width,c.height);
+  // Oyuncu
+  ctx.fillStyle="#0f0";
+  ctx.fillRect(player.x,player.y,player.w,player.h);
+  // Mermiler
+  ctx.fillStyle="#ff0";
+  bullets.forEach(b=>ctx.fillRect(b.x,b.y,4,b.h));
+  // Düşmanlar
+  ctx.fillStyle="#f00";
+  enemies.forEach(e=>ctx.fillRect(e.x,e.y,e.w,e.h));
+  if(!running){
+    ctx.fillStyle="#fff";
+    ctx.font="30px monospace";
+    ctx.fillText("GAME OVER",c.width/2-90,c.height/2);
+  }
+}
+
+function loop(){
+  if(running){ update(); draw(); }
+  else { draw(); }
+  requestAnimationFrame(loop);
+}
+loop();
+</script>
+</body>
+</html>
