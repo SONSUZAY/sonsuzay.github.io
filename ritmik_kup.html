@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SONSUZ.AY | SES TESTİ</title>
+    <style>
+        body { background: #000; color: #0f0; font-family: sans-serif; text-align: center; margin: 0; overflow: hidden; touch-action: none; }
+        canvas { background: #111; display: block; margin: 0 auto; border: 2px solid #0f0; }
+        #overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 10; }
+        button { background: #0f0; border: none; padding: 20px 40px; font-size: 24px; font-weight: bold; border-radius: 10px; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+<div id="overlay">
+    <h1>🔊 SES TESTİ OYUNU</h1>
+    <p>Hoparlörü açın ve butona basın!</p>
+    <button onclick="oyunuBaslat()">OYUNA BAŞLA</button>
+</div>
+
+<canvas id="gameCanvas"></canvas>
+
+<script>
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = 320;
+    canvas.height = 480;
+
+    let oyunAktif = false;
+    let score = 0;
+    let cube = { x: 140, y: 400, w: 40, h: 40, dy: 0 };
+    let obstacle = { x: 320, y: 400, w: 30, h: 40, speed: 4 };
+
+    // --- SİHİRLİ SES SİSTEMİ (BEP-BUP SESLERİ ÜRETİR) ---
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+    function sesCal(frekans, tip, sure) {
+        if (!oyunAktif) return;
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = tip; // 'square', 'sine', 'sawtooth', 'triangle'
+        osc.frequency.setValueAtTime(frekans, audioCtx.currentTime);
+        gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + sure);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + sure);
+    }
+
+    function oyunuBaslat() {
+        document.getElementById('overlay').style.display = 'none';
+        oyunAktif = true;
+        audioCtx.resume();
+        sesCal(523.25, 'square', 0.2); // Başlangıç sesi
+        loop();
+    }
+
+    function jump() {
+        if (cube.y >= 400) {
+            cube.dy = -12;
+            sesCal(440, 'triangle', 0.1); // Zıplama sesi (Bep!)
+        }
+    }
+
+    // Dokunma kontrolü
+    window.addEventListener('touchstart', (e) => { e.preventDefault(); jump(); });
+    window.addEventListener('mousedown', jump);
+
+    function loop() {
+        if (!oyunAktif) return;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        // Küp Yerçekimi
+        cube.dy += 0.6;
+        cube.y += cube.dy;
+        if (cube.y > 400) cube.y = 400;
+
+        // Engel Hareketi
+        obstacle.x -= obstacle.speed;
+        if (obstacle.x < -30) {
+            obstacle.x = 320;
+            score++;
+            sesCal(880, 'sine', 0.1); // Puan sesi (Ding!)
+            if(score % 5 === 0) obstacle.speed += 0.5;
+        }
+
+        // Çarpışma
+        if (obstacle.x < cube.x + cube.w && obstacle.x + obstacle.w > cube.x && cube.y + cube.h > obstacle.y) {
+            sesCal(110, 'sawtooth', 0.5); // Kaybetme sesi (Boooom!)
+            oyunAktif = false;
+            setTimeout(() => location.reload(), 1000);
+        }
+
+        // Çizim
+        ctx.fillStyle = '#0f0';
+        ctx.fillRect(cube.x, cube.y, cube.w, cube.h);
+        ctx.fillStyle = 'red';
+        ctx.fillRect(obstacle.x, obstacle.y, obstacle.w, obstacle.h);
+        ctx.fillStyle = 'white';
+        ctx.font = '20px Arial';
+        ctx.fillText('SKOR: ' + score, 20, 30);
+
+        requestAnimationFrame(loop);
+    }
+</script>
+</body>
+</html>
