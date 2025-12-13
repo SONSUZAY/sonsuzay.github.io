@@ -1,0 +1,84 @@
+<script>
+    // --- 🔊 SİHİRLİ SES SİSTEMİ (AudioContext) ---
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+    function sesCal(frekans, tip, sure, sesSeviyesi = 0.1) {
+        if (!oyunAktif) return;
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = tip; // 'square', 'sine', 'triangle', 'sawtooth'
+        osc.frequency.setValueAtTime(frekans, audioCtx.currentTime);
+        gain.gain.setValueAtTime(sesSeviyesi, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + sure);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + sure);
+    }
+
+    // --- ÖZEL AKSİYON SESLERİ ---
+    const sesler = {
+        normalElma: () => sesCal(600, 'sine', 0.1),       // İnce 'bip'
+        altinElma: () => sesCal(880, 'triangle', 0.2),   // Parlak 'ding'
+        hizYemi: () => {                                 // Hızlanma efekti
+            sesCal(400, 'square', 0.1);
+            setTimeout(() => sesCal(600, 'square', 0.1), 50);
+        },
+        zehirYemi: () => sesCal(150, 'sawtooth', 0.3),   // Kalın 'düüuv'
+        canKaybi: () => sesCal(200, 'square', 0.4),      // Uyarı sesi
+        gameOver: () => {                                // Booom efekti
+            sesCal(100, 'sawtooth', 0.6, 0.2);
+            sesCal(50, 'sawtooth', 0.8, 0.2);
+        }
+    };
+
+    // --- OYUN MANTIĞINA SESLERİ ENTEGRE ETME ---
+
+    // 1. Oyunu Başlatırken (Ses Sistemini Uyandır)
+    function oyunuBaslat() {
+        audioCtx.resume(); // Tarayıcı izni için kritik!
+        bilgiMenusu.style.display = 'none'; 
+        document.getElementById('oyunAlani').style.display = 'block'; 
+        bilgiPaneli.style.display = 'flex'; 
+        kontrolPaneli.style.display = 'grid'; 
+        sesler.normalElma(); // Başlangıç işareti
+        oyunuSifirlaVeBaslat(); 
+    }
+
+    // 2. Yem Yeme Anları (oyunuCiz fonksiyonu içine eklendi)
+    // Örnek: Normal elma yendiğinde
+    if(basX === elmaX && basY === elmaY) {
+        sesler.normalElma(); // 🔊 SES BURADA
+        // ... (diğer kodlar)
+    }
+
+    // Altın elma yendiğinde
+    if(basX === altinElmaX && basY === altinElmaY) {
+        sesler.altinElma(); // 🔊 SES BURADA
+        // ... (diğer kodlar)
+    }
+
+    // Can Kaybı Anında (oyunuCiz içinde Game Over kontrolü)
+    if (secilenHayatModu === 'direncli' && canSayisi > 1) {
+        sesler.canKaybi(); // 🔊 SES BURADA
+        // ... (diğer kodlar)
+    }
+
+    // Oyun Tamamen Bittiğinde
+    function oyunBitti() {
+        sesler.gameOver(); // 🔊 SES BURADA
+        // ... (diğer kodlar)
+    }
+
+    // Hız Yemi Yendiğinde
+    if (basX === hizX && basY === hizY) {
+        sesler.hizYemi(); // 🔊 SES BURADA
+        // ... (diğer kodlar)
+    }
+
+    // Zehir Yemi Yendiğinde
+    if (basX === zehirX && basY === zehirY) {
+        sesler.zehirYemi(); // 🔊 SES BURADA
+        // ... (diğer kodlar)
+    }
+</script>
