@@ -29,7 +29,6 @@
             margin-bottom: 25px;
         }
         .game-grid {
-            /* 300px'in altında 1 sütun */
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
             gap: 15px; 
@@ -42,11 +41,40 @@
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(57, 255, 20, 0.3); 
             transition: transform 0.2s;
+            position: relative; /* Etiketler için eklendi */
         }
         .game-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 5px 20px rgba(57, 255, 20, 0.6);
         }
+        
+        /* Yeni ve Öne Çıkan Etiket Stilleri */
+        .badge-container {
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+            z-index: 5;
+        }
+        .badge-new {
+            background: #39FF14;
+            color: #000;
+            font-size: 0.7em;
+            padding: 2px 8px;
+            border-radius: 3px;
+            font-weight: bold;
+        }
+        .badge-featured {
+            background: #FFD700;
+            color: #000;
+            font-size: 0.7em;
+            padding: 2px 8px;
+            border-radius: 3px;
+            font-weight: bold;
+        }
+
         .game-card h2 {
             color: #FF00FF; 
             font-size: 1.3em; 
@@ -82,15 +110,31 @@
             margin-left: auto; 
             margin-right: auto; 
         }
+        /* Yılan Pro için özel altın rengi başlık */
+        .pro-title {
+            color: #39FF14 !important;
+            text-shadow: 0 0 5px #39FF14;
+        }
     </style>
 </head>
 <body>
 
     <h1>🎮 SONSUZ.AY OYUN GALERİSİ</h1>
-    <p class="subtitle">En çok oynanan 6 oyunumuzla tanışın! Yeni oyunlar yakında.</p>
+    <p class="subtitle">Çevrim içi ve en yeni özellikleriyle yeni SonsuzAY yılan oyunu burada!</p>
     
     <div class="game-grid">
         
+        <div class="game-card" style="border: 1px solid #FFD700;">
+            <div class="badge-container">
+                <span class="badge-new">YENİ GELDİ</span>
+                <span class="badge-featured">ÖNE ÇIKAN</span>
+            </div>
+            <img src="yilan_pro_simge.jpg" alt="Yılan pro"> 
+            <h2 class="pro-title">Yılan pro</h2>
+            <p>Çevrim içi ve en yeni özellikleriyle yeni SonsuzAY yılan oyunu! Gerçek zeki botlar ve devasa kostüm arşiviyle tanışın.</p>
+            <a href="yilan_pro.html">HEMEN OYNA</a> 
+        </div>
+
         <div class="game-card">
             <img src="space_kup_simge.jpg" alt="Sonsuz Uzay Darbesi Oyunu"> 
             <h2>SONSUZ UZAY DARBESİ</h2>
@@ -101,7 +145,7 @@
         <div class="game-card">
             <img src="kosucu_simge_yeni.jpg" alt="Sonsuz Koşucu Oyunu">
             <h2>SONSUZ KOŞUCU</h2>
-            <p>Zorlu neon engelleri aşmak için çift zıplama yeteneğinizi kullanın. Yatay görünümle tam ekran oynama deneyimi! (YENİ)</p>
+            <p>Zorlu neon engelleri aşmak için çift zıplama yeteneğinizi kullanın. Yatay görünümle tam ekran oynama deneyimi!</p>
             <a href="sonsuz_kosucu.html">HEMEN OYNA</a> 
         </div>
 
