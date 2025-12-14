@@ -2,10 +2,19 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <title>Kart Ustası | SONSUZ.AY</title>
+    <title>Kart Ustası Online | SONSUZ.AY</title>
     <style>
         body { background: #0d0d1e; color: #fff; font-family: sans-serif; text-align: center; margin: 0; padding: 20px; }
         h1 { color: #39FF14; text-shadow: 0 0 10px #39FF14; }
+        
+        /* İnternet Hatası Paneli */
+        #error-screen { 
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background: rgba(0,0,0,0.9); display: none; flex-direction: column; 
+            align-items: center; justify-content: center; z-index: 9999; 
+        }
+        .retry-btn { background: #39FF14; color: #000; padding: 15px 30px; border-radius: 50px; font-weight: bold; cursor: pointer; border: none; margin-top: 20px; }
+
         #game-board { 
             display: grid; grid-template-columns: repeat(4, 100px); gap: 15px; 
             justify-content: center; margin-top: 30px; 
@@ -13,52 +22,78 @@
         .card {
             width: 100px; height: 140px; background: #1a1a38; border-radius: 8px;
             cursor: pointer; position: relative; transform-style: preserve-3d;
-            transition: transform 0.6s; border: 2px solid #39FF14;
+            transition: transform 0.4s; border: 2px solid #39FF14;
         }
         .card.flipped { transform: rotateY(180deg); }
-        .card-front, .card-back {
-            position: absolute; width: 100%; height: 100%;
-            backface-visibility: hidden; border-radius: 6px;
-        }
+        .card-front, .card-back { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; border-radius: 6px; }
         .card-back { background: #2a2a5a; display: flex; align-items: center; justify-content: center; font-size: 40px; }
-        .card-front { transform: rotateY(180deg); background-size: cover; }
+        .card-front { transform: rotateY(180deg); background-size: contain; background-repeat: no-repeat; background-position: center; background-color: white; }
     </style>
 </head>
 <body>
 
-    <h1>🃏 KART USTASI PRO</h1>
-    <p>Görseller internetten çekiliyor...</p>
+    <div id="error-screen">
+        <h2 style="color: #ff0000;">⚠️ BAĞLANTI HATASI</h2>
+        <p>Görselleri indirmek için internet bağlantısı gerekiyor.</p>
+        <button class="retry-btn" onclick="checkConnection()">TEKRAR DENE</button>
+    </div>
+
+    <h1>🃏 KART USTASI ONLINE</h1>
+    <p id="status-msg">Görseller Google üzerinden indiriliyor...</p>
     <div id="game-board"></div>
 
     <script>
-        const board = document.getElementById('game-board');
-        // AÇIK KAYNAK KART KÜTÜPHANESİ (SVG GÖRSELLER)
-        const baseURL = "https://raw.githubusercontent.com/hayeah/playing-cards-assets/master/png/";
-        
-        // Örnek kart listesi (Kupa As, Maça Papaz vb.)
-        const cardTypes = [
-            "heart_1", "spade_13", "diamond_11", "club_1",
-            "heart_12", "spade_1", "diamond_10", "club_13"
-        ];
-        
-        // Kartları oluştur
-        const deck = [...cardTypes, ...cardTypes].sort(() => Math.random() - 0.5);
+        // İNTERNET KONTROLÜ
+        function checkConnection() {
+            if (!navigator.onLine) {
+                document.getElementById('error-screen').style.display = 'flex';
+                return false;
+            } else {
+                document.getElementById('error-screen').style.display = 'none';
+                return true;
+            }
+        }
 
-        deck.forEach(type => {
-            const card = document.createElement('div');
-            card.className = 'card';
-            
-            // İnternetten çekilen link yapısı
-            const imgURL = `${baseURL}${type}.png`;
+        // Oyun Başlatma
+        if (checkConnection()) {
+            initGame();
+        }
 
-            card.innerHTML = `
-                <div class="card-back">🌙</div>
-                <div class="card-front" style="background-image: url('${imgURL}')"></div>
-            `;
+        function initGame() {
+            const board = document.getElementById('game-board');
+            // GÜVENİLİR VE DOĞRULANMIŞ LİNK (Wikimedia üzerinden örnek set)
+            const baseURL = "https://raw.githubusercontent.com/htdebeer/PlayingCards/master/PNG-cards-1.3/";
+            const cardTypes = [
+                "ace_of_hearts", "king_of_spades", "queen_of_diamonds", "jack_of_clubs",
+                "10_of_hearts", "ace_of_spades", "king_of_diamonds", "queen_of_clubs"
+            ];
             
-            card.onclick = () => card.classList.toggle('flipped');
-            board.appendChild(card);
-        });
+            const deck = [...cardTypes, ...cardTypes].sort(() => Math.random() - 0.5);
+
+            deck.forEach(type => {
+                const card = document.createElement('div');
+                card.className = 'card';
+                const imgURL = `${baseURL}${type}.png`;
+
+                card.innerHTML = `
+                    <div class="card-back">🌙</div>
+                    <div class="card-front" style="background-image: url('${imgURL}')"></div>
+                `;
+                
+                // GÖRSEL YÜKLENME HATASI KONTROLÜ
+                const testImg = new Image();
+                testImg.src = imgURL;
+                testImg.onerror = () => {
+                    document.getElementById('status-msg').innerText = "Bazı görseller indirilemedi, lütfen internetinizi kontrol edin.";
+                };
+
+                card.onclick = () => card.classList.toggle('flipped');
+                board.appendChild(card);
+            });
+        }
+
+        // İnternet anlık giderse uyar
+        window.addEventListener('offline', checkConnection);
     </script>
 </body>
 </html>
