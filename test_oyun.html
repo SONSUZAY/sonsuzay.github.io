@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>Kart Ustası | SONSUZ.AY</title>
+    <style>
+        body { background: #0d0d1e; color: #fff; font-family: sans-serif; text-align: center; margin: 0; padding: 20px; }
+        h1 { color: #39FF14; text-shadow: 0 0 10px #39FF14; }
+        #game-board { 
+            display: grid; grid-template-columns: repeat(4, 100px); gap: 15px; 
+            justify-content: center; margin-top: 30px; 
+        }
+        .card {
+            width: 100px; height: 140px; background: #1a1a38; border-radius: 8px;
+            cursor: pointer; position: relative; transform-style: preserve-3d;
+            transition: transform 0.6s; border: 2px solid #39FF14;
+        }
+        .card.flipped { transform: rotateY(180deg); }
+        .card-front, .card-back {
+            position: absolute; width: 100%; height: 100%;
+            backface-visibility: hidden; border-radius: 6px;
+        }
+        .card-back { background: #2a2a5a; display: flex; align-items: center; justify-content: center; font-size: 40px; }
+        .card-front { transform: rotateY(180deg); background-size: cover; }
+    </style>
+</head>
+<body>
+
+    <h1>🃏 KART USTASI PRO</h1>
+    <p>Görseller internetten çekiliyor...</p>
+    <div id="game-board"></div>
+
+    <script>
+        const board = document.getElementById('game-board');
+        // AÇIK KAYNAK KART KÜTÜPHANESİ (SVG GÖRSELLER)
+        const baseURL = "https://raw.githubusercontent.com/hayeah/playing-cards-assets/master/png/";
+        
+        // Örnek kart listesi (Kupa As, Maça Papaz vb.)
+        const cardTypes = [
+            "heart_1", "spade_13", "diamond_11", "club_1",
+            "heart_12", "spade_1", "diamond_10", "club_13"
+        ];
+        
+        // Kartları oluştur
+        const deck = [...cardTypes, ...cardTypes].sort(() => Math.random() - 0.5);
+
+        deck.forEach(type => {
+            const card = document.createElement('div');
+            card.className = 'card';
+            
+            // İnternetten çekilen link yapısı
+            const imgURL = `${baseURL}${type}.png`;
+
+            card.innerHTML = `
+                <div class="card-back">🌙</div>
+                <div class="card-front" style="background-image: url('${imgURL}')"></div>
+            `;
+            
+            card.onclick = () => card.classList.toggle('flipped');
+            board.appendChild(card);
+        });
+    </script>
+</body>
+</html>
