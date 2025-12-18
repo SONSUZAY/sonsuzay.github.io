@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SONSUZ.AY | Ana Sayfa ve Oyunlar</title>
+    <title>SONSUZ.AY | Ana Sayfa</title>
     
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1819947444660683"
          crossorigin="anonymous"></script>
@@ -13,12 +13,12 @@
             font-family: Arial, sans-serif;
             text-align: center;
             padding-top: 50px;
-            background-color: #0d0d1e; /* Neon temasına uygun koyu renk */
+            background-color: #0d0d1e;
             color: #d1d1f0;
             margin: 0;
         }
         h1 {
-            color: #39FF14; /* Neon Yeşil */
+            color: #39FF14;
             text-shadow: 0 0 10px #39FF14;
         }
         p {
@@ -27,6 +27,10 @@
         .buttons-container {
             margin-top: 20px;
             padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
         }
         .btn {
             padding: 15px 30px; 
@@ -36,20 +40,27 @@
             font-size: 1.1em;
             font-weight: bold; 
             cursor: pointer;
-            margin: 10px;
+            width: 90%;
+            max-width: 350px;
             transition: transform 0.2s;
         }
         .btn:hover {
             transform: translateY(-2px);
         }
-        /* Oyunlar Butonu Stili */
+        
         .btn-oyunlar {
-            background-color: #39FF14; /* Neon Yeşil */
+            background-color: #39FF14;
             box-shadow: 0 0 10px #39FF14;
         }
-        /* APK Butonu Stili */
+        
+        /* YENİ BUTON STİLİ (MAVİ) */
+        .btn-webapp {
+            background-color: #00e5ff; /* Neon Mavi */
+            box-shadow: 0 0 10px #00e5ff;
+        }
+
         .btn-apk {
-            background-color: #FF00FF; /* Neon Pembe/Mor */
+            background-color: #FF00FF;
             box-shadow: 0 0 10px #FF00FF;
         }
     </style>
@@ -60,12 +71,19 @@
     <p>Bu sayfa, AdSense doğrulaması için oluşturulmuştur. Oyunlarımızın adresi: /neon-gezgin</p>
 
     <div class="buttons-container">
-        <a href="oyunlar.html" style="text-decoration: none;">
+        <a href="oyunlar.html" style="text-decoration: none; width: 100%; display: flex; justify-content: center;">
             <button class="btn btn-oyunlar">
                 🎮 TÜM OYUNLARIMIZ
             </button>
         </a>
-        <a href="indir.html" style="text-decoration: none;">
+
+        <a href="uygulamalar.html" style="text-decoration: none; width: 100%; display: flex; justify-content: center;">
+            <button class="btn btn-webapp">
+                ⚡ WEB UYGULAMALARI
+            </button>
+        </a>
+
+        <a href="indir.html" style="text-decoration: none; width: 100%; display: flex; justify-content: center;">
             <button class="btn btn-apk">
                 MOBİL UYGULAMAYI İNDİR 🚀
             </button>
