@@ -9,18 +9,6 @@
 
     <link rel="manifest" href="manifest.json">
 
-    <script>
-      if ('serviceWorker' in navigator) {
-        window.addEventListener('load', function() {
-          navigator.serviceWorker.register('sw.js').then(function(registration) {
-            console.log('ServiceWorker başarıyla kaydedildi: ', registration.scope);
-          }, function(err) {
-            console.log('ServiceWorker kaydı başarısız: ', err);
-          });
-        });
-      }
-    </script>
-    
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1819947444660683"
          crossorigin="anonymous"></script>
 
@@ -35,7 +23,7 @@
             margin: 0;
             height: 100vh;
             
-            /* DÜZELTME: Yan ekranda içerik sığmazsa aşağı kaydırmaya izin ver */
+            /* Yan ekranda içerik sığmazsa aşağı kaydırmaya izin ver */
             overflow-y: auto; 
             
             display: flex;
@@ -43,13 +31,13 @@
             align-items: center;
         }
 
-        /* --- HAREKETLİ YILDIZ EFEKTİ (Sadece CSS ile) --- */
+        /* --- HAREKETLİ YILDIZ EFEKTİ --- */
         .stars {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            z-index: -1; /* Her şeyin arkasında kalsın */
+            z-index: -1;
             background: transparent;
-            pointer-events: none; /* Tıklamayı engellemesin */
+            pointer-events: none;
         }
         .star {
             position: absolute;
@@ -74,13 +62,12 @@
         p {
             margin-bottom: 40px;
             z-index: 2;
-            text-shadow: 0 0 5px black; /* Yazı okunsun diye gölge */
+            text-shadow: 0 0 5px black;
         }
 
         .buttons-container {
             margin-top: 20px;
             padding: 20px;
-            /* Alt kısımda boşluk bırak ki kaydırınca en alttaki buton kesilmesin */
             padding-bottom: 50px; 
             display: flex;
             flex-direction: column;
@@ -94,7 +81,7 @@
             padding: 18px 30px; 
             color: #0d0d1e;
             border: none; 
-            border-radius: 50px; /* Daha yuvarlak modern butonlar */
+            border-radius: 50px;
             font-size: 1.1em;
             font-weight: 900; 
             cursor: pointer;
@@ -112,24 +99,43 @@
             filter: brightness(1.2);
         }
         
-        /* 1. OYUNLAR (YEŞİL) */
-        .btn-oyunlar {
-            background-color: #39FF14;
-            box-shadow: 0 0 20px rgba(57, 255, 20, 0.4);
-        }
-        
-        /* 2. WEB ARAÇLARI (MAVİ - YENİ) */
-        .btn-webapp {
-            background-color: #00e5ff;
-            box-shadow: 0 0 20px rgba(0, 229, 255, 0.4);
+        /* BUTON RENKLERİ */
+        .btn-oyunlar { background-color: #39FF14; box-shadow: 0 0 20px rgba(57, 255, 20, 0.4); }
+        .btn-webapp { background-color: #00e5ff; box-shadow: 0 0 20px rgba(0, 229, 255, 0.4); }
+        .btn-apk { background-color: #FF00FF; box-shadow: 0 0 20px rgba(255, 0, 255, 0.4); color: white; }
+
+        /* --- YENİ EKLENEN: GÜNCELLEME UYARI KUTUSU CSS --- */
+        #update-toast {
+            visibility: hidden; /* Başlangıçta gizli */
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #161b22;
+            color: #fff;
+            padding: 15px 25px;
+            border-radius: 50px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            z-index: 1000;
+            border: 1px solid #39FF14; /* Neon Yeşil Çerçeve */
+            min-width: 300px;
+            justify-content: space-between;
         }
 
-        /* 3. APK İNDİR (PEMBE) */
-        .btn-apk {
-            background-color: #FF00FF;
-            box-shadow: 0 0 20px rgba(255, 0, 255, 0.4);
-            color: white;
+        #update-toast.show { visibility: visible; animation: slideUp 0.5s ease; }
+
+        @keyframes slideUp { from { bottom: -100px; } to { bottom: 20px; } }
+
+        #reload-btn {
+            background: #39FF14; color: #000; border: none;
+            padding: 8px 15px; border-radius: 20px; font-weight: bold;
+            cursor: pointer; transition: 0.2s;
         }
+        #reload-btn:hover { transform: scale(1.1); }
+
     </style>
 </head>
 <body>
@@ -159,8 +165,34 @@
         </a>
     </div>
 
+    <div id="update-toast">
+        <span>🚀 Yeni güncelleme mevcut!</span>
+        <button id="reload-btn" onclick="window.location.reload()">YÜKLE</button>
+    </div>
+
     <script>
-        // Basit Yıldız Oluşturucu
+        // 1. Service Worker & Güncelleme Kontrolü
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js').then(function(reg) {
+                // Güncelleme kontrolü yap
+                reg.onupdatefound = function() {
+                    var installingWorker = reg.installing;
+                    installingWorker.onstatechange = function() {
+                        if (installingWorker.state === 'installed') {
+                            if (navigator.serviceWorker.controller) {
+                                // Yeni güncelleme bulundu! Uyarıyı göster.
+                                console.log('Yeni güncelleme mevcut.');
+                                document.getElementById('update-toast').classList.add('show');
+                            }
+                        }
+                    };
+                };
+            }).catch(function(err) {
+                console.log('Service Worker hatası:', err);
+            });
+        }
+
+        // 2. Yıldız Oluşturucu
         const container = document.getElementById('starContainer');
         for(let i=0; i<50; i++) {
             const star = document.createElement('div');
