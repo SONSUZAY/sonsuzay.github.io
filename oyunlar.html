@@ -5,7 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SONSUZ.AY | Tüm Oyunlar</title>
     
-    <script async src="https://pagead2.googysindication.com/pagead/js/adsbygoogle.js?client=ca-pub-1819947444660683"
+    <link rel="icon" type="image/png" href="site_simge.png">
+
+    <link rel="manifest" href="manifest.json">
+
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1819947444660683"
          crossorigin="anonymous"></script>
     
     <style>
@@ -16,6 +20,8 @@
             margin: 0;
             padding: 20px 10px; 
             text-align: center;
+            /* Kaydırma sorunu olmaması için */
+            overflow-y: auto;
         }
         h1 {
             color: #39FF14;
@@ -34,6 +40,7 @@
             gap: 15px; 
             max-width: 1200px;
             margin: 0 auto;
+            margin-bottom: 40px; /* Alttaki buton için boşluk */
         }
         .game-card {
             background-color: #1a1a38;
@@ -48,48 +55,18 @@
             box-shadow: 0 5px 20px rgba(57, 255, 20, 0.6);
         }
         
-        /* Yeni ve Öne Çıkan Etiket Stilleri */
+        /* Etiketler */
         .badge-container {
-            position: absolute;
-            top: 5px;
-            left: 5px;
-            display: flex;
-            flex-direction: column;
-            gap: 3px;
-            z-index: 5;
+            position: absolute; top: 5px; left: 5px;
+            display: flex; flex-direction: column; gap: 3px; z-index: 5;
         }
-        .badge-new {
-            background: #39FF14;
-            color: #000;
-            font-size: 0.7em;
-            padding: 2px 8px;
-            border-radius: 3px;
-            font-weight: bold;
-        }
-        .badge-featured {
-            background: #FFD700;
-            color: #000;
-            font-size: 0.7em;
-            padding: 2px 8px;
-            border-radius: 3px;
-            font-weight: bold;
-        }
+        .badge-new { background: #39FF14; color: #000; font-size: 0.7em; padding: 2px 8px; border-radius: 3px; font-weight: bold; }
+        .badge-featured { background: #FFD700; color: #000; font-size: 0.7em; padding: 2px 8px; border-radius: 3px; font-weight: bold; }
 
-        .game-card h2 {
-            color: #FF00FF; 
-            font-size: 1.3em; 
-            margin-top: 0;
-            margin-bottom: 5px;
-        }
-        .pro-title {
-            color: #39FF14 !important;
-            text-shadow: 0 0 5px #39FF14;
-        }
-        .game-card p {
-            font-size: 0.9em; 
-            margin-top: 5px;
-            margin-bottom: 10px;
-        }
+        .game-card h2 { color: #FF00FF; font-size: 1.3em; margin: 5px 0; }
+        .pro-title { color: #39FF14 !important; text-shadow: 0 0 5px #39FF14; }
+        .game-card p { font-size: 0.9em; margin: 5px 0 10px 0; color: #ccc; }
+        
         .game-card a {
             display: block;
             background-color: #39FF14;
@@ -101,19 +78,26 @@
             margin-top: 10px;
             transition: background-color 0.2s;
         }
-        .game-card a:hover {
-             background-color: #00cccc;
-        }
+        .game-card a:hover { background-color: #00cccc; }
+        
         .game-card img {
-            width: 50%; 
-            height: auto;
-            border-radius: 5px;
-            margin-bottom: 10px;
+            width: 50%; height: auto; border-radius: 5px; margin-bottom: 10px;
             box-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
-            display: block; 
-            margin-left: auto; 
-            margin-right: auto; 
+            display: block; margin-left: auto; margin-right: auto; 
         }
+
+        /* Geri Dön Butonu */
+        .back-btn {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            border: 1px solid #555;
+            color: #888;
+            text-decoration: none;
+            border-radius: 30px;
+            transition: 0.3s;
+        }
+        .back-btn:hover { color: #fff; border-color: #fff; }
     </style>
 </head>
 <body>
@@ -183,6 +167,8 @@
         </div>
         
     </div>
+
+    <a href="index.html" class="back-btn">⬅ Ana Menüye Dön</a>
 
 </body>
 </html>
