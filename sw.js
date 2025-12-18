@@ -1,4 +1,4 @@
-const CACHE_NAME = 'sonsuzay-v1';
+const CACHE_NAME = 'sonsuzay-v2';
 const urlsToCache = [
   '/',
   '/index.html',
