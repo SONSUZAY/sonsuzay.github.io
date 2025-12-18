@@ -4,6 +4,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SONSUZ.AY | Mobil Market</title>
+    
+    <link rel="icon" type="image/png" href="site_simge.png">
+
+    <link rel="manifest" href="manifest.json">
+
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function() {
+          navigator.serviceWorker.register('sw.js').then(function(registration) {
+            console.log('ServiceWorker başarıyla kaydedildi: ', registration.scope);
+          }, function(err) {
+            console.log('ServiceWorker kaydı başarısız: ', err);
+          });
+        });
+      }
+    </script>
+    
     <style>
         body {
             font-family: 'Segoe UI', Arial, sans-serif;
@@ -145,11 +162,11 @@
                 <div class="app-desc">
                     Tüm oyunlara ve araçlara tek yerden erişin. Sitenin mobil uygulama versiyonu.
                 </div>
-                <a href="sonsuzay_v1.apk" class="download-btn" download>📥 İNDİR (v1.0)</a>
+                <a href="SonsuzAY_Oyunlari.apk" class="download-btn" download>📥 İNDİR (v1.0)</a>
             </div>
         </div>
 
-        </div>
+    </div>
 
     <div class="security-box">
         <strong>⚠️ Önemli Güvenlik Notu:</strong>
