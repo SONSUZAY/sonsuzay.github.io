@@ -7,13 +7,13 @@
     <style>
         body {
             font-family: 'Segoe UI', Arial, sans-serif;
-            /* Ana sayfayla aynı arka plan geçişi */
+            /* Ana sayfayla uyumlu koyu uzay arka planı */
             background: radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%);
             color: #fff;
             text-align: center;
             margin: 0;
             padding: 20px;
-            min-height: 100vh; /* Sayfa boyu kadar uzasın */
+            min-height: 100vh;
             overflow-x: hidden;
         }
 
@@ -57,7 +57,7 @@
 
         /* UYGULAMA KARTI */
         .app-card {
-            background: rgba(16, 16, 37, 0.8); /* Yarı saydam arka plan */
+            background: rgba(16, 16, 37, 0.8); /* Yarı saydam */
             backdrop-filter: blur(10px); /* Buzlu cam efekti */
             border: 1px solid rgba(0, 229, 255, 0.3);
             border-radius: 20px;
@@ -65,6 +65,9 @@
             width: 100%;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
             transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
         .app-card:hover {
@@ -80,7 +83,7 @@
             display: inline-flex; align-items: center; justify-content: center;
             background: linear-gradient(135deg, rgba(0,229,255,0.1), rgba(0,229,255,0.05));
             width: 90px; height: 90px;
-            border-radius: 50%; /* Yuvarlak ikon */
+            border-radius: 50%;
             border: 1px solid rgba(0, 229, 255, 0.2);
             box-shadow: 0 0 20px rgba(0, 229, 255, 0.1);
         }
@@ -126,8 +129,8 @@
 
     <div class="stars" id="starContainer"></div>
 
-    <h1>SONSUZ.AY ARAÇLAR</h1>
-    <p class="subtitle">İndirme gerektirmeyen, tarayıcı tabanlı özel araçlar.</p>
+    <h1>SONSUZ.AY WEB ARAÇLARI</h1>
+    <p class="subtitle">İndirme gerektirmeyen, tarayıcı tabanlı modern araçlar.</p>
 
     <div class="apps-container">
 
@@ -140,6 +143,16 @@
             <a href="player.html" class="play-btn">UYGULAMAYI AÇ 🚀</a>
         </div>
 
+        <div class="app-card">
+            <div class="app-icon">⏱️</div>
+            <div class="app-title">ZAMAN ARAÇLARI</div>
+            <div class="app-desc">
+                Neon tasarımlı Dijital Saat, Kronometre ve Geri Sayım aracı. 
+                Modern arayüzüyle hepsi tek bir yerde.
+            </div>
+            <a href="saat.html" class="play-btn">UYGULAMAYI AÇ 🚀</a>
+        </div>
+
     </div>
 
     <a href="index.html" class="back-link">⬅ Ana Sayfaya Dön</a>
@@ -147,7 +160,7 @@
     <script>
         // Sayfada yıldızları oluşturan kod
         const container = document.getElementById('starContainer');
-        for(let i=0; i<40; i++) { // Sayıyı biraz azalttım menüde göz yormasın diye
+        for(let i=0; i<40; i++) {
             const star = document.createElement('div');
             star.className = 'star';
             const x = Math.random() * 100;
