@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>SONSUZ.AY | Zaman Araçları</title>
+    <style>
+        :root {
+            --primary: #00e5ff; /* Neon Mavi */
+            --secondary: #39FF14; /* Neon Yeşil */
+            --danger: #FF00FF; /* Neon Pembe */
+            --bg: #090a0f;
+            --panel: #161b22;
+        }
+
+        * { box-sizing: border-box; transition: all 0.3s ease; font-family: 'Segoe UI', monospace; user-select: none; }
+
+        body {
+            background-color: var(--bg);
+            color: #fff;
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            padding-bottom: env(safe-area-inset-bottom);
+        }
+
+        .tab-content {
+            flex: 1;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            animation: fadeIn 0.4s ease;
+            padding-bottom: 90px; 
+        }
+        .tab-content.active { display: flex; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        h1 { margin: 0 0 10px 0; font-size: 1.5rem; text-transform: uppercase; letter-spacing: 2px; opacity: 0.8; }
+
+        /* --- 1. SAAT VE TARİH (DÜZELTİLDİ) --- */
+        .clock-display {
+            /* ÇÖZÜM BURADA: Ekran genişliğinin %16'sı kadar yap */
+            font-size: 16vw; 
+            font-weight: bold;
+            color: var(--primary);
+            text-shadow: 0 0 30px rgba(0, 229, 255, 0.4);
+            white-space: nowrap; /* Asla alt satıra geçme */
+            text-align: center;
+            font-variant-numeric: tabular-nums; /* Rakamlar titremesin */
+            line-height: 1.2;
+        }
+        
+        .date-display {
+            font-size: 1rem;
+            color: #aaa;
+            margin-top: 5px;
+            text-align: center;
+        }
+
+        /* --- 2. KRONOMETRE --- */
+        .chrono-display {
+            font-size: 13vw; /* Bunu da responsive yaptık */
+            font-family: 'Courier New', monospace;
+            color: var(--secondary);
+            text-shadow: 0 0 20px rgba(57, 255, 20, 0.3);
+            margin-bottom: 30px;
+            font-variant-numeric: tabular-nums;
+            white-space: nowrap;
+        }
+        .btn-group { display: flex; gap: 20px; }
+        .action-btn {
+            width: 70px; height: 70px;
+            border-radius: 50%;
+            border: 2px solid #fff;
+            background: transparent;
+            color: #fff;
+            font-size: 1.5rem;
+            cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .action-btn:active { transform: scale(0.95); }
+        .btn-start { border-color: var(--secondary); color: var(--secondary); box-shadow: 0 0 10px rgba(57, 255, 20, 0.2); }
+        .btn-stop { border-color: var(--danger); color: var(--danger); box-shadow: 0 0 10px rgba(255, 0, 255, 0.2); }
+        .btn-reset { border-color: #aaa; color: #aaa; font-size: 1rem; }
+
+        /* --- 3. GERİ SAYIM --- */
+        .timer-container {
+            position: relative;
+            width: 250px; height: 250px;
+            margin-bottom: 30px;
+        }
+        svg { transform: rotate(-90deg); width: 100%; height: 100%; }
+        circle { fill: none; stroke-width: 8; stroke-linecap: round; }
+        .circle-bg { stroke: #222; }
+        .circle-progress {
+            stroke: var(--danger);
+            stroke-dasharray: 753;
+            stroke-dashoffset: 0;
+            transition: stroke-dashoffset 1s linear;
+        }
+        .timer-text {
+            position: absolute; top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 3rem; font-weight: bold;
+            color: #fff;
+            font-variant-numeric: tabular-nums;
+        }
+        .timer-inputs { display: flex; gap: 10px; margin-bottom: 20px; align-items: center; }
+        .time-input {
+            background: #222; border: 1px solid #444; color: #fff;
+            padding: 10px; width: 60px; text-align: center; font-size: 1.2rem; border-radius: 10px;
+        }
+        
+        /* --- ALT MENÜ (YÜZEN ADA) --- */
+        .bottom-nav {
+            padding: 12px 0;
+            padding-bottom: calc(12px + env(safe-area-inset-bottom));
+            background: rgba(22, 27, 34, 0.95); /* Hafif şeffaf */
+            backdrop-filter: blur(10px);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            margin: 0 20px 25px 20px;
+            border-radius: 40px;
+            border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+            position: fixed; bottom: 0; left: 0; right: 0;
+            z-index: 100;
+        }
+        
+        .nav-item {
+            flex: 1; display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            color: #888; cursor: pointer; padding: 5px;
+        }
+        
+        .nav-item.active { color: #fff; }
+        .nav-item.active .icon { transform: translateY(-3px); filter: drop-shadow(0 0 5px currentColor); }
+        
+        .icon { font-size: 1.4rem; margin-bottom: 3px; transition: all 0.3s; }
+        .label { font-size: 0.7rem; font-weight: bold; letter-spacing: 0.5px; }
+
+        .nav-clock.active { color: var(--primary); }
+        .nav-chrono.active { color: var(--secondary); }
+        .nav-timer.active { color: var(--danger); }
+
+    </style>
+</head>
+<body>
+
+    <div id="tab-clock" class="tab-content active">
+        <h1 style="color:var(--primary)">DİJİTAL SAAT</h1>
+        <div class="clock-display" id="clock">00:00:00</div>
+        <div class="date-display" id="date">Yükleniyor...</div>
+    </div>
+
+    <div id="tab-chrono" class="tab-content">
+        <h1 style="color:var(--secondary)">KRONOMETRE</h1>
+        <div class="chrono-display" id="chronoDisplay">00:00:00</div>
+        <div class="btn-group">
+            <button class="action-btn btn-reset" onclick="resetChrono()">↺</button>
+            <button class="action-btn btn-start" id="chronoBtn" onclick="toggleChrono()">▶</button>
+        </div>
+    </div>
+
+    <div id="tab-timer" class="tab-content">
+        <h1 style="color:var(--danger)">GERİ SAYIM</h1>
+        
+        <div class="timer-container">
+            <svg>
+                <circle class="circle-bg" cx="125" cy="125" r="120"></circle>
+                <circle class="circle-progress" id="timerCircle" cx="125" cy="125" r="120"></circle>
+            </svg>
+            <div class="timer-text" id="timerDisplay">00:00</div>
+        </div>
+
+        <div class="timer-inputs" id="timerInputs">
+            <input type="number" id="inputMin" class="time-input" placeholder="Dk" min="0" max="99" value="1"> :
+            <input type="number" id="inputSec" class="time-input" placeholder="Sn" min="0" max="59" value="00">
+        </div>
+
+        <div class="btn-group">
+            <button class="action-btn btn-reset" onclick="resetTimer()">↺</button>
+            <button class="action-btn btn-stop" id="timerBtn" onclick="toggleTimer()">▶</button>
+        </div>
+    </div>
+
+    <div class="bottom-nav">
+        <div class="nav-item nav-clock active" onclick="switchTab('clock')">
+            <div class="icon">🕒</div>
+            <div class="label">SAAT</div>
+        </div>
+        <div class="nav-item nav-chrono" onclick="switchTab('chrono')">
+            <div class="icon">⏱️</div>
+            <div class="label">KRONOMETRE</div>
+        </div>
+        <div class="nav-item nav-timer" onclick="switchTab('timer')">
+            <div class="icon">⏳</div>
+            <div class="label">ZAMANLAYICI</div>
+        </div>
+    </div>
+
+    <audio id="alarmSound" src="https://actions.google.com/sounds/v1/alarms/beep_short.ogg" preload="auto"></audio>
+
+    <script>
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.getElementById('tab-' + tabName).classList.add('active');
+            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+            document.querySelector('.nav-' + tabName).classList.add('active');
+        }
+
+        // --- SAAT ---
+        function updateClock() {
+            const now = new Date();
+            const timeStr = now.toLocaleTimeString('tr-TR');
+            const dateStr = now.toLocaleDateString('tr-TR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+            document.getElementById('clock').innerText = timeStr;
+            document.getElementById('date').innerText = dateStr;
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        // --- KRONOMETRE ---
+        let chronoInterval; let chronoTime = 0; let isChronoRunning = false;
+        function toggleChrono() {
+            const btn = document.getElementById('chronoBtn');
+            if (isChronoRunning) {
+                clearInterval(chronoInterval); isChronoRunning = false;
+                btn.innerText = "▶"; btn.classList.remove('btn-stop'); btn.classList.add('btn-start');
+            } else {
+                const startTime = Date.now() - chronoTime;
+                chronoInterval = setInterval(() => {
+                    chronoTime = Date.now() - startTime;
+                    document.getElementById('chronoDisplay').innerText = formatTime(chronoTime);
+                }, 10);
+                isChronoRunning = true;
+                btn.innerText = "⏸"; btn.classList.remove('btn-start'); btn.classList.add('btn-stop');
+            }
+        }
+        function resetChrono() {
+            clearInterval(chronoInterval); isChronoRunning = false; chronoTime = 0;
+            document.getElementById('chronoDisplay').innerText = "00:00:00";
+            const btn = document.getElementById('chronoBtn');
+            btn.innerText = "▶"; btn.classList.remove('btn-stop'); btn.classList.add('btn-start');
+        }
+        function formatTime(ms) {
+            const date = new Date(ms);
+            const m = date.getUTCMinutes().toString().padStart(2, '0');
+            const s = date.getUTCSeconds().toString().padStart(2, '0');
+            const cs = Math.floor(date.getUTCMilliseconds() / 10).toString().padStart(2, '0');
+            return `${m}:${s}:${cs}`;
+        }
+
+        // --- ZAMANLAYICI ---
+        let timerInterval; let totalTime = 0; let timeLeft = 0; let isTimerRunning = false;
+        const circle = document.getElementById('timerCircle'); const circumference = 753;
+        function toggleTimer() {
+            const btn = document.getElementById('timerBtn'); const inputs = document.getElementById('timerInputs');
+            if (isTimerRunning) {
+                clearInterval(timerInterval); isTimerRunning = false;
+                btn.innerText = "▶"; inputs.style.display = "flex";
+            } else {
+                if (timeLeft === 0) {
+                    const min = parseInt(document.getElementById('inputMin').value) || 0;
+                    const sec = parseInt(document.getElementById('inputSec').value) || 0;
+                    totalTime = (min * 60) + sec; timeLeft = totalTime;
+                }
+                if (timeLeft > 0) {
+                    inputs.style.display = "none"; isTimerRunning = true; btn.innerText = "⏸";
+                    timerInterval = setInterval(() => {
+                        timeLeft--; updateTimerDisplay();
+                        if (timeLeft <= 0) timerFinished();
+                    }, 1000);
+                }
+            }
+        }
+        function updateTimerDisplay() {
+            const m = Math.floor(timeLeft / 60).toString().padStart(2, '0');
+            const s = (timeLeft % 60).toString().padStart(2, '0');
+            document.getElementById('timerDisplay').innerText = `${m}:${s}`;
+            const offset = circumference - (timeLeft / totalTime) * circumference;
+            circle.style.strokeDashoffset = offset;
+        }
+        function timerFinished() {
+            clearInterval(timerInterval); isTimerRunning = false;
+            document.getElementById('timerDisplay').innerText = "BİTTİ!";
+            document.getElementById('timerBtn').innerText = "▶";
+            document.getElementById('timerInputs').style.display = "flex";
+            document.getElementById('alarmSound').play();
+            if (navigator.vibrate) navigator.vibrate([500, 200, 500]);
+            alert("Süre Doldu!");
+        }
+        function resetTimer() {
+            clearInterval(timerInterval); isTimerRunning = false; timeLeft = 0;
+            document.getElementById('timerDisplay').innerText = "00:00";
+            circle.style.strokeDashoffset = 0;
+            document.getElementById('timerBtn').innerText = "▶";
+            document.getElementById('timerInputs').style.display = "flex";
+        }
+    </script>
+</body>
+</html>
