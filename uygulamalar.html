@@ -3,139 +3,168 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SONSUZ.AY | Web Uygulamaları</title>
+    <title>SONSUZ.AY | Web Araçları</title>
     <style>
         body {
             font-family: 'Segoe UI', Arial, sans-serif;
-            background-color: #050510; /* Koyu Lacivert Arka Plan */
+            /* Ana sayfayla aynı arka plan geçişi */
+            background: radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%);
             color: #fff;
             text-align: center;
             margin: 0;
             padding: 20px;
+            min-height: 100vh; /* Sayfa boyu kadar uzasın */
+            overflow-x: hidden;
         }
 
-        /* BAŞLIK TASARIMI */
+        /* --- YILDIZ EFEKTLERİ --- */
+        .stars {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1; pointer-events: none;
+        }
+        .star {
+            position: absolute; background: white; border-radius: 50%;
+            animation: twinkle 3s infinite ease-in-out;
+        }
+        @keyframes twinkle {
+            0% { opacity: 0.2; transform: scale(0.8); }
+            50% { opacity: 1; transform: scale(1.2); box-shadow: 0 0 5px white; }
+            100% { opacity: 0.2; transform: scale(0.8); }
+        }
+
+        /* BAŞLIKLAR */
         h1 {
             color: #00e5ff; /* Neon Mavi */
             text-shadow: 0 0 15px #00e5ff;
             font-size: 2rem;
-            margin-bottom: 10px;
+            margin-bottom: 5px;
+            position: relative; z-index: 2;
         }
 
         p.subtitle {
             color: #aaa;
             font-size: 0.9rem;
             margin-bottom: 30px;
+            position: relative; z-index: 2;
         }
 
-        /* KARTLARI TUTAN KAPSAYICI */
+        /* KART ALANI */
         .apps-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 25px;
-            max-width: 600px;
-            margin: 0 auto;
+            display: flex; flex-direction: column; align-items: center;
+            gap: 25px; max-width: 600px; margin: 0 auto;
+            position: relative; z-index: 2;
         }
 
-        /* UYGULAMA KARTI TASARIMI (Senin Oyun Kartlarına Benzer) */
+        /* UYGULAMA KARTI */
         .app-card {
-            background: linear-gradient(145deg, #101025, #0a0a1a);
-            border: 2px solid #00e5ff; /* Mavi Çerçeve */
-            border-radius: 15px;
-            padding: 20px;
-            width: 90%;
-            box-shadow: 0 0 15px rgba(0, 229, 255, 0.2);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            background: rgba(16, 16, 37, 0.8); /* Yarı saydam arka plan */
+            backdrop-filter: blur(10px); /* Buzlu cam efekti */
+            border: 1px solid rgba(0, 229, 255, 0.3);
+            border-radius: 20px;
+            padding: 25px;
+            width: 100%;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s;
         }
 
         .app-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 0 25px rgba(0, 229, 255, 0.4);
+            box-shadow: 0 15px 40px rgba(0, 229, 255, 0.15);
+            border-color: #00e5ff;
         }
 
-        /* İKON / GÖRSEL ALANI */
+        /* İKON */
         .app-icon {
-            font-size: 4rem;
+            font-size: 3.5rem;
             margin-bottom: 15px;
-            display: inline-block;
-            background: rgba(0, 229, 255, 0.1);
-            width: 100px;
-            height: 100px;
-            line-height: 100px;
-            border-radius: 20px;
-            border: 1px solid rgba(0, 229, 255, 0.3);
-            text-shadow: 0 0 10px rgba(0, 229, 255, 0.8);
+            display: inline-flex; align-items: center; justify-content: center;
+            background: linear-gradient(135deg, rgba(0,229,255,0.1), rgba(0,229,255,0.05));
+            width: 90px; height: 90px;
+            border-radius: 50%; /* Yuvarlak ikon */
+            border: 1px solid rgba(0, 229, 255, 0.2);
+            box-shadow: 0 0 20px rgba(0, 229, 255, 0.1);
         }
 
         .app-title {
-            font-size: 1.5rem;
-            color: #00e5ff;
-            margin: 10px 0;
-            font-weight: bold;
+            font-size: 1.4rem; color: #00e5ff; margin: 10px 0; font-weight: bold; letter-spacing: 0.5px;
         }
 
         .app-desc {
-            color: #ccc;
-            font-size: 0.95rem;
-            line-height: 1.5;
-            margin-bottom: 20px;
+            color: #ccc; font-size: 0.95rem; line-height: 1.6; margin-bottom: 25px;
         }
 
-        /* AÇ BUTONU */
+        /* BUTON */
         .play-btn {
-            display: block;
-            width: 100%;
-            padding: 12px;
-            background-color: #00e5ff;
-            color: #000;
-            text-decoration: none;
-            font-weight: bold;
-            font-size: 1.1rem;
-            border-radius: 8px;
-            box-shadow: 0 0 10px #00e5ff;
+            display: block; width: 100%; padding: 14px;
+            background: linear-gradient(90deg, #00c6ff, #0072ff); /* Mavi Gradient */
+            color: #fff; text-decoration: none; font-weight: bold; font-size: 1rem;
+            border-radius: 50px;
+            box-shadow: 0 5px 15px rgba(0, 114, 255, 0.4);
             transition: 0.3s;
+            text-transform: uppercase; letter-spacing: 1px;
         }
 
         .play-btn:hover {
-            background-color: #fff;
-            box-shadow: 0 0 20px #fff;
+            background: linear-gradient(90deg, #0072ff, #00c6ff);
+            box-shadow: 0 0 25px rgba(0, 114, 255, 0.6);
+            transform: scale(1.02);
         }
 
-        /* GERİ DÖN BUTONU */
+        /* GERİ DÖN LİNKİ */
         .back-link {
-            display: inline-block;
-            margin-top: 40px;
-            color: #888;
-            text-decoration: none;
-            border-bottom: 1px solid #555;
-            padding-bottom: 5px;
+            display: inline-block; margin-top: 40px;
+            color: #888; text-decoration: none;
+            border: 1px solid #444; padding: 10px 20px; border-radius: 30px;
+            font-size: 0.85rem; transition: 0.3s;
+            background: rgba(0,0,0,0.3);
+            position: relative; z-index: 2;
         }
+        .back-link:hover { color: #fff; border-color: #fff; background: rgba(255,255,255,0.1); }
     </style>
 </head>
 <body>
 
-    <h1>SONSUZ.AY WEB ARAÇLARI</h1>
-    <p class="subtitle">İndirme gerektirmeyen, tarayıcı tabanlı modern araçlar.</p>
+    <div class="stars" id="starContainer"></div>
+
+    <h1>SONSUZ.AY ARAÇLAR</h1>
+    <p class="subtitle">İndirme gerektirmeyen, tarayıcı tabanlı özel araçlar.</p>
 
     <div class="apps-container">
 
         <div class="app-card">
             <div class="app-icon">🎧</div>
-            
             <div class="app-title">SONSUZ.AY PLAYER</div>
-            
             <div class="app-desc">
-                İnternetsiz çalışan, görsel efektli ve modern müzik çalar. 
-                Dosyalarınız güvende, sadece tarayıcınızda çalışır.
+                İnternetsiz çalışan, görsel efektli, A-Z sıralamalı ve modern tasarıma sahip web tabanlı müzik çalar.
             </div>
-
             <a href="player.html" class="play-btn">UYGULAMAYI AÇ 🚀</a>
         </div>
 
-        </div>
+    </div>
 
     <a href="index.html" class="back-link">⬅ Ana Sayfaya Dön</a>
 
+    <script>
+        // Sayfada yıldızları oluşturan kod
+        const container = document.getElementById('starContainer');
+        for(let i=0; i<40; i++) { // Sayıyı biraz azalttım menüde göz yormasın diye
+            const star = document.createElement('div');
+            star.className = 'star';
+            const x = Math.random() * 100;
+            const y = Math.random() * 100;
+            const size = Math.random() * 3;
+            const duration = 2 + Math.random() * 3;
+            const delay = Math.random() * 2;
+
+            star.style.left = x + '%';
+            star.style.top = y + '%';
+            star.style.width = size + 'px';
+            star.style.height = size + 'px';
+            star.style.animationDuration = duration + 's';
+            star.style.animationDelay = delay + 's';
+            
+            container.appendChild(star);
+        }
+    </script>
 </body>
 </html>
