@@ -6,6 +6,20 @@
     <title>SONSUZ.AY | Ana Sayfa</title>
 
     <link rel="icon" type="image/png" href="site_simge.png">
+
+    <link rel="manifest" href="manifest.json">
+
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function() {
+          navigator.serviceWorker.register('sw.js').then(function(registration) {
+            console.log('ServiceWorker başarıyla kaydedildi: ', registration.scope);
+          }, function(err) {
+            console.log('ServiceWorker kaydı başarısız: ', err);
+          });
+        });
+      }
+    </script>
     
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1819947444660683"
          crossorigin="anonymous"></script>
