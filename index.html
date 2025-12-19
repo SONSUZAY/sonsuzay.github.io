@@ -20,7 +20,7 @@
             background: radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%);
             color: #d1d1f0;
             margin: 0;
-            min-height: 100vh; /* height yerine min-height kullandım, footer altta kalsın diye */
+            min-height: 100vh;
             
             overflow-y: auto; 
             
@@ -73,7 +73,6 @@
             gap: 20px;
             z-index: 2;
             width: 100%;
-            /* Footer'ı aşağı itmek için flex-grow veriyoruz */
             flex-grow: 1; 
         }
 
@@ -103,20 +102,23 @@
         .btn-oyunlar { background-color: #39FF14; box-shadow: 0 0 20px rgba(57, 255, 20, 0.4); }
         .btn-webapp { background-color: #00e5ff; box-shadow: 0 0 20px rgba(0, 229, 255, 0.4); }
         .btn-apk { background-color: #FF00FF; box-shadow: 0 0 20px rgba(255, 0, 255, 0.4); color: white; }
+        
+        /* YENİ EKLENEN: GÜNCELLEMELER BUTONU RENGİ (Turuncu/Altın) */
+        .btn-update { background-color: #ffaa00; box-shadow: 0 0 20px rgba(255, 170, 0, 0.4); color: #000; }
 
-        /* --- YENİ EKLENEN: FOOTER (Gizlilik Politikası Alanı) --- */
+        /* FOOTER TASARIMI */
         footer {
             width: 100%;
             padding: 20px 0;
-            margin-top: auto; /* En alta yapıştırır */
+            margin-top: auto;
             color: #666;
             font-size: 0.85rem;
             z-index: 2;
-            background: rgba(0, 0, 0, 0.3); /* Hafif karartma */
+            background: rgba(0, 0, 0, 0.3);
         }
 
         footer a {
-            color: #39FF14; /* Neon yeşil */
+            color: #39FF14;
             text-decoration: none;
             font-weight: bold;
             transition: 0.3s;
@@ -184,6 +186,12 @@
         <a href="indir.html" style="text-decoration: none; width: 100%; display: flex; justify-content: center;">
             <button class="btn btn-apk">
                 MOBİL UYGULAMAYI İNDİR 🚀
+            </button>
+        </a>
+
+        <a href="guncellemeler.html" style="text-decoration: none; width: 100%; display: flex; justify-content: center;">
+            <button class="btn btn-update">
+                🔄 GÜNCELLEMELER & DETAYLAR
             </button>
         </a>
     </div>
