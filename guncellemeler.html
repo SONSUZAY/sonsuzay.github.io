@@ -113,6 +113,13 @@
 
     <div class="grid-container">
         
+        <div class="card" onclick="openModal('modal-apk')">
+            <h3>🛡️ APK Güvenlik & Altyapı</h3>
+            <p>Mobil uygulamalarımızın geliştirilme süreci, güvenlik protokolleri ve virüs tarama sonuçları hakkında şeffaf rapor.</p>
+            <span class="read-more">Raporu İncele ></span>
+            <span class="date">Son Güncelleme: 19 Aralık 2025</span>
+        </div>
+
         <div class="card" onclick="openModal('modal-musicay')">
             <h3>🎵 MusicAY Uygulaması</h3>
             <p>Eski cihazlar için optimize edilmiş, kendi motorunu kullanan yüksek performanslı müzik çalar.</p>
@@ -138,20 +145,40 @@
 
     <a href="index.html" class="back-btn">⬅ Ana Sayfaya Dön</a>
 
+    <div id="modal-apk" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal('modal-apk')">&times;</span>
+            <h2>🛡️ APK Güvenlik ve Geliştirme Raporu</h2>
+            <p>SONSUZ.AY olarak şeffaflık ilkemiz gereği, mobil uygulamalarımızın nasıl geliştirildiğini ve güvenlik standartlarını kullanıcılarımızla paylaşıyoruz.</p>
+            
+            <h3>📱 Mobil Üzerinden Mobil İçin Geliştirme (AIDE)</h3>
+            <p>APK dosyalarımız, masaüstü bilgisayarlara bağımlı kalmadan, doğrudan Android ekosistemi içerisinde <strong>AIDE (Android IDE)</strong> kullanılarak geliştirilmektedir. Bu yöntem, uygulamaların mobil işlemci mimarisine (ARM) daha doğal uyum sağlamasına olanak tanır.</p>
+
+            <h3>🔒 Saf Kod & Güvenlik</h3>
+            <p>Uygulamalarımız "Saf Uygulama Kodu" prensibiyle yazılmıştır. Bunun anlamı şudur:</p>
+            <ul>
+                <li>Uygulamalarımız sadece vaat ettiği işi yapar (Müzik çalmak, Oyun oynatmak vb.).</li>
+                <li>İçerisinde kötü amaçlı yazılım (Malware), gizli veri toplayıcılar veya arka kapı kodları <strong>bulunmaz.</strong></li>
+                <li>Sitemizi ve ekosistemimizi geliştirmek amacıyla eklenen bu dosyalar, tamamen güvenli ve kullanıcı dostudur.</li>
+            </ul>
+
+            <h3>✅ Başarılı Virüs Taramaları</h3>
+            <p>Yayınladığımız her sürüm, sunucuya yüklenmeden önce güncel antivirüs motorları tarafından taranmakta ve güvenlik testlerinden başarıyla geçmektedir.</p>
+        </div>
+    </div>
+
     <div id="modal-musicay" class="modal">
         <div class="modal-content">
             <span class="close-btn" onclick="closeModal('modal-musicay')">&times;</span>
             <h2>MusicAY - Proje Detayları</h2>
             <p>MusicAY, SONSUZ.AY tarafından geliştirilen, özellikle düşük donanımlı Android cihazlarda (Samsung S3 Mini vb.) sorunsuz çalışması için tasarlanmış bir müzik çalardır.</p>
-            
             <h3>🛠️ Teknik Özellikler</h3>
             <p>Uygulama, Android'in yerleşik MediaPlayer API'sini kullanarak sadece 4.32 MB boyutundadır. Batarya dostu olması için gereksiz grafik kütüphanelerinden kaçınılmıştır.</p>
-
-            <h3>🔄 Sürüm Geçmişi (Güncellemeler)</h3>
+            <h3>🔄 Sürüm Geçmişi</h3>
             <ul>
-                <li><strong>v1.2 (16.12.2025):</strong> MediaSession entegrasyonu tamamlandı. Artık bildirim panelinden kontrol edilebiliyor.</li>
-                <li><strong>v1.1 (15.12.2025):</strong> Dinamik tema özelliği eklendi. Arka plan rengi, çalan şarkının albüm kapağına göre değişiyor.</li>
-                <li><strong>v1.0 (10.12.2025):</strong> İlk kararlı sürüm yayınlandı. Şarkı sıralama (Başlık, Sanatçı) özelliği aktif edildi.</li>
+                <li><strong>v1.2 (16.12.2025):</strong> MediaSession entegrasyonu tamamlandı.</li>
+                <li><strong>v1.1 (15.12.2025):</strong> Dinamik tema özelliği eklendi.</li>
+                <li><strong>v1.0 (10.12.2025):</strong> İlk kararlı sürüm yayınlandı.</li>
             </ul>
         </div>
     </div>
@@ -161,10 +188,6 @@
             <span class="close-btn" onclick="closeModal('modal-yilan')">&times;</span>
             <h2>Neon Yılan - Proje Detayları</h2>
             <p>Klasik yılan oyununun modern tarayıcılar için yeniden yorumlanmış halidir. HTML5 Canvas kullanılarak çizilmiştir.</p>
-            
-            <h3>🛠️ Teknik Özellikler</h3>
-            <p>Oyun, JavaScript ile sıfırdan yazılmıştır. Herhangi bir oyun motoru kullanılmamıştır. Çarpışma testleri matematiksel algoritmalarla hesaplanır.</p>
-
             <h3>🔄 Sürüm Geçmişi</h3>
             <ul>
                 <li><strong>v1.5:</strong> Mobil dokunmatik kontroller iyileştirildi.</li>
