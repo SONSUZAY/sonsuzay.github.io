@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SONSUZ.AY | Güncellemeler</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%);
+            color: #fff;
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            text-align: center;
+        }
+
+        h1 { color: #ffaa00; text-shadow: 0 0 10px #ffaa00; margin-bottom: 40px; }
+
+        /* KARTLARIN DİZİLİMİ (IZGARA) */
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        /* KART TASARIMI */
+        .card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 20px;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+            text-align: left;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+            border-color: #ffaa00;
+        }
+
+        .card h3 { margin-top: 0; color: #ffaa00; }
+        .card p { color: #ccc; font-size: 0.9em; }
+        .card .date { font-size: 0.8em; color: #777; margin-top: 10px; display: block; }
+        
+        .read-more {
+            color: #39FF14;
+            font-weight: bold;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 10px;
+        }
+
+        /* POPUP (MODAL) PENCERE TASARIMI */
+        .modal {
+            display: none; /* Başlangıçta gizli */
+            position: fixed;
+            z-index: 1000;
+            left: 0; top: 0;
+            width: 100%; height: 100%;
+            background-color: rgba(0,0,0,0.9);
+            overflow-y: auto; /* Çok yazı olursa kaydır */
+        }
+
+        .modal-content {
+            background-color: #161b22;
+            margin: 10% auto;
+            padding: 30px;
+            border: 1px solid #ffaa00;
+            width: 80%;
+            max-width: 700px;
+            border-radius: 10px;
+            position: relative;
+            text-align: left;
+            box-shadow: 0 0 30px rgba(255, 170, 0, 0.3);
+        }
+
+        .close-btn {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .close-btn:hover { color: #fff; }
+
+        .modal h2 { color: #ffaa00; border-bottom: 1px solid #333; padding-bottom: 10px; }
+        .modal h3 { color: #39FF14; margin-top: 20px; }
+        .modal ul { list-style-type: none; padding: 0; }
+        .modal li { background: rgba(255,255,255,0.05); margin: 5px 0; padding: 10px; border-radius: 5px; border-left: 3px solid #ffaa00; }
+        
+        .back-btn {
+            display: inline-block;
+            margin-top: 30px;
+            padding: 10px 20px;
+            background: #333;
+            color: white;
+            text-decoration: none;
+            border-radius: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>PROJE GÜNCELLEME MERKEZİ</h1>
+    <p>Projelerimizin gelişim süreçleri, sürüm notları ve teknik detaylar.</p>
+
+    <div class="grid-container">
+        
+        <div class="card" onclick="openModal('modal-musicay')">
+            <h3>🎵 MusicAY Uygulaması</h3>
+            <p>Eski cihazlar için optimize edilmiş, kendi motorunu kullanan yüksek performanslı müzik çalar.</p>
+            <span class="read-more">Detayları ve Güncellemeleri Gör ></span>
+            <span class="date">Son Güncelleme: 16 Aralık 2025</span>
+        </div>
+
+        <div class="card" onclick="openModal('modal-yilan')">
+            <h3>🐍 Neon Yılan Oyunu</h3>
+            <p>HTML5 Canvas teknolojisi ile geliştirilmiş, modern tasarımlı klasik yılan oyunu.</p>
+            <span class="read-more">Detayları ve Güncellemeleri Gör ></span>
+            <span class="date">Son Güncelleme: 14 Aralık 2025</span>
+        </div>
+
+        <div class="card" onclick="openModal('modal-siber')">
+            <h3>🚀 Siber Savaş</h3>
+            <p>Uzay temalı aksiyon oyunu. JavaScript tabanlı çarpışma fizikleri içerir.</p>
+            <span class="read-more">Detayları ve Güncellemeleri Gör ></span>
+            <span class="date">Son Güncelleme: 10 Aralık 2025</span>
+        </div>
+
+    </div>
+
+    <a href="index.html" class="back-btn">⬅ Ana Sayfaya Dön</a>
+
+    <div id="modal-musicay" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal('modal-musicay')">&times;</span>
+            <h2>MusicAY - Proje Detayları</h2>
+            <p>MusicAY, SONSUZ.AY tarafından geliştirilen, özellikle düşük donanımlı Android cihazlarda (Samsung S3 Mini vb.) sorunsuz çalışması için tasarlanmış bir müzik çalardır.</p>
+            
+            <h3>🛠️ Teknik Özellikler</h3>
+            <p>Uygulama, Android'in yerleşik MediaPlayer API'sini kullanarak sadece 4.32 MB boyutundadır. Batarya dostu olması için gereksiz grafik kütüphanelerinden kaçınılmıştır.</p>
+
+            <h3>🔄 Sürüm Geçmişi (Güncellemeler)</h3>
+            <ul>
+                <li><strong>v1.2 (16.12.2025):</strong> MediaSession entegrasyonu tamamlandı. Artık bildirim panelinden kontrol edilebiliyor.</li>
+                <li><strong>v1.1 (15.12.2025):</strong> Dinamik tema özelliği eklendi. Arka plan rengi, çalan şarkının albüm kapağına göre değişiyor.</li>
+                <li><strong>v1.0 (10.12.2025):</strong> İlk kararlı sürüm yayınlandı. Şarkı sıralama (Başlık, Sanatçı) özelliği aktif edildi.</li>
+            </ul>
+        </div>
+    </div>
+
+    <div id="modal-yilan" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal('modal-yilan')">&times;</span>
+            <h2>Neon Yılan - Proje Detayları</h2>
+            <p>Klasik yılan oyununun modern tarayıcılar için yeniden yorumlanmış halidir. HTML5 Canvas kullanılarak çizilmiştir.</p>
+            
+            <h3>🛠️ Teknik Özellikler</h3>
+            <p>Oyun, JavaScript ile sıfırdan yazılmıştır. Herhangi bir oyun motoru kullanılmamıştır. Çarpışma testleri matematiksel algoritmalarla hesaplanır.</p>
+
+            <h3>🔄 Sürüm Geçmişi</h3>
+            <ul>
+                <li><strong>v1.5:</strong> Mobil dokunmatik kontroller iyileştirildi.</li>
+                <li><strong>v1.0:</strong> Oyun ilk kez GitHub Pages üzerinde yayınlandı.</li>
+            </ul>
+        </div>
+    </div>
+
+    <div id="modal-siber" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal('modal-siber')">&times;</span>
+            <h2>Siber Savaş - Proje Detayları</h2>
+            <p>Geliştirme aşamasında olan uzay savaşı oyunu.</p>
+            <h3>🔄 Güncellemeler</h3>
+            <ul>
+                <li><strong>Planlanan:</strong> Düşman yapay zekası güçlendirilecek.</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // Modal Açma Fonksiyonu
+        function openModal(modalId) {
+            document.getElementById(modalId).style.display = "block";
+        }
+
+        // Modal Kapatma Fonksiyonu
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = "none";
+        }
+
+        // Pencere dışına tıklayınca kapatma
+        window.onclick = function(event) {
+            if (event.target.className === 'modal') {
+                event.target.style.display = "none";
+            }
+        }
+    </script>
+
+</body>
+</html>
