@@ -21,7 +21,7 @@
             padding: 20px 10px; 
             text-align: center;
             min-height: 100vh;
-            overflow-x: hidden; /* Yatay kaydırmayı engelle */
+            overflow-x: hidden; 
         }
 
         /* --- HAREKETLİ YILDIZ EFEKTİ --- */
@@ -59,67 +59,70 @@
             position: relative;
             z-index: 2;
         }
+        
+        /* IZGARA YAPISI - ESKİ BOYUTLAR */
         .game-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
-            gap: 20px; 
+            gap: 15px; /* Boşluklar küçültüldü */
             max-width: 1200px;
             margin: 0 auto;
             margin-bottom: 40px;
             position: relative;
             z-index: 2;
         }
+
+        /* KART YAPISI - ESKİ BOYUTLAR */
         .game-card {
-            background-color: rgba(26, 26, 56, 0.8); /* Şeffaflık eklendi */
-            padding: 15px; 
-            border-radius: 15px;
-            box-shadow: 0 0 15px rgba(57, 255, 20, 0.1); 
-            border: 1px solid rgba(57, 255, 20, 0.2);
-            transition: transform 0.3s, box-shadow 0.3s;
+            background-color: rgba(26, 26, 56, 0.8); /* Hafif şeffaf */
+            padding: 12px; /* Dolgu küçültüldü */
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(57, 255, 20, 0.3); 
+            border: 1px solid rgba(57, 255, 20, 0.1);
+            transition: transform 0.2s;
             position: relative;
-            overflow: hidden;
         }
         .game-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(57, 255, 20, 0.4);
+            box-shadow: 0 5px 20px rgba(57, 255, 20, 0.6);
             border-color: #39FF14;
         }
         
         /* Etiketler */
         .badge-container {
-            position: absolute; top: 10px; left: 10px;
-            display: flex; flex-direction: column; gap: 5px; z-index: 5;
+            position: absolute; top: 5px; left: 5px;
+            display: flex; flex-direction: column; gap: 3px; z-index: 5;
         }
-        .badge-new { background: #39FF14; color: #000; font-size: 0.75em; padding: 4px 10px; border-radius: 4px; font-weight: 900; box-shadow: 0 0 5px #39FF14; }
-        .badge-featured { background: #FFD700; color: #000; font-size: 0.75em; padding: 4px 10px; border-radius: 4px; font-weight: 900; box-shadow: 0 0 5px #FFD700; }
+        .badge-new { background: #39FF14; color: #000; font-size: 0.7em; padding: 2px 8px; border-radius: 3px; font-weight: bold; }
+        .badge-featured { background: #FFD700; color: #000; font-size: 0.7em; padding: 2px 8px; border-radius: 3px; font-weight: bold; }
 
-        .game-card h2 { color: #FF00FF; font-size: 1.4em; margin: 10px 0; }
+        .game-card h2 { color: #FF00FF; font-size: 1.3em; margin: 5px 0; }
         .pro-title { color: #39FF14 !important; text-shadow: 0 0 5px #39FF14; }
-        .game-card p { font-size: 0.95em; margin: 5px 0 15px 0; color: #ccc; line-height: 1.4; }
+        .game-card p { font-size: 0.9em; margin: 5px 0 10px 0; color: #ccc; }
         
         .game-card a {
             display: block;
             background-color: #39FF14;
             color: #0d0d1e;
-            padding: 10px 10px; 
-            border-radius: 50px;
+            padding: 8px 10px; 
+            border-radius: 5px;
             text-decoration: none;
             font-weight: bold;
             margin-top: 10px;
-            transition: all 0.3s;
+            transition: background-color 0.2s;
         }
-        .game-card a:hover { 
-            background-color: #fff; 
-            box-shadow: 0 0 15px #fff;
-        }
+        .game-card a:hover { background-color: #00cccc; box-shadow: 0 0 10px #00cccc; }
         
+        /* RESİM BOYUTU DÜZELTİLDİ (%50) */
         .game-card img {
-            width: 100%; 
-            max-height: 180px;
-            object-fit: cover;
-            border-radius: 10px; margin-bottom: 10px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
-            display: block;
+            width: 50%; /* Eskisi gibi %50 yapıldı */
+            height: auto; 
+            border-radius: 5px; 
+            margin-bottom: 10px;
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
+            display: block; 
+            margin-left: auto; 
+            margin-right: auto; 
         }
 
         /* Geri Dön Butonu */
@@ -127,22 +130,20 @@
             display: inline-block;
             margin-top: 30px;
             margin-bottom: 50px;
-            padding: 12px 30px;
-            border: 2px solid #555;
+            padding: 10px 20px;
+            border: 1px solid #555;
             background: rgba(0,0,0,0.5);
-            color: #aaa;
+            color: #888;
             text-decoration: none;
             border-radius: 30px;
-            font-weight: bold;
             transition: 0.3s;
             position: relative;
             z-index: 2;
         }
         .back-btn:hover { 
             color: #fff; 
-            border-color: #39FF14; 
-            background: rgba(57, 255, 20, 0.1);
-            box-shadow: 0 0 15px rgba(57, 255, 20, 0.3);
+            border-color: #39FF14;
+            background: rgba(57, 255, 20, 0.1); 
         }
     </style>
 </head>
@@ -170,35 +171,35 @@
             <div class="badge-container">
                 <span class="badge-new">YENİ</span>
             </div>
-            <img src="space_yeni_simge.jpg" alt="Space Yeni"> 
-            <h2>SPACE YENİ</h2>
+            <img src="space_yeni_simge.jpg" alt="Space Savaş"> 
+            <h2>SPACE SAVAŞ</h2>
             <p>Derin uzayda nefes kesen yeni bir macera! Düşmanları yok et ve hayatta kal.</p>
             <a href="space_yeni.html">HEMEN OYNA</a> 
         </div>
 
         <div class="game-card">
             <img src="space_kup_simge.jpg" alt="Sonsuz Uzay Darbesi Oyunu"> 
-            <h2>Sonsuz Uzay Darbesi</h2>
+            <h2>SONSUZ UZAY DARBESİ</h2>
             <p>Hızlı ve acımasız düşman salvosundan sıyrılın. Rastgele zorlukta nişancı oyunu!</p>
             <a href="sonsuz_uzay.html">HEMEN OYNA</a> 
         </div>
 
         <div class="game-card">
             <img src="kosucu_simge_yeni.jpg" alt="Sonsuz Koşucu Oyunu">
-            <h2>Sonsuz Koşucu</h2>
+            <h2>SONSUZ KOŞUCU</h2>
             <p>Zorlu neon engelleri aşmak için çift zıplama yeteneğinizi kullanın.</p>
             <a href="sonsuz_kosucu.html">HEMEN OYNA</a> </div>
 
         <div class="game-card">
             <img src="yilan_simge_yeni.jpg" alt="Sonsuz Yılan Oyunu">
-            <h2>Sonsuz Yılan</h2>
+            <h2>SONSUZ YILAN</h2>
             <p>Klasik yılan oyunu, zorluk seviyeleri ve can moduyla neon temasına uyarlandı.</p>
             <a href="sonsuz-yilan.html">HEMEN OYNA</a> 
         </div>
         
         <div class="game-card">
              <img src="tenis_simge.jpg" alt="Sonsuz Tenis Oyunu">
-            <h2>Sonsuz Tenis</h2>
+            <h2>SONSUZ TENİS</h2>
             <p>Pürüzsüz oynanış ve neon temalı yapay zeka rakibe karşı 1v1 maç yapın.</p>
             <a href="neon_tenis.html">HEMEN OYNA</a> 
         </div>
@@ -212,7 +213,7 @@
         
         <div class="game-card">
              <img src="hafiza_ustasi_simge.jpg" alt="Hafıza Oyunu">
-            <h2>Hafıza Ustası</h2>
+            <h2>HAFIZA USTASI</h2>
             <p>Zekanızı ve hafızanızı test edin! Basit ama eğlenceli kart eşleştirme.</p>
             <a href="hafiza_ustasi.html">HEMEN OYNA</a> 
         </div>
@@ -231,7 +232,7 @@
     <script>
         // YILDIZ OLUŞTURUCU SCRIPT
         const container = document.getElementById('starContainer');
-        for(let i=0; i<60; i++) { // 60 Yıldız ekler
+        for(let i=0; i<60; i++) { 
             const star = document.createElement('div');
             star.className = 'star';
             
