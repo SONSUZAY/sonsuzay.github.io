@@ -27,7 +27,6 @@
     <style>
         body {
             font-family: 'Segoe UI', Arial, sans-serif;
-            /* Ana sayfayla aynı uzay arka planı */
             background: radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%);
             color: #fff;
             text-align: center;
@@ -35,7 +34,6 @@
             padding: 20px;
             min-height: 100vh;
             overflow-x: hidden;
-            /* İçerik sığmazsa aşağı kaydırma izni (Garanti olsun diye) */
             overflow-y: auto;
         }
 
@@ -50,7 +48,7 @@
 
         /* BAŞLIKLAR */
         h1 {
-            color: #FF00FF; /* Neon Pembe */
+            color: #FF00FF;
             text-shadow: 0 0 15px #FF00FF;
             font-size: 2rem; margin-bottom: 5px; position: relative; z-index: 2;
         }
@@ -67,7 +65,7 @@
 
         /* APK KARTI TASARIMI */
         .app-card {
-            background: rgba(30, 10, 30, 0.8); /* Mora çalan koyu arka plan */
+            background: rgba(30, 10, 30, 0.8);
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 0, 255, 0.3);
             border-radius: 20px;
@@ -75,7 +73,7 @@
             width: 100%;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
             transition: 0.3s;
-            display: flex; /* Yan yana dizilim için */
+            display: flex;
             align-items: center;
             text-align: left;
         }
@@ -96,6 +94,12 @@
             margin-right: 20px;
             flex-shrink: 0;
             box-shadow: 0 0 15px rgba(255, 0, 255, 0.4);
+        }
+
+        /* YILDIZAY İÇİN ÖZEL SARI İKON STİLİ (Opsiyonel) */
+        .icon-yildiz {
+            background: linear-gradient(135deg, #FFD700, #FFA500) !important;
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.4) !important;
         }
 
         /* YAZI ALANI */
@@ -142,7 +146,6 @@
             position: relative; z-index: 2;
         }
         
-        /* MOBİL UYUMLULUK */
         @media (max-width: 400px) {
             .app-card { flex-direction: column; text-align: center; }
             .app-icon { margin-right: 0; margin-bottom: 15px; }
@@ -168,6 +171,17 @@
                     Tüm oyunlara ve araçlara tek yerden erişin. Sitenin mobil uygulama versiyonu.
                 </div>
                 <a href="SonsuzAY_Oyunlari.apk" class="download-btn" download>📥 İNDİR (v1.0)</a>
+            </div>
+        </div>
+
+        <div class="app-card">
+            <div class="app-icon icon-yildiz">🌟</div>
+            <div class="app-info">
+                <div class="app-title" style="color: #FFD700;">YILDIZAY ASİSTAN</div>
+                <div class="app-desc">
+                    Sohbet edebilen, feneri açıp kapatan, uygulama başlatan ve mini oyunlar (Zar, Yazı-Tura) içeren gelişmiş yapay zeka.
+                </div>
+                <a href="YildizAY.apk" class="download-btn" style="background-color: #FFD700; color: #000;" download>📥 İNDİR (Beta)</a>
             </div>
         </div>
 
