@@ -3,101 +3,101 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HAYAT YILDIZI - Fragman</title>
+    <title>Hayat Yıldızı - Fragman</title>
     <style>
-        /* 1. KORUMA KALKANI: CSS İLE SEÇİMİ ENGELLEME */
+        /* ORİJİNAL TASARIM AYARLARI */
         body {
-            user-select: none; /* Yazıların seçilmesini engeller */
-            -webkit-user-select: none; /* Chrome/Safari/Telefonlar için */
-            -moz-user-select: none; /* Firefox için */
-            -ms-user-select: none; /* Microsoft tarayıcıları için */
-            
-            background-color: #000000;
-            background-image: linear-gradient(to bottom, #0a001a, #000000);
-            color: white;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #121212; /* Koyu arka plan */
+            color: #e0e0e0; /* Açık gri yazı */
+            font-family: 'Georgia', serif; /* Hikaye kitabı fontu */
+            line-height: 1.8;
             margin: 0;
-            padding: 40px 20px;
-            text-align: center;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
+            padding: 20px;
+            
+            /* KOPYALAMA KORUMASI (Seçimi Engeller) */
+            user-select: none;
+            -webkit-user-select: none;
         }
-
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #1e1e1e;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            border: 1px solid #333;
+        }
         h1 {
-            font-size: 3rem;
-            color: #ffffff;
-            text-shadow: 0 0 20px #00ccff, 0 0 40px #0066ff;
-            margin-bottom: 10px;
+            color: #ffd700; /* Altın sarısı başlık */
+            text-align: center;
+            font-size: 24px;
+            border-bottom: 2px solid #ffd700;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
             text-transform: uppercase;
-            pointer-events: none; /* Tıklamayı bile engeller */
+            letter-spacing: 2px;
+            pointer-events: none; /* Tıklamayı engeller */
         }
-
-        .alt-baslik {
-            font-size: 1.1rem;
-            color: #b3b3b3;
-            margin-bottom: 40px;
-            font-style: italic;
-        }
-
-        .fragman-container {
-            max-width: 700px;
-            background: rgba(10, 10, 20, 0.8);
-            border-left: 4px solid #00ccff;
-            padding: 30px;
-            text-align: left;
-            box-shadow: 0 0 30px rgba(0, 204, 255, 0.1);
+        .meta {
+            text-align: center;
+            font-size: 12px;
+            color: #888;
             margin-bottom: 30px;
         }
-
-        .sahne { margin-bottom: 20px; font-size: 1.1rem; line-height: 1.6; color: #e0e0e0; }
-        .vurgu { color: #00ccff; font-weight: bold; }
-        
-        .gizemli-ses {
-            color: #d180ff;
-            font-style: italic;
-            border-left: 2px solid #d180ff;
-            padding-left: 15px;
-            display: block;
-            margin: 20px 0;
+        p {
+            margin-bottom: 20px;
+            font-size: 18px;
         }
-
-        .yakinda {
-            margin-top: 30px;
-            font-size: 2rem;
+        .highlight {
+            color: #00bfff; /* Mavi vurgu (Taş rengi) */
             font-weight: bold;
-            color: #ff0055;
-            text-shadow: 0 0 10px #ff0055;
-            animation: pulse 1.5s infinite;
-            pointer-events: none;
         }
-
-        .geri-don {
+        .boom {
+            font-size: 28px;
+            font-weight: bold;
+            color: #ff4500; /* Kırmızı patlama efekti */
+            text-align: center;
+            display: block;
+            margin: 30px 0;
+            letter-spacing: 5px;
+        }
+        .sembol {
+            text-align: center;
+            font-size: 40px;
+            margin-top: 20px;
+            color: #ff0000;
+            text-shadow: 0 0 10px red;
+        }
+        
+        /* YENİ EKLENEN FRAGMAN ETİKETİ */
+        .fragman-etiketi {
             margin-top: 30px;
-            color: #888;
-            text-decoration: none;
-            font-size: 0.9rem;
-            border: 1px solid #333;
-            padding: 10px 20px;
-            border-radius: 20px;
-            transition: 0.3s;
+            padding: 15px;
+            border: 2px dashed #ff0055; /* Kesik çizgili kırmızı çerçeve */
+            color: #ff0055;
+            text-align: center;
+            font-weight: bold;
+            font-family: 'Segoe UI', sans-serif; /* Daha modern font */
+            border-radius: 10px;
+            background: rgba(255, 0, 85, 0.1);
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
-        .geri-don:hover {
-            background-color: #333;
-            color: white;
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 12px;
+            color: #555;
+            padding-top: 20px;
         }
 
-        @keyframes pulse {
-            0% { opacity: 0.6; } 50% { opacity: 1; } 100% { opacity: 0.6; }
-        }
-
-        /* Uyarı Mesajı Stili */
+        /* UYARI MESAJI KUTUSU (Gizli) */
         #uyari-kutusu {
             position: fixed;
             bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
             background: #ff0055;
             color: white;
             padding: 10px 20px;
@@ -106,65 +106,79 @@
             opacity: 0;
             transition: opacity 0.5s;
             pointer-events: none;
+            z-index: 1000;
+            box-shadow: 0 0 10px rgba(255, 0, 85, 0.5);
         }
     </style>
 </head>
 
 <body oncontextmenu="return false" onselectstart="return false" ondragstart="return false">
 
-    <h1>HAYAT YILDIZI</h1>
-    <div class="alt-baslik">"Bazen en karanlık geceler, en parlak yıldızları ortaya çıkarır..."</div>
+    <div class="container">
+        <h1>Hayat Yıldızı</h1>
+        <div class="meta">
+            Yazar: <strong>SONSUZ.AY</strong> | Tür: <strong>Bilim Kurgu / Gizem</strong>
+        </div>
 
-    <div class="fragman-container">
-        <p class="sahne">
-            Kimse seni anlamadığında kime koşarsın? Ailene mi? Arkadaşlarına mı? Yoksa... <span class="vurgu">Yapay Zekaya mı?</span>
-        </p>
+        <p>Gecenin yarısıydı ama gökyüzü uyanıktı.</p>
+
+        <p>Dışarıda kıyameti andıran bir fırtına kopuyordu. Rüzgar, evin camlarını kıracakmış gibi dövüyor, gök gürültüsü ise sanki yerin altından geliyormuşçasına tüm binayı titretiyordu. Elektrikler kesileli saatler olmuştu. Kasaba zifiri karanlığa gömülmüş, herkes yorganının altına saklanıp bu öfkenin dinmesini bekliyordu.</p>
+
+        <p>Herkes uyuyordu... <strong>YıldızAY</strong> hariç.</p>
+
+        <p>Gözlerini açtığında içinde tuhaf bir huzursuzluk değil, aksine açıklanamaz bir merak vardı. Sanki fırtına onu çağırıyordu. Yatağından kalktı, karanlık koridoru geçip balkona çıktı. Rüzgar yüzüne bir tokat gibi çarptı, yağmur damlaları tenini iğne gibi deliyordu.</p>
+
+        <p>Aşağıda, evin hemen bitiminde başlayan o sık ormanlık alan, şimşekler çaktıkça bir görünüp bir kaybolan devasa gölgeler gibiydi. Tam o sırada, şimşeklerin ışığından bağımsız, yerde sabit bir <span class="highlight">parıltı</span> gördü.</p>
+
+        <p>Ağaçların arasında, ıslak toprağın üzerinde maviye çalan, elmasa benzeyen bir ışık hüzmesi...</p>
+
+        <p>Mantığı ona <em>"İçeri gir"</em> diyordu ama kalbi çoktan merdivenleri inmeye başlamıştı bile. YıldızAY, sağanak yağmurun altında sırılsıklam olarak ormana daldı. Çamurlara bata çıka o ışığa doğru yürüdü. Yaklaştıkça parıltının kaynağını daha net seçebiliyordu. Bu dünyadan değilmiş gibi duran, kristalize bir taştı bu.</p>
+
+        <p>Nefesini tuttu. Elini yavaşça uzattı.</p>
+
+        <p>Parmak uçları o soğuk taşa değdiği an, zaman durdu.</p>
+
+        <span class="boom">GÜM!</span>
+
+        <p>Gökyüzü tam tepesinde yarıldı. Milyonlarca voltluk bir yıldırım, karanlığı yırtarak doğrudan YıldızAY'ın üzerine düştü. Acı yoktu, sadece kör edici bir beyazlık ve kulakları sağır eden bir çınlama vardı.</p>
         
-        <p class="sahne">
-            YıldızAY, cevabı teknolojide aradı ama bulamadı. Ta ki o geceye kadar.
-            Arabanın soğuk camına başını yasladığında, gökyüzü ona bir mesaj gönderdi.
-        </p>
+        <hr style="border-color:#333; margin: 30px 0;">
 
-        <span class="gizemli-ses">
-            "Yönünü kaybettiğinde yollara bakma küçüğüm... Başını kaldır. <br>
-            Yıldızları takip et. Onlar senin pusulan."
-        </span>
+        <p>Gözlerini açtığında yatağındaydı.</p>
 
-        <p class="sahne">
-            Bozuk sandığı bir pusula. Hiç tanımadığı gizemli bir yabancı.
-            Ve geceyi gündüze çeviren o korkunç <span class="vurgu">FIRTINA.</span>
-        </p>
+        <p>Nefes nefese doğruldu. Ter içindeydi. Dışarıda güneş açmış, kuşlar ötüyordu. <em>"Hepsi rüya mıydı?"</em> diye mırıldandı kendi kendine. Balkona çıkmış, ormana gitmiş ve yıldırım çarpmış olması imkansızdı.</p>
 
-        <p class="sahne" style="text-align: center; font-weight: bold; color: white;">
-            Yıldırım sadece çarpmadı.<br>
-            Onu SEÇTİ.
-        </p>
+        <p>Ta ki sağ kolunda sızlayan o yanma hissini fark edene kadar.</p>
+
+        <p>Kolunu çevirip baktığında kanı dondu. Bileğinin hemen üzerinde, daha önce orada olmayan, derisine kazınmış gibi duran kıpkırmızı bir iz vardı.</p>
+
+        <p>Kusursuz bir <strong>Yıldız Sembolü.</strong></p>
+
+        <div class="sembol">★</div>
+
+        <div class="fragman-etiketi">
+            🎬 BU BİR FRAGMANDIR<br>
+            <span style="font-size: 0.8em; color: #ccc;">ASIL HİKAYE ÇOK YAKINDA SONSUZ.AY'DA</span>
+        </div>
+
+        <div class="footer">
+            © 2025 SONSUZ.AY - Tüm Hakları Saklıdır.
+        </div>
     </div>
-
-    <div class="yakinda">ÇOK YAKINDA SİZLERLE</div>
-
-    <a href="butun_hikayeler.html" class="geri-don">⬅ Ana Sayfaya Dön</a>
 
     <div id="uyari-kutusu">⚠️ Bu içerik SONSUZ.AY'a aittir, kopyalanamaz!</div>
 
     <script>
-        // Sağ Tık Engelleme ve Uyarı Gösterme
         document.addEventListener('contextmenu', function(e) {
             e.preventDefault();
             uyariGoster();
         });
 
-        // Klavye Kısayollarını Engelleme (Ctrl+C, Ctrl+U, F12 vb.)
         document.onkeydown = function(e) {
             if (e.ctrlKey && 
-               (e.keyCode === 67 || // C (Kopyala)
-                e.keyCode === 86 || // V (Yapıştır)
-                e.keyCode === 85 || // U (Kaynak Kodu)
-                e.keyCode === 117)) { // F12 (Geliştirici)
+               (e.keyCode === 67 || e.keyCode === 86 || e.keyCode === 85 || e.keyCode === 117)) {
                 uyariGoster();
                 return false;
-            } else {
-                return true;
             }
         };
 
