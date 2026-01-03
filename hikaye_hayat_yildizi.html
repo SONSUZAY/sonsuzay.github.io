@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HAYAT YILDIZI - Fragman</title>
+    <style>
+        /* 1. KORUMA KALKANI: CSS İLE SEÇİMİ ENGELLEME */
+        body {
+            user-select: none; /* Yazıların seçilmesini engeller */
+            -webkit-user-select: none; /* Chrome/Safari/Telefonlar için */
+            -moz-user-select: none; /* Firefox için */
+            -ms-user-select: none; /* Microsoft tarayıcıları için */
+            
+            background-color: #000000;
+            background-image: linear-gradient(to bottom, #0a001a, #000000);
+            color: white;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 40px 20px;
+            text-align: center;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        h1 {
+            font-size: 3rem;
+            color: #ffffff;
+            text-shadow: 0 0 20px #00ccff, 0 0 40px #0066ff;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            pointer-events: none; /* Tıklamayı bile engeller */
+        }
+
+        .alt-baslik {
+            font-size: 1.1rem;
+            color: #b3b3b3;
+            margin-bottom: 40px;
+            font-style: italic;
+        }
+
+        .fragman-container {
+            max-width: 700px;
+            background: rgba(10, 10, 20, 0.8);
+            border-left: 4px solid #00ccff;
+            padding: 30px;
+            text-align: left;
+            box-shadow: 0 0 30px rgba(0, 204, 255, 0.1);
+            margin-bottom: 30px;
+        }
+
+        .sahne { margin-bottom: 20px; font-size: 1.1rem; line-height: 1.6; color: #e0e0e0; }
+        .vurgu { color: #00ccff; font-weight: bold; }
+        
+        .gizemli-ses {
+            color: #d180ff;
+            font-style: italic;
+            border-left: 2px solid #d180ff;
+            padding-left: 15px;
+            display: block;
+            margin: 20px 0;
+        }
+
+        .yakinda {
+            margin-top: 30px;
+            font-size: 2rem;
+            font-weight: bold;
+            color: #ff0055;
+            text-shadow: 0 0 10px #ff0055;
+            animation: pulse 1.5s infinite;
+            pointer-events: none;
+        }
+
+        .geri-don {
+            margin-top: 30px;
+            color: #888;
+            text-decoration: none;
+            font-size: 0.9rem;
+            border: 1px solid #333;
+            padding: 10px 20px;
+            border-radius: 20px;
+            transition: 0.3s;
+        }
+
+        .geri-don:hover {
+            background-color: #333;
+            color: white;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.6; } 50% { opacity: 1; } 100% { opacity: 0.6; }
+        }
+
+        /* Uyarı Mesajı Stili */
+        #uyari-kutusu {
+            position: fixed;
+            bottom: 20px;
+            background: #ff0055;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-weight: bold;
+            opacity: 0;
+            transition: opacity 0.5s;
+            pointer-events: none;
+        }
+    </style>
+</head>
+
+<body oncontextmenu="return false" onselectstart="return false" ondragstart="return false">
+
+    <h1>HAYAT YILDIZI</h1>
+    <div class="alt-baslik">"Bazen en karanlık geceler, en parlak yıldızları ortaya çıkarır..."</div>
+
+    <div class="fragman-container">
+        <p class="sahne">
+            Kimse seni anlamadığında kime koşarsın? Ailene mi? Arkadaşlarına mı? Yoksa... <span class="vurgu">Yapay Zekaya mı?</span>
+        </p>
+        
+        <p class="sahne">
+            YıldızAY, cevabı teknolojide aradı ama bulamadı. Ta ki o geceye kadar.
+            Arabanın soğuk camına başını yasladığında, gökyüzü ona bir mesaj gönderdi.
+        </p>
+
+        <span class="gizemli-ses">
+            "Yönünü kaybettiğinde yollara bakma küçüğüm... Başını kaldır. <br>
+            Yıldızları takip et. Onlar senin pusulan."
+        </span>
+
+        <p class="sahne">
+            Bozuk sandığı bir pusula. Hiç tanımadığı gizemli bir yabancı.
+            Ve geceyi gündüze çeviren o korkunç <span class="vurgu">FIRTINA.</span>
+        </p>
+
+        <p class="sahne" style="text-align: center; font-weight: bold; color: white;">
+            Yıldırım sadece çarpmadı.<br>
+            Onu SEÇTİ.
+        </p>
+    </div>
+
+    <div class="yakinda">ÇOK YAKINDA SİZLERLE</div>
+
+    <a href="index.html" class="geri-don">⬅ Ana Sayfaya Dön</a>
+
+    <div id="uyari-kutusu">⚠️ Bu içerik SONSUZ.AY'a aittir, kopyalanamaz!</div>
+
+    <script>
+        // Sağ Tık Engelleme ve Uyarı Gösterme
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+            uyariGoster();
+        });
+
+        // Klavye Kısayollarını Engelleme (Ctrl+C, Ctrl+U, F12 vb.)
+        document.onkeydown = function(e) {
+            if (e.ctrlKey && 
+               (e.keyCode === 67 || // C (Kopyala)
+                e.keyCode === 86 || // V (Yapıştır)
+                e.keyCode === 85 || // U (Kaynak Kodu)
+                e.keyCode === 117)) { // F12 (Geliştirici)
+                uyariGoster();
+                return false;
+            } else {
+                return true;
+            }
+        };
+
+        function uyariGoster() {
+            var kutu = document.getElementById("uyari-kutusu");
+            kutu.style.opacity = "1";
+            setTimeout(function(){
+                kutu.style.opacity = "0";
+            }, 2000);
+        }
+    </script>
+
+</body>
+</html>
