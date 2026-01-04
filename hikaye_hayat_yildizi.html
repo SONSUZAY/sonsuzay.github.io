@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hayat Yıldızı - Fragman</title>
     <style>
-        /* ORİJİNAL TASARIM AYARLARI */
+        /* GENEL AYARLAR */
         body {
             background-color: #121212;
             color: #e0e0e0;
@@ -13,8 +13,6 @@
             line-height: 1.8;
             margin: 0;
             padding: 20px;
-            
-            /* KOPYALAMA KORUMASI */
             user-select: none;
             -webkit-user-select: none;
         }
@@ -40,36 +38,34 @@
         }
         .meta {
             text-align: center;
-            font-size: 12px;
+            font-size: 13px;
             color: #888;
             margin-bottom: 20px;
+            line-height: 1.6;
         }
         
-        /* --- VİDEO STİLİ --- */
+        /* VİDEO STİLİ */
         .video-wrapper {
             width: 100%;
             margin-bottom: 25px;
             border-radius: 10px;
             overflow: hidden;
-            box-shadow: 0 0 15px rgba(0, 191, 255, 0.2); /* Mavi parıltı */
+            box-shadow: 0 0 15px rgba(0, 191, 255, 0.2);
             border: 1px solid #333;
-            background-color: #000; /* Video yüklenene kadar siyah kalsın */
+            background-color: #000;
         }
         .video-wrapper video {
             width: 100%;
             display: block;
             object-fit: cover;
         }
-        /* ------------------- */
 
+        /* METİN VE EFEKTLER */
         p {
             margin-bottom: 20px;
             font-size: 18px;
         }
-        .highlight {
-            color: #00bfff;
-            font-weight: bold;
-        }
+        .highlight { color: #00bfff; font-weight: bold; }
         .boom {
             font-size: 28px;
             font-weight: bold;
@@ -103,10 +99,11 @@
 
         .footer {
             text-align: center;
-            margin-top: 20px;
+            margin-top: 30px;
             font-size: 12px;
             color: #555;
             padding-top: 20px;
+            border-top: 1px solid #333;
         }
 
         #uyari-kutusu {
@@ -123,7 +120,6 @@
             transition: opacity 0.5s;
             pointer-events: none;
             z-index: 1000;
-            box-shadow: 0 0 10px rgba(255, 0, 85, 0.5);
         }
     </style>
 </head>
@@ -132,8 +128,10 @@
 
     <div class="container">
         <h1>Hayat Yıldızı</h1>
+        
         <div class="meta">
-            Yazar: <strong>SONSUZ.AY</strong> | Tür: <strong>Bilim Kurgu / Gizem</strong>
+            Yazar: <strong style="color: #00bfff; font-size: 1.1em; letter-spacing: 1px;">SERKAN COŞAN</strong><br>
+            Yayıncı: <strong>SONSUZ.AY</strong> | Tür: <strong>Bilim Kurgu / Gizem</strong>
         </div>
 
         <div class="video-wrapper">
@@ -142,6 +140,7 @@
                 Tarayıcınız bu videoyu desteklemiyor.
             </video>
         </div>
+
         <p>Gecenin yarısıydı ama gökyüzü uyanıktı.</p>
 
         <p>Dışarıda kıyameti andıran bir fırtına kopuyordu. Rüzgar, evin camlarını kıracakmış gibi dövüyor, gök gürültüsü ise sanki yerin altından geliyormuşçasına tüm binayı titretiyordu. Elektrikler kesileli saatler olmuştu. Kasaba zifiri karanlığa gömülmüş, herkes yorganının altına saklanıp bu öfkenin dinmesini bekliyordu.</p>
@@ -184,6 +183,9 @@
         </div>
 
         <div class="footer">
+            <div style="margin-bottom: 8px; font-style: italic; font-size: 14px;">
+                Yazan ve Tasarlayan: <strong style="color: #ffd700; letter-spacing: 1px;">SERKAN COŞAN</strong>
+            </div>
             © 2025 SONSUZ.AY - Tüm Hakları Saklıdır.
         </div>
     </div>
@@ -195,21 +197,10 @@
             e.preventDefault();
             uyariGoster();
         });
-
-        document.onkeydown = function(e) {
-            if (e.ctrlKey && 
-               (e.keyCode === 67 || e.keyCode === 86 || e.keyCode === 85 || e.keyCode === 117)) {
-                uyariGoster();
-                return false;
-            }
-        };
-
         function uyariGoster() {
             var kutu = document.getElementById("uyari-kutusu");
             kutu.style.opacity = "1";
-            setTimeout(function(){
-                kutu.style.opacity = "0";
-            }, 2000);
+            setTimeout(function(){ kutu.style.opacity = "0"; }, 2000);
         }
     </script>
 
