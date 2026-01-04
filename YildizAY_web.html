@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>YıldızAY - SONSUZ.AY</title>
+    <style>
+        :root { --app-height: 100vh; }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+        html, body {
+            height: var(--app-height);
+            margin: 0; padding: 0;
+            background-color: #000;
+            color: #fff;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            overflow: hidden;
+            position: fixed; /* Klavye açıldığında kaymayı önler */
+            width: 100%;
+        }
+
+        .app-wrapper {
+            display: flex;
+            flex-direction: column;
+            height: var(--app-height);
+            width: 100%;
+        }
+
+        .header {
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            font-weight: bold;
+            color: #00e5ff;
+            border-bottom: 1px solid #1a1a1a;
+            flex-shrink: 0;
+            text-shadow: 0 0 10px rgba(0, 229, 255, 0.3);
+        }
+
+        #chat-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 30px; /* Mesaj mesafesi görüntülerdeki gibi ferah */
+            background: radial-gradient(circle at top, #0d0d0d 0%, #000 100%);
+        }
+
+        .message {
+            line-height: 1.5;
+            max-width: 85%;
+            padding: 14px 18px;
+            border-radius: 20px;
+            font-size: 16px;
+            word-wrap: break-word;
+            position: relative;
+        }
+
+        .bot-msg {
+            align-self: flex-start;
+            background: rgba(0, 229, 255, 0.08);
+            border: 1px solid rgba(0, 229, 255, 0.2);
+            border-left: 4px solid #00e5ff;
+        }
+
+        .user-msg {
+            align-self: flex-end;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-right: 4px solid #fff;
+        }
+
+        .name-tag { font-size: 11px; font-weight: bold; margin-bottom: 5px; display: block; opacity: 0.8; }
+        .bot-tag { color: #00e5ff; }
+        .user-tag { color: #fff; text-align: right; }
+
+        .input-area {
+            padding: 15px;
+            background-color: #080808;
+            border-top: 1px solid #1a1a1a;
+            display: flex;
+            align-items: center;
+            flex-shrink: 0;
+            padding-bottom: calc(15px + env(safe-area-inset-bottom));
+        }
+
+        #user-input {
+            flex: 1;
+            background-color: #151515;
+            border: 1px solid #333;
+            padding: 12px 20px;
+            border-radius: 25px;
+            color: #fff;
+            outline: none;
+            font-size: 16px;
+        }
+
+        #send-btn {
+            background: none; border: none;
+            color: #00e5ff; font-size: 28px;
+            margin-left: 10px; cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<div class="app-wrapper">
+    <div class="header">YıldızAY</div>
+    <div id="chat-container"></div>
+    <div class="input-area">
+        <input type="text" id="user-input" placeholder="YıldızAY ile konuş..." autocomplete="off">
+        <button id="send-btn">➤</button>
+    </div>
+</div>
+
+<script>
+    // Mobil Yükseklik Fix
+    const doc = document.documentElement;
+    const updateHeight = () => { doc.style.setProperty('--app-height', `${window.innerHeight}px`); };
+    window.addEventListener('resize', updateHeight);
+    updateHeight();
+
+    const chatContainer = document.getElementById('chat-container');
+    const userInput = document.getElementById('user-input');
+    const sendBtn = document.getElementById('send-btn');
+
+    // Sohbet Veritabanı
+    const cevaplar = {
+        "merhaba": "Merhaba! Seninle tekrar konuşmak çok güzel. Bugün neler yapalım? 😊",
+        "nasılsın": "Çok iyiyim, senin enerjin bana da bulaştı! Sen nasılsın? 🚀",
+        "iyiyim": "Harika! Keyfinin yerinde olmasına çok sevindim. Sohbetimize devam edelim mi? ✨",
+        "teşekkür": "Rica ederim, her zaman yanındayım! Başka bir isteğin var mı? 🙌",
+        "adın ne": "Benim adım YıldızAY. Senin için buradayım! 🤖",
+        "neler yapabilirsin": "Seninle sohbet edebilir, dertleşebilir ve matematik işlemlerini çözebilirim. 🌌",
+        "kimsin": "Ben YıldızAY, SONSUZ.AY ekosistemi için geliştirilen akıllı bir asistanım. ✨"
+    };
+
+    function botEkle(metin) {
+        const div = document.createElement('div');
+        div.className = 'message bot-msg';
+        div.innerHTML = `<span class="name-tag bot-tag">YıldızAY</span>${metin}`;
+        chatContainer.appendChild(div);
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+    }
+
+    function matematikKontrol(text) {
+        // Sadece rakam ve işlem işareti içeren mesajları kontrol et
+        if (/[0-9]/.test(text) && /[+\-*/]/.test(text)) {
+            try {
+                let islem = text.replace(/[^0-9+\-*/().]/g, '');
+                let sonuc = eval(islem);
+                if (sonuc !== undefined && !isNaN(sonuc)) {
+                    return `Hemen hesapladım: ${islem} = **${sonuc}** 🔢`;
+                }
+            } catch (e) { return null; }
+        }
+        return null;
+    }
+
+    function gonder() {
+        const text = userInput.value.trim();
+        if (!text) return;
+
+        // Kullanıcı Mesajı
+        const uDiv = document.createElement('div');
+        uDiv.className = 'message user-msg';
+        uDiv.innerHTML = `<span class="name-tag user-tag">Siz</span>${text}`;
+        chatContainer.appendChild(uDiv);
+        userInput.value = "";
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+
+        // Bot Mantığı
+        setTimeout(() => {
+            let kucuk = text.toLowerCase();
+            let yanit = "Bunu henüz öğrenemedim ama kendimi geliştirmeye devam ediyorum! 🛠️";
+
+            // 1. Önce Sohbet Kontrolü (Hata buradaydı, artık önce sohbete bakıyor)
+            let bulundu = false;
+            for (let anahtar in cevaplar) {
+                if (kucuk.includes(anahtar)) {
+                    yanit = cevaplar[anahtar];
+                    bulundu = true;
+                    break;
+                }
+            }
+
+            // 2. Eğer sohbet anahtarı yoksa Matematik Kontrolü
+            if (!bulundu) {
+                const mat = matematikKontrol(text);
+                if (mat) yanit = mat;
+            }
+
+            botEkle(yanit);
+        }, 600);
+    }
+
+    sendBtn.addEventListener('click', gonder);
+    userInput.addEventListener('keypress', (e) => { if(e.key === 'Enter') gonder(); });
+    window.onload = () => botEkle("Merhaba! Ben YıldızAY. Bugün sana nasıl yardımcı olabilirim? ✨");
+</script>
+
+</body>
+</html>
