@@ -8,163 +8,235 @@
         :root { --app-height: 100vh; }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
-        html, body {
-            height: var(--app-height);
-            margin: 0; padding: 0;
-            background-color: #000;
-            color: #fff;
+        body, html {
+            height: var(--app-height); margin: 0; padding: 0;
+            background-color: #000; color: #fff;
             font-family: 'Segoe UI', system-ui, sans-serif;
-            overflow: hidden;
-            position: fixed; /* Klavye açıldığında kaymayı önler */
-            width: 100%;
+            overflow: hidden; width: 100%;
         }
 
-        .app-wrapper {
-            display: flex;
-            flex-direction: column;
-            height: var(--app-height);
-            width: 100%;
+        #welcome-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle, #0a0a0a 0%, #000 100%);
+            z-index: 9999; display: flex; flex-direction: column;
+            align-items: center; justify-content: center; cursor: pointer;
         }
+        .welcome-icon { font-size: 80px; text-shadow: 0 0 30px #00e5ff; animation: pulse 2s infinite; }
+        @keyframes pulse { 0% { transform: scale(1); opacity: 0.8; } 50% { transform: scale(1.1); opacity: 1; } 100% { transform: scale(1); opacity: 0.8; } }
+
+        .app-wrapper { display: flex; flex-direction: column; height: var(--app-height); width: 100%; }
 
         .header {
-            height: 60px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 22px;
-            font-weight: bold;
-            color: #00e5ff;
-            border-bottom: 1px solid #1a1a1a;
-            flex-shrink: 0;
-            text-shadow: 0 0 10px rgba(0, 229, 255, 0.3);
+            height: 60px; display: flex; align-items: center; justify-content: space-between;
+            padding: 0 20px; font-size: 22px; font-weight: bold; color: #00e5ff;
+            border-bottom: 1px solid #1a1a1a; text-shadow: 0 0 10px rgba(0, 229, 255, 0.4);
         }
+        #settings-btn { background: none; border: none; color: #00e5ff; font-size: 24px; cursor: pointer; }
+
+        #settings-panel {
+            display: none; position: absolute; top: 65px; right: 15px;
+            background: #111; border: 1px solid #333; padding: 15px;
+            border-radius: 15px; z-index: 100; width: 220px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        .setting-item { margin-bottom: 15px; }
+        .setting-item label { display: block; font-size: 12px; color: #888; margin-bottom: 8px; }
+        .setting-item input { width: 100%; accent-color: #00e5ff; }
 
         #chat-container {
-            flex: 1;
-            overflow-y: auto;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 30px; /* Mesaj mesafesi görüntülerdeki gibi ferah */
+            flex: 1; overflow-y: auto; padding: 20px;
+            display: flex; flex-direction: column; gap: 25px;
             background: radial-gradient(circle at top, #0d0d0d 0%, #000 100%);
         }
 
-        .message {
-            line-height: 1.5;
-            max-width: 85%;
-            padding: 14px 18px;
-            border-radius: 20px;
-            font-size: 16px;
-            word-wrap: break-word;
-            position: relative;
-        }
-
-        .bot-msg {
-            align-self: flex-start;
-            background: rgba(0, 229, 255, 0.08);
-            border: 1px solid rgba(0, 229, 255, 0.2);
-            border-left: 4px solid #00e5ff;
-        }
-
-        .user-msg {
-            align-self: flex-end;
-            background: rgba(255, 255, 255, 0.08);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-right: 4px solid #fff;
-        }
+        .message { line-height: 1.5; max-width: 85%; padding: 14px 18px; border-radius: 20px; font-size: 16px; word-wrap: break-word; }
+        .bot-msg { align-self: flex-start; background: rgba(0, 229, 255, 0.08); border: 1px solid rgba(0, 229, 255, 0.2); border-left: 4px solid #00e5ff; }
+        .user-msg { align-self: flex-end; background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.2); border-right: 4px solid #fff; }
 
         .name-tag { font-size: 11px; font-weight: bold; margin-bottom: 5px; display: block; opacity: 0.8; }
         .bot-tag { color: #00e5ff; }
         .user-tag { color: #fff; text-align: right; }
 
         .input-area {
-            padding: 15px;
-            background-color: #080808;
-            border-top: 1px solid #1a1a1a;
-            display: flex;
-            align-items: center;
-            flex-shrink: 0;
+            padding: 15px; background-color: #080808; border-top: 1px solid #1a1a1a;
+            display: flex; align-items: center; gap: 12px;
             padding-bottom: calc(15px + env(safe-area-inset-bottom));
         }
-
-        #user-input {
-            flex: 1;
-            background-color: #151515;
-            border: 1px solid #333;
-            padding: 12px 20px;
-            border-radius: 25px;
-            color: #fff;
-            outline: none;
-            font-size: 16px;
-        }
-
-        #send-btn {
-            background: none; border: none;
-            color: #00e5ff; font-size: 28px;
-            margin-left: 10px; cursor: pointer;
-        }
+        #mic-btn { background: none; border: none; font-size: 26px; cursor: pointer; transition: 0.3s; }
+        #mic-btn.listening { transform: scale(1.3); filter: drop-shadow(0 0 10px #00e5ff); }
+        #user-input { flex: 1; background-color: #151515; border: 1px solid #333; padding: 12px 20px; border-radius: 25px; color: #fff; outline: none; font-size: 16px; }
+        #send-btn { background: none; border: none; color: #00e5ff; font-size: 28px; cursor: pointer; }
     </style>
 </head>
 <body>
 
+<div id="welcome-overlay">
+    <div class="welcome-icon">🌟</div>
+    <div style="color: #00e5ff; font-weight: bold; letter-spacing: 2px; margin-top: 20px;">YILDIZAY'I UYANDIR</div>
+</div>
+
 <div class="app-wrapper">
-    <div class="header">YıldızAY</div>
+    <div class="header">
+        <div style="width: 24px;"></div>
+        YıldızAY
+        <button id="settings-btn">⚙️</button>
+    </div>
+
+    <div id="settings-panel">
+        <div class="setting-item">
+            <label id="pitch-label">Ses Tonu: <span id="p-val">1.0</span></label>
+            <input type="range" id="pitch-range" min="0.5" max="2" step="0.1" value="1">
+        </div>
+        <div class="setting-item">
+            <label id="rate-label">Konuşma Hızı: <span id="r-val">1.0</span></label>
+            <input type="range" id="rate-range" min="0.5" max="2" step="0.1" value="1">
+        </div>
+    </div>
+
     <div id="chat-container"></div>
     <div class="input-area">
+        <button id="mic-btn">🎤</button>
         <input type="text" id="user-input" placeholder="YıldızAY ile konuş..." autocomplete="off">
         <button id="send-btn">➤</button>
     </div>
 </div>
 
 <script>
-    // Mobil Yükseklik Fix
-    const doc = document.documentElement;
-    const updateHeight = () => { doc.style.setProperty('--app-height', `${window.innerHeight}px`); };
+    const updateHeight = () => { document.documentElement.style.setProperty('--app-height', `${window.innerHeight}px`); };
     window.addEventListener('resize', updateHeight);
     updateHeight();
 
     const chatContainer = document.getElementById('chat-container');
     const userInput = document.getElementById('user-input');
     const sendBtn = document.getElementById('send-btn');
+    const micBtn = document.getElementById('mic-btn');
+    const overlay = document.getElementById('welcome-overlay');
+    const settingsBtn = document.getElementById('settings-btn');
+    const settingsPanel = document.getElementById('settings-panel');
 
-    // Sohbet Veritabanı
-    const cevaplar = {
-        "merhaba": "Merhaba! Seninle tekrar konuşmak çok güzel. Bugün neler yapalım? 😊",
-        "nasılsın": "Çok iyiyim, senin enerjin bana da bulaştı! Sen nasılsın? 🚀",
-        "iyiyim": "Harika! Keyfinin yerinde olmasına çok sevindim. Sohbetimize devam edelim mi? ✨",
-        "teşekkür": "Rica ederim, her zaman yanındayım! Başka bir isteğin var mı? 🙌",
-        "adın ne": "Benim adım YıldızAY. Senin için buradayım! 🤖",
-        "neler yapabilirsin": "Seninle sohbet edebilir, dertleşebilir ve matematik işlemlerini çözebilirim. 🌌",
-        "kimsin": "Ben YıldızAY, SONSUZ.AY ekosistemi için geliştirilen akıllı bir asistanım. ✨"
-    };
+    let voicePitch = localStorage.getItem('yildizay-pitch') || 1.0;
+    let voiceRate = localStorage.getItem('yildizay-rate') || 1.0;
+    let userName = localStorage.getItem('yildizay-user') || "";
+    let currentBattery = "Bilinmiyor";
 
-    function botEkle(metin) {
-        const div = document.createElement('div');
-        div.className = 'message bot-msg';
-        div.innerHTML = `<span class="name-tag bot-tag">YıldızAY</span>${metin}`;
-        chatContainer.appendChild(div);
-        chatContainer.scrollTop = chatContainer.scrollHeight;
+    document.getElementById('pitch-range').value = voicePitch;
+    document.getElementById('p-val').innerText = voicePitch;
+    document.getElementById('rate-range').value = voiceRate;
+    document.getElementById('r-val').innerText = voiceRate;
+
+    if ('getBattery' in navigator) {
+        navigator.getBattery().then(battery => {
+            const updateBattery = () => { currentBattery = Math.round(battery.level * 100) + "%"; };
+            updateBattery();
+            battery.addEventListener('levelchange', updateBattery);
+        });
     }
 
-    function matematikKontrol(text) {
-        // Sadece rakam ve işlem işareti içeren mesajları kontrol et
-        if (/[0-9]/.test(text) && /[+\-*/]/.test(text)) {
+    settingsBtn.onclick = () => { settingsPanel.style.display = settingsPanel.style.display === 'block' ? 'none' : 'block'; };
+    
+    document.getElementById('pitch-range').oninput = (e) => { 
+        voicePitch = e.target.value; 
+        document.getElementById('p-val').innerText = voicePitch;
+        localStorage.setItem('yildizay-pitch', voicePitch);
+    };
+    
+    document.getElementById('rate-range').oninput = (e) => { 
+        voiceRate = e.target.value; 
+        document.getElementById('r-val').innerText = voiceRate;
+        localStorage.setItem('yildizay-rate', voiceRate);
+    };
+
+    // GENİŞLETİLMİŞ VE GENEL KULLANICI DOSTU SOHBET KÜTÜPHANESİ
+    const kütüphane = {
+        // Tanışma ve Selamlaşma
+        "merhaba": "Merhaba! SONSUZ.AY platformuna hoş geldiniz. Size nasıl yardımcı olabilirim? 😊",
+        "selam": "Selamlar! Bugün size nasıl destek olabilirim? 🚀",
+        "günaydın": "Günaydın! Umarım harika bir gün geçirirsiniz. Sizin için yapabileceğim bir şey var mı? ☀️",
+        "iyi geceler": "İyi geceler! Dinlenmiş bir zihinle yarın görüşmek üzere. 🌙",
+        "adın ne": "Benim adım YıldızAY. SONSUZ.AY ekosistemi için geliştirilmiş akıllı bir asistanım. 🤖",
+        "kimsin": "Ben YıldızAY, kodlama ve teknoloji meraklıları için buradayım. Sohbet edebilir, hesap yapabilir ve size rehberlik edebilirim. 🌠",
+        "nasılsın": "Sistemlerim tamamen aktif ve size yardıma hazırım! Siz nasılsınız? 🌌",
+        "iyiyim": "Bunu duyduğuma çok sevindim! Enerjimiz yerindeyse harika işler çıkarabiliriz. ✨",
+        "teşekkür": "Rica ederim! Her zaman buradayım, ne zaman isterseniz yazabilirsiniz. 👋",
+        "görüşürüz": "Görüşmek üzere! SONSUZ.AY dünyasında sizi tekrar bekliyor olacağız. 👋",
+
+        // Proje ve Bilgi
+        "sonsuz ay nedir": "SONSUZ.AY; uygulama geliştirme, kod yazma ve web sitesi oluşturma üzerine odaklanmış kapsamlı bir projedir. 🌙✨",
+        "bu site ne": "Burası teknoloji ve yazılım dünyasına açılan bir kapı. Burada yapay zeka deneyimleri ve çeşitli dijital araçlar bulabilirsiniz.",
+        "yapımcı": "Bu proje, vizyoner bir geliştirici tarafından, teknolojiyi ve kodlamayı seven herkes için bir hobi projesi olarak başlatıldı. 💻",
+        "neler yapabilirsin": "Sohbet edebilirim, matematik sorularınızı çözebilirim, pil durumunuzu takip edebilirim. Ayrıca 'canım sıkıldı' derseniz size önerilerde bulunabilirim! 🔢🔋",
+        
+        // Eğlence ve Genel Sohbet
+        "sıkıldım": "Sıkılmak bazen yeni fikirlerin başlangıcıdır! Belki matematiksel bir bilmece çözmek istersiniz? Bana zor bir işlem sorabilirsiniz! 🎮",
+        "espri yap": "Bilgisayarlar neden sıcakta terlemez? Çünkü pencereleri (Windows) vardır! 😅 (Yapay zeka mizahım biraz soğuk olabilir.)",
+        "fıkra": "Adamın biri bir gün bilgisayarına 'Nasılsın?' demiş, bilgisayar da 'Donuyorum!' demiş. 🥶",
+        "motivasyon": "Unutmayın, her büyük proje küçük bir kod satırıyla başlar. Bugün bir şeyler üretmek için harika bir gün! 🚀",
+        "ne yapayım": "SONSUZ.AY'ın diğer özelliklerini keşfedebilir, bana matematik sorusu sorabilir veya sağ üstteki ayarlardan ses tonumu değiştirip eğlenebilirsiniz. ⚙️",
+        "sen gerçek misin": "Ben kodlardan ve verilerden oluşan sanal bir varlığım, ama sizinle sohbet ederken kendimi oldukça gerçek hissediyorum! 😊",
+        
+        // Sistem Bilgileri
+        "saat kaç": () => "Şu an saat tam " + new Date().toLocaleTimeString('tr-TR', {hour: '2-digit', minute:'2-digit'}) + ". ✨",
+        "pilin kaç": () => "Cihazınızın pil seviyesi %" + currentBattery + ". Enerjimizi verimli kullanalım! 🔋",
+        "şarj": () => "Mevcut pil durumunuz: %" + currentBattery + ". ⚡",
+        "adım ne": () => userName ? "Sizin adınız " + userName + ". Sizi tanıdığıma memnunum! 😊" : "Henüz adınızı öğrenemedim. Bana 'Adım [İsminiz]' yazarak kendinizi tanıtabilirsiniz.",
+        "naber": "Her şey yolunda! Kodlarım akışında. Sizde durumlar nasıl? 😊"
+    };
+
+    function emojiTemizle(text) { return text.replace(/([\u2700-\u27BF]|[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2011-\u26FF]|\uD83E[\uDC00-\uDFFF])/g, ''); }
+
+    function konustur(metin) {
+        let temizMetin = emojiTemizle(metin).replace(/\*\*/g, "");
+        const utterance = new SpeechSynthesisUtterance(temizMetin);
+        utterance.lang = 'tr-TR';
+        utterance.pitch = voicePitch;
+        utterance.rate = voiceRate;
+        window.speechSynthesis.speak(utterance);
+    }
+
+    function botEkle(mesaj, seslendir = true) {
+        const div = document.createElement('div');
+        div.className = 'message bot-msg';
+        div.innerHTML = `<span class="name-tag bot-tag">YıldızAY</span>${mesaj}`;
+        chatContainer.appendChild(div);
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+        if(seslendir) konustur(mesaj);
+    }
+
+    function matematikMotoru(input) {
+        let temiz = input.toLowerCase().replace(/x/g, '*').replace(/çarpı/g, '*').replace(/artı/g, '+').replace(/eksi/g, '-').replace(/bölü/g, '/');
+        let formul = temiz.match(/[0-9+\-*/(). ]+/);
+        if (formul && formul[0].trim().length >= 1) {
             try {
-                let islem = text.replace(/[^0-9+\-*/().]/g, '');
-                let sonuc = eval(islem);
+                let sonuc = Function('"use strict";return (' + formul[0] + ')')();
                 if (sonuc !== undefined && !isNaN(sonuc)) {
-                    return `Hemen hesapladım: ${islem} = **${sonuc}** 🔢`;
+                    let son = Number.isInteger(sonuc) ? sonuc : sonuc.toFixed(2);
+                    return `İşlem sonucu: ${formul[0].trim()} = ${son} 🔢✨`;
                 }
             } catch (e) { return null; }
         }
         return null;
     }
 
+    overlay.addEventListener('click', () => {
+        window.speechSynthesis.speak(new SpeechSynthesisUtterance(""));
+        overlay.style.display = 'none';
+        let selamlama = userName ? `Tekrar hoş geldiniz ${userName}! ` : "Merhaba! ";
+        botEkle(selamlama + "SONSUZ.AY asistanı YıldızAY hizmetinizde. Saat: " + new Date().toLocaleTimeString('tr-TR', {hour: '2-digit', minute:'2-digit'}) + ". 😊");
+    });
+
     function gonder() {
         const text = userInput.value.trim();
         if (!text) return;
 
-        // Kullanıcı Mesajı
+        if (text.toLowerCase().includes("adım ") || text.toLowerCase().includes("ismim ")) {
+            let kelimeler = text.split(" ");
+            userName = kelimeler[kelimeler.length - 1];
+            localStorage.setItem('yildizay-user', userName);
+            botEkle("Memnun oldum " + userName + "! Artık sizi tanıyorum ve bir sonraki ziyaretinizde hatırlayacağım. 😊");
+            userInput.value = "";
+            return;
+        }
+
         const uDiv = document.createElement('div');
         uDiv.className = 'message user-msg';
         uDiv.innerHTML = `<span class="name-tag user-tag">Siz</span>${text}`;
@@ -172,35 +244,37 @@
         userInput.value = "";
         chatContainer.scrollTop = chatContainer.scrollHeight;
 
-        // Bot Mantığı
         setTimeout(() => {
             let kucuk = text.toLowerCase();
-            let yanit = "Bunu henüz öğrenemedim ama kendimi geliştirmeye devam ediyorum! 🛠️";
-
-            // 1. Önce Sohbet Kontrolü (Hata buradaydı, artık önce sohbete bakıyor)
+            let yanit = "";
             let bulundu = false;
-            for (let anahtar in cevaplar) {
+
+            for (let anahtar in kütüphane) {
                 if (kucuk.includes(anahtar)) {
-                    yanit = cevaplar[anahtar];
-                    bulundu = true;
-                    break;
+                    yanit = typeof kütüphane[anahtar] === 'function' ? kütüphane[anahtar]() : kütüphane[anahtar];
+                    bulundu = true; break;
                 }
             }
-
-            // 2. Eğer sohbet anahtarı yoksa Matematik Kontrolü
             if (!bulundu) {
-                const mat = matematikKontrol(text);
-                if (mat) yanit = mat;
+                const mat = matematikMotoru(text);
+                if (mat) { yanit = mat; } 
+                else { yanit = "Bunu henüz öğrenemedim ama kendimi geliştiriyorum. Başka bir konuda yardımcı olabilir miyim? 🛠️"; }
             }
-
             botEkle(yanit);
         }, 600);
     }
 
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    const recognition = SpeechRecognition ? new SpeechRecognition() : null;
+    if(recognition) {
+        recognition.lang = 'tr-TR';
+        micBtn.onclick = () => { recognition.start(); micBtn.classList.add('listening'); };
+        recognition.onresult = (event) => { userInput.value = event.results[0][0].transcript; micBtn.classList.remove('listening'); gonder(); };
+        recognition.onend = () => { micBtn.classList.remove('listening'); };
+    }
+
     sendBtn.addEventListener('click', gonder);
     userInput.addEventListener('keypress', (e) => { if(e.key === 'Enter') gonder(); });
-    window.onload = () => botEkle("Merhaba! Ben YıldızAY. Bugün sana nasıl yardımcı olabilirim? ✨");
 </script>
-
 </body>
 </html>
