@@ -1,27 +1,23 @@
-const CACHE_NAME = 'sonsuzay-v2.4'; // Güncelleme yaptıkça burayı v2, v3 yap!
+const CACHE_NAME = 'sonsuzay-ana-v3.0'; 
 const urlsToCache = [
   './',
   './index.html',
-  './oyunlar.html',
-  './uygulamalar.html',
-  './indir.html',
-  './player.html',
-  './saat.html',
   './site_simge.png',
   './manifest.json'
+  // Diğer HTML dosyalarını sildik çünkü artık onlar başka depolarda
 ];
 
 self.addEventListener('install', (event) => {
-  self.skipWaiting(); // Yeni sürüm gelince bekleme, hemen yükle
+  self.skipWaiting();
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
+      console.log('Ana Sayfa Önbelleğe Alınıyor...');
       return cache.addAll(urlsToCache);
     })
   );
 });
 
 self.addEventListener('activate', (event) => {
-  // Eski sürümleri (cache) temizle
   event.waitUntil(
     caches.keys().then((cacheNames) => {
       return Promise.all(
@@ -33,7 +29,7 @@ self.addEventListener('activate', (event) => {
       );
     })
   );
-  self.clients.claim(); // Sayfanın kontrolünü hemen ele al
+  self.clients.claim();
 });
 
 self.addEventListener('fetch', (event) => {
