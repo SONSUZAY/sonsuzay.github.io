@@ -1,4 +1,4 @@
-const CACHE_NAME = 'sonsuzay-v2.3'; // Güncelleme yaptıkça burayı v2, v3 yap!
+const CACHE_NAME = 'sonsuzay-v2.4'; // Güncelleme yaptıkça burayı v2, v3 yap!
 const urlsToCache = [
   './',
   './index.html',
