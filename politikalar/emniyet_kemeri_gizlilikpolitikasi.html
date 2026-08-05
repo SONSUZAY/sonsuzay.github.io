@@ -26,28 +26,23 @@
     <h2>1. Bilgi Toplama ve Kullanımı</h2>
     <p>Emniyet Kemeri uygulaması gizlilik odaklı tasarlanmıştır. Temel prensibimiz kişisel verilerinizi doğrudan toplamamak ve dışarı aktarmamaktır.</p>
 
+    <h3>Hava Durumu Hizmeti ve Konum Verisi</h3>
+    <p>Uygulamamızdaki "Hava Durumu Bilgisi" özelliğinin çalışabilmesi için cihazınızın yaklaşık konum verisi kullanılır. Bu veri sadece hava durumu bilgisini çekmek amacıyla <strong>Open-Meteo API</strong>'sine iletilir. Konum verileriniz hiçbir sunucumuzda saklanmaz, kaydedilmez ve üçüncü taraflarla reklam amacıyla paylaşılmaz. Kullanılan hava durumu servisinin gizlilik ilkelerine <a href="https://open-meteo.com/en/features#privacy" target="_blank">buradan</a> ulaşabilirsiniz.</p>
+
     <h3>İnternet Erişimi ve Ödeme İşlemleri</h3>
-    <p>Uygulamamız genel olarak çevrimdışı (offline) çalışır. Ancak uygulama içi abonelik işlemlerini gerçekleştirebilmek amacıyla <strong>Google Play Faturalandırma Altyapısı</strong> kullanılır. Bu süreçte ödeme ve abonelik verileri Google Play tarafından güvenli bir şekilde işlenir. Geliştirici olarak biz finansal bilgilerinize kesinlikle erişmeyiz.</p>
+    <p>Uygulama içi abonelik ve hava durumu verilerinin güncellenmesi için internet erişimi kullanılır. Ödeme süreçleri tamamen <strong>Google Play Faturalandırma Altyapısı</strong> üzerinden güvenli bir şekilde yürütülür; finansal bilgilerinize tarafımızca erişilmez.</p>
 
     <h3>Gerekli İzinler ve Kullanım Amaçları</h3>
     <ul>
-        <li><strong>Bluetooth ve Yakındaki Cihazlar:</strong> Yalnızca seçtiğiniz araç Bluetooth cihazına bağlandığınızı tespit etmek için kullanılır.</li>
-        <li><strong>İnternet Erişimi ve Ağ Durumu:</strong> Sadece Google Play ödeme sisteminin doğrulanması ve Premium abonelik durumunuzun kontrol edilmesi için kullanılır.</li>
-        <li><strong>Yüklü Uygulamaları Sorgulama (QUERY_ALL_PACKAGES):</strong> Premium "Medya Uygulaması Seç" özelliğinde, telefonunuzdaki müzik çalarları (Spotify, YT Music vb.) listeleyebilmek için gereklidir. Bu işlem tamamen yereldir, uygulama listeniz hiçbir yere gönderilmez.</li>
-        <li><strong>Bildirimler:</strong> Uygulamanın aktif olduğunu bildirmek ve hatırlatmalar göndermek için kullanılır.</li>
-        <li><strong>Ön Plan Servisi:</strong> Hatırlatıcının kesintisiz çalışması için gereklidir.</li>
-        <li><strong>Diğer Uygulamaların Üzerinde Görüntüleme (Overlay):</strong> Premium "Otomatik Müzik Başlatma" özelliğinin telefon arka plandayken veya ekran kapalıyken sorunsuz çalışabilmesi için kullanılır.</li>
-        <li><strong>Faturalandırma (Billing):</strong> Uygulama içi abonelik işlemlerini yönetmek için kullanılır.</li>
+        <li><strong>Bluetooth ve Yakındaki Cihazlar:</strong> Seçtiğiniz araç Bluetooth cihazına bağlandığınızı tespit etmek için kullanılır.</li>
+        <li><strong>Konum Bilgisi (Yaklaşık):</strong> Mevcut bölgenizin güncel hava durumunu çekebilmek için gereklidir.</li>
+        <li><strong>Yüklü Uygulamaları Sorgulama (QUERY_ALL_PACKAGES):</strong> Premium medya seçimi özelliğinde, cihazdaki müzik çalarları listeleyebilmek için kullanılır.</li>
+        <li><strong>Diğer Uygulamaların Üzerinde Görüntüleme (Overlay):</strong> Müzik uygulamasının arka planda otomatik başlatılabilmesi için gereklidir.</li>
+        <li><strong>Bildirimler ve Ön Plan Servisi:</strong> Uygulamanın kararlı çalışması ve uyarıların iletilmesi için kullanılır.</li>
     </ul>
 
-    <h3>Veri Saklama</h3>
-    <p>Tüm tercihleriniz (ses, dil, tema vb.) yalnızca cihazınızın yerel hafızasında saklanır. Uygulama silindiğinde bu veriler de yok olur.</p>
-
     <div class="contact-box">
-        <strong>İletişicim:</strong><br>
-        Geliştirici: SonsuzAY<br>
-        GitHub: <a href="https://github.com/SonsuzAY">github.com/SonsuzAY</a><br>
-        E-posta: sonsuzaystudyo@gmail.com
+        <strong>İletişim:</strong> sonsuzaystudyo@gmail.com
     </div>
 
     <hr>
@@ -57,30 +52,22 @@
     <p>This Privacy Policy applies to the <strong>Seatbelt Reminder</strong> mobile app developed by <strong>SonsuzAY</strong>.</p>
 
     <h2>1. Information Collection and Use</h2>
-    <p>The app is designed with privacy in mind. Our core principle is not to collect or transmit your personal data directly.</p>
+    <p>The app is designed with privacy in mind. We do not collect or transmit your personal data directly.</p>
 
-    <h3>Internet Access and In-App Purchases</h3>
-    <p>The app generally works offline. However, the <strong>Google Play Billing Library</strong> is used to process in-app subscriptions and purchases. Transaction and subscription data are securely processed by Google Play. As the developer, we never access your credit card or financial details.</p>
+    <h3>Weather Service and Location Data</h3>
+    <p>The "Weather Information" feature uses your device's coarse location to fetch local weather updates. This data is transmitted to the <strong>Open-Meteo API</strong> solely to retrieve weather information. Your location data is not stored on our servers and is not shared with third parties for advertising purposes. You can review the provider's privacy commitment <a href="https://open-meteo.com/en/features#privacy" target="_blank">here</a>.</p>
 
     <h3>Required Permissions and Usage</h3>
     <ul>
         <li><strong>Bluetooth & Nearby Devices:</strong> Used only to detect connection to your selected car Bluetooth device.</li>
-        <li><strong>Internet Access & Network State:</strong> Used solely to verify Google Play payment systems and to check your Premium subscription status.</li>
-        <li><strong>Query All Packages (Installed Apps):</strong> Required for the Premium "Select Media App" feature to list music players on your device. This process is purely local and your app list is never transmitted.</li>
-        <li><strong>Notifications:</strong> Used to notify you that the app is running and to provide alerts.</li>
-        <li><strong>Foreground Service:</strong> Required for the reminder to function seamlessly.</li>
-        <li><strong>Display Over Other Apps (Overlay):</strong> Used for the Premium "Auto Music Start" feature to function correctly when the phone is in the background or locked.</li>
-        <li><strong>Billing:</strong> Used to manage in-app purchases and subscriptions.</li>
+        <li><strong>Location Information (Coarse):</strong> Required to fetch current weather data for your area.</li>
+        <li><strong>Query All Packages (Installed Apps):</strong> Used to list music players on your device for the Premium feature.</li>
+        <li><strong>Display Over Other Apps (Overlay):</strong> Required to automatically launch the selected music app in the background.</li>
+        <li><strong>Notifications & Foreground Service:</strong> Required for the app to function seamlessly and deliver alerts.</li>
     </ul>
 
-    <h3>Data Storage</h3>
-    <p>All your preferences are stored only locally on your device. Data is deleted when the app is uninstalled.</p>
-
     <div class="contact-box">
-        <strong>Contact:</strong><br>
-        Developer: SonsuzAY<br>
-        GitHub: <a href="https://github.com/SonsuzAY">github.com/SonsuzAY</a><br>
-        Email: sonsuzaystudyo@gmail.com
+        <strong>Contact:</strong> sonsuzaystudyo@gmail.com
     </div>
 </div>
 
