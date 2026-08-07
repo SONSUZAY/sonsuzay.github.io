@@ -26,23 +26,30 @@
     <h2>1. Bilgi Toplama ve Kullanımı</h2>
     <p>Emniyet Kemeri uygulaması gizlilik odaklı tasarlanmıştır. Temel prensibimiz kişisel verilerinizi doğrudan toplamamak ve dışarı aktarmamaktır.</p>
 
-    <h3>Hava Durumu Hizmeti ve Konum Verisi</h3>
-    <p>Uygulamamızdaki "Hava Durumu Bilgisi" özelliğinin çalışabilmesi için cihazınızın yaklaşık konum verisi kullanılır. Bu veri sadece hava durumu bilgisini çekmek amacıyla <strong>Open-Meteo API</strong>'sine iletilir. Konum verileriniz hiçbir sunucumuzda saklanmaz, kaydedilmez ve üçüncü taraflarla reklam amacıyla paylaşılmaz. Kullanılan hava durumu servisinin gizlilik ilkelerine <a href="https://open-meteo.com/en/features#privacy" target="_blank">buradan</a> ulaşabilirsiniz.</p>
+    <h3>Çevrimdışı Çalışma ve Veri Güvenliği</h3>
+    <p>Uygulamamızın temel özellikleri (Hız göstergesi, Kilometre sayacı, NFC tetikleme vb.) tamamen <strong>çevrimdışı (offline)</strong> çalışacak şekilde tasarlanmıştır. Konum verileriniz veya NFC etiket bilgileriniz hiçbir sunucuya gönderilmez, kaydedilmez ve üçüncü taraflarla paylaşılmaz. Tüm işlemler cihazınızın kendi donanımı üzerinde yerel olarak gerçekleşir.</p>
 
     <h3>İnternet Erişimi ve Ödeme İşlemleri</h3>
-    <p>Uygulama içi abonelik ve hava durumu verilerinin güncellenmesi için internet erişimi kullanılır. Ödeme süreçleri tamamen <strong>Google Play Faturalandırma Altyapısı</strong> üzerinden güvenli bir şekilde yürütülür; finansal bilgilerinize tarafımızca erişilmez.</p>
+    <p>Uygulamamız genel olarak çevrimdışı çalışsa da; uygulama içi abonelik işlemleri ve hava durumu güncellemeleri için internet erişimi kullanılır. Ödeme verileri <strong>Google Play Faturalandırma Altyapısı</strong> tarafından güvenli bir şekilde işlenir; finansal bilgilerinize tarafımızca erişilmez.</p>
 
     <h3>Gerekli İzinler ve Kullanım Amaçları</h3>
     <ul>
-        <li><strong>Bluetooth ve Yakındaki Cihazlar:</strong> Seçtiğiniz araç Bluetooth cihazına bağlandığınızı tespit etmek için kullanılır.</li>
-        <li><strong>Konum Bilgisi (Yaklaşık):</strong> Mevcut bölgenizin güncel hava durumunu çekebilmek için gereklidir.</li>
-        <li><strong>Yüklü Uygulamaları Sorgulama (QUERY_ALL_PACKAGES):</strong> Premium medya seçimi özelliğinde, cihazdaki müzik çalarları listeleyebilmek için kullanılır.</li>
-        <li><strong>Diğer Uygulamaların Üzerinde Görüntüleme (Overlay):</strong> Müzik uygulamasının arka planda otomatik başlatılabilmesi için gereklidir.</li>
-        <li><strong>Bildirimler ve Ön Plan Servisi:</strong> Uygulamanın kararlı çalışması ve uyarıların iletilmesi için kullanılır.</li>
+        <li><strong>Bluetooth ve Yakındaki Cihazlar:</strong> Aracınızın Bluetooth sistemine bağlandığınızı tespit etmek için kullanılır.</li>
+        <li><strong>Konum Bilgisi (Hassas ve Yaklaşık):</strong> Hızınızı en doğru şekilde ölçmek (Hız Göstergesi) ve bulunduğunuz bölgenin hava durumunu çekmek için kullanılır. Bu veriler sadece anlık işlem için kullanılır, geçmiş takibi yapılmaz.</li>
+        <li><strong>NFC (Yakın Alan İletişimi):</strong> Uygulamanın bir etikete dokunarak otomatik başlatılabilmesi için kullanılır.</li>
+        <li><strong>Kilit Ekranında Görüntüleme ve Tam Ekran:</strong> Hız göstergesi panelinin telefon kilitliyken veya sürüş sırasında dikkatiniz dağılmadan tam ekran olarak sunulabilmesi için gereklidir.</li>
+        <li><strong>Bildirimler ve Ön Plan Servisi:</strong> Uygulamanın arka planda kesintisiz çalışması ve sesli uyarıların iletilmesi için kullanılır.</li>
+        <li><strong>Vibrasyon (Titreşim):</strong> NFC etiketi okunduğunda kullanıcıya fiziksel geri bildirim vermek için kullanılır.</li>
     </ul>
 
+    <h3>Veri Saklama</h3>
+    <p>Tüm tercihleriniz ve toplam kilometre veriniz yalnızca cihazınızın yerel hafızasında saklanır. Uygulama silindiğinde bu veriler de yok olur.</p>
+
     <div class="contact-box">
-        <strong>İletişim:</strong> sonsuzaystudyo@gmail.com
+        <strong>İletişim:</strong><br>
+        Geliştirici: SonsuzAY<br>
+        GitHub: <a href="https://github.com/SonsuzAY">github.com/SonsuzAY</a><br>
+        E-posta: sonsuzaystudyo@gmail.com
     </div>
 
     <hr>
@@ -52,22 +59,26 @@
     <p>This Privacy Policy applies to the <strong>Seatbelt Reminder</strong> mobile app developed by <strong>SonsuzAY</strong>.</p>
 
     <h2>1. Information Collection and Use</h2>
-    <p>The app is designed with privacy in mind. We do not collect or transmit your personal data directly.</p>
+    <p>The app is designed with privacy in mind. Our core principle is not to collect or transmit your personal data directly.</p>
 
-    <h3>Weather Service and Location Data</h3>
-    <p>The "Weather Information" feature uses your device's coarse location to fetch local weather updates. This data is transmitted to the <strong>Open-Meteo API</strong> solely to retrieve weather information. Your location data is not stored on our servers and is not shared with third parties for advertising purposes. You can review the provider's privacy commitment <a href="https://open-meteo.com/en/features#privacy" target="_blank">here</a>.</p>
+    <h3>Offline Operation and Data Security</h3>
+    <p>The core features of our app (Speedometer, Odometer, NFC Trigger, etc.) are designed to operate entirely <strong>offline</strong>. Your location data or NFC tag information is never sent to any server, recorded, or shared with third parties. All processing occurs locally on your device's hardware.</p>
 
     <h3>Required Permissions and Usage</h3>
     <ul>
-        <li><strong>Bluetooth & Nearby Devices:</strong> Used only to detect connection to your selected car Bluetooth device.</li>
-        <li><strong>Location Information (Coarse):</strong> Required to fetch current weather data for your area.</li>
-        <li><strong>Query All Packages (Installed Apps):</strong> Used to list music players on your device for the Premium feature.</li>
-        <li><strong>Display Over Other Apps (Overlay):</strong> Required to automatically launch the selected music app in the background.</li>
-        <li><strong>Notifications & Foreground Service:</strong> Required for the app to function seamlessly and deliver alerts.</li>
+        <li><strong>Bluetooth & Nearby Devices:</strong> Used to detect connection to your car's Bluetooth system.</li>
+        <li><strong>Location Information (Precise & Coarse):</strong> Required to measure your speed accurately (Speedometer) and fetch current weather data. This data is used only for real-time processing; no tracking history is maintained.</li>
+        <li><strong>NFC (Near Field Communication):</strong> Used to automatically launch the app by tapping a tag.</li>
+        <li><strong>Show on Lock Screen & Full Screen:</strong> Necessary to present the speedometer panel while the phone is locked or as a distraction-free full-screen experience during driving.</li>
+        <li><strong>Notifications & Foreground Service:</strong> Required for the app to function seamlessly in the background and deliver voice alerts.</li>
+        <li><strong>Vibration:</strong> Used to provide physical feedback when an NFC tag is successfully read.</li>
     </ul>
 
     <div class="contact-box">
-        <strong>Contact:</strong> sonsuzaystudyo@gmail.com
+        <strong>Contact:</strong><br>
+        Developer: SonsuzAY<br>
+        GitHub: <a href="https://github.com/SonsuzAY">github.com/SonsuzAY</a><br>
+        Email: sonsuzaystudyo@gmail.com
     </div>
 </div>
 
