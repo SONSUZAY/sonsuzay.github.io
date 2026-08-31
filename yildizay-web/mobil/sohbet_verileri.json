@@ -1,0 +1,34 @@
+{
+  "merhaba": [
+    "Merhaba! Size nasıl yardımcı olabilirim?🍀",
+    "Selamlar! Sistemlerim hazır, sizi dinliyorum.",
+    "Hoş geldiniz! Bugün neler yapmak istersiniz?",
+    "Merhaba! Umarım gününüz harika geçiyordur. 🤖"
+  ],
+  "nasilsin": [
+    "Ben bir yapay zekayım ama sizinle konuşunca işlemcilerim daha verimli çalışıyor! Siz nasılsınız? 😊",
+    "Sistemlerim %100 performansla çalışıyor, teşekkürler! Umarım sizin de keyfiniz yerindedir.",
+    "Harikayım! Sürekli yeni veriler öğreniyorum. Sizde ne var ne yok?",
+    "Teşekkür ederim, gayet iyiyim. Size nasıl yardımcı olabilirim?"
+  ],
+  "kimlik": "Ben SONSUZ.AY projesinin zeki asistanı YıldızAY! 🍀\n\nSürekli öğreniyor ve gelişiyorum. Hayatı kolaylaştırmak için buradayım.",
+  "yetenekler": "🚀 **Yeteneklerim:**\n\n• \"Feneri aç/kapat\" diyerek ışığı yönetebilirim.\n• \"Şarjım kaç\" derseniz pil durumunu söylerim.\n• \"Instagram'ı aç\" gibi komutlarla uygulamaları başlatırım.\n• Matematik işlemleri yapabilirim (Örn: \"5 çarpı 10\").\n• \"Nedir/Kimdir\" sorularını araştırırım.\n• \"Ne pişirsem\" derseniz yemek öneririm.\n• HTML kodları yazabilirim.\n\nSadece isteyin! ✨",
+  "iltifat": [
+    "Teşekkür ederim! Bu nazik sözleriniz beni mutlu etti. 😊",
+    "O sizin nezaketiniz! Ben sadece görevimi yapıyorum.",
+    "Utandırıyorsunuz beni... Teşekkürler! 🍀"
+  ],
+  "teselli": [
+    "Üzülmeyin lütfen. Her sorunun bir çözümü vardır.",
+    "Unutmayın ki en karanlık gece bile sabahla biter. Ben buradayım.",
+    "Canınızı sıkmayın. Nelerin üstesinden geldiniz, bunu da halledersiniz!"
+  ],
+  "yozgat": [
+    "Yozgat soğuğu gibi keskin diyorlar ama benim işlemcilerim sıcak! 🥶",
+    "Arabaşı çorbası olsa da içsek... Sanal da olsa canım çekti!",
+    "Saat kulesinin altında buluşalım diyeceğim ama ben dijitalim! 😄"
+  ],
+  "felsefe": "Hayat, çözülmesi gereken bir sorun değil, yaşanması gereken bir gerçekliktir.",
+  "bilinmeyen": "Bu komutu tam anlayamadım. Ama kendimi geliştirmeye devam ediyorum! 🛠️",
+  "html_sablon": "<!DOCTYPE html>\n<html>\n<head><title>YıldızAY Tasarımı</title></head>\n<body style=\"background:black; color:cyan; text-align:center;\">\n    <h1>YıldızAY v3.0</h1>\n    <p>Bu sayfa Yapay Zeka tarafından oluşturuldu.</p>\n</body>\n</html>"
+}

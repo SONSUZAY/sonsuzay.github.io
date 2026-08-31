@@ -290,7 +290,7 @@
         bubble.addEventListener('touchend', (e) => {
             bubble.style.animation = 'nefesAl 3s infinite ease-in-out';
             let dragDuration = new Date().getTime() - dragStartTime;
-            if (!isDragging || dragDuration < 150) { window.location.href = "https://sonsuzay.github.io/yildizay-web/"; }
+            if (!isDragging || dragDuration < 150) { window.location.href = "yildizay-web/index.html"; }
         });
 
         bubble.onmousedown = function(e) {
@@ -305,7 +305,7 @@
             bubble.onmouseup = function() {
                 document.removeEventListener('mousemove', onMouseMove); bubble.onmouseup = null;
                 let dragDuration = new Date().getTime() - dragStartTime;
-                if (!isDragging || dragDuration < 150) { window.location.href = "https://sonsuzay.github.io/yildizay-web/"; }
+                if (!isDragging || dragDuration < 150) { window.location.href = "yildizay-web/index.html"; }
             };
         };
         bubble.ondragstart = function() { return false; };

@@ -1,0 +1,43 @@
+{  "tarifler": [
+    {
+      "yemekAdi": "mantı",
+      "tarif": "🥟 **Kayseri Mantısı Tarifi:**\n\nMalzemeler: Un, su, tuz, yumurta (Hamur). Kıyma, soğan, karabiber (İç).\n\nNasıl Yapılır: Sert bir hamur yoğur. İç harcı hazırla. Hamuru açıp minik kareler kes, içini doldur ve kapat. Kaynar suda haşla. Sarımsaklı yoğurt ve salçalı sos ile servis et. Afiyet olsun!"
+    },
+    {
+      "yemekAdi": "makarna",
+      "tarif": "🍝 **Öğrenci Dostu Makarna:**\n\nNasıl Yapılır: Suyu kaynat, bol tuz at. Makarnaları 8-10 dakika haşla. Süzdükten sonra az yağda çevir. İstersen üzerine peynir, ketçap ya da ton balığı ekle. En hızlı çözüm!"
+    },
+    {
+      "yemekAdi": "karnıyarık",
+      "tarif": "🍆 **Karnıyarık Tarifi:**\n\nNasıl Yapılır: Patlıcanları alacalı soy ve kızart. Ortalarını yar. Kıyma, soğan, biber ve domatesle hazırladığın harcı içine doldur. Salçalı su ekleyip fırına ver veya tencerede pişir. Yanına pilav şart!"
+    },
+    {
+      "yemekAdi": "menemen",
+      "tarif": "🍳 **Efsane Menemen:**\n\nNasıl Yapılır: Biberleri ince doğra, yağda kavur. Kabukları soyulmuş domatesleri ekle. Domatesler suyunu çekince yumurtaları kır. İster karıştır, ister banmalık bırak. Tuz ve pul biberi unutma!"
+    },
+    {
+      "yemekAdi": "mercimek",
+      "tarif": "🥣 **Süzme Mercimek Çorbası:**\n\nNasıl Yapılır: Soğan, patates ve havucu kavur. Yıkanmış kırmızı mercimeği ekle. Su ve et suyu koyup düdüklüde pişir. Blenderdan geçir. Üzerine tereyağlı nane yak."
+    },
+    {
+      "yemekAdi": "köfte",
+      "tarif": "🥩 **Anne Köftesi:**\n\nNasıl Yapılır: Kıyma, rendelenmiş soğan, ekmek içi, yumurta, maydanoz, kimyon, karabiber ve tuzu iyice yoğur. Şekil verip az yağlı tavada kızart."
+    },
+    {
+      "yemekAdi": "pilav",
+      "tarif": "🍚 **Tane Tane Pirinç Pilavı:**\n\nNasıl Yapılır: Pirinçleri ılık tuzlu suda beklet ve yıka. Şehriyeleri tereyağında kavur. Pirinçleri ekle, şeffaflaşana kadar kavur. Üzerini 1 parmak geçecek kadar sıcak su ve tuz ekle. Kısık ateşte suyunu çekene kadar pişir."
+    },
+    {
+      "yemekAdi": "kurufasulye",
+      "tarif": "🍲 **Kuru Fasulye:**\n\nNasıl Yapılır: Fasulyeleri geceden ıslat. Soğanı ve salçayı kavur. Fasulyeleri ekle. Üzerini geçecek kadar su koy. Düdüklüde yumuşayana kadar pişir. Yanına turşu çok yakışır!"
+    },
+    {
+      "yemekAdi": "pizza",
+      "tarif": "🍕 **Ev Yapımı Pizza:**\n\nNasıl Yapılır: Un, maya, su ile hamur yap. Tepsiye yay. Üzerine domates sosu sür. Kaşar peyniri, sucuk, zeytin, mısır ne varsa diz. 200 derece fırında kızarana kadar pişir."
+    },
+    {
+      "yemekAdi": "tost",
+      "tarif": "🧀 **Pratik Tost Tarifi:**\n\nEkmeğin arasına kaşar ve sucuk koyup tost makinesinde bastır. Afiyet olsun!"
+    }
+  ]
+}
