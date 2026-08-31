@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Tuğla Kırıcı - Serkan Coşan</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link rel="icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAABmJLR0QA/wD/AP+gvaeTAAAAdklEQVRogcYyQRCAMAwD8w/8SAU60IE+8g88EAIG3E1m93iH3ZtU3a76iY+4Y48/G2KPP/7YY48/9thjjz/22GOPP/bYY48/9thjjz/22GOPP/bYY48/9thjjz/22GOPP/bYY48/9thjjz/22GOPP/bYEwE+sR9X9YJ7eQAAAABJRU5ErkJggg==">
+
+    <style>
+        body {
+            background-color: #111;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            font-family: 'Arial', sans-serif;
+            overflow: hidden;
+            touch-action: none;
+        }
+
+        #oyunAlani {
+            border: 2px solid #444;
+            background: radial-gradient(circle, #222, #000);
+            box-shadow: 0 0 20px rgba(0,255,255,0.2);
+            border-radius: 5px;
+        }
+
+        #bilgi {
+            color: white;
+            font-size: 20px;
+            margin-bottom: 10px;
+            width: 320px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        /* İŞTE SENİN İMZAN BURADA */
+        #imza {
+            margin-top: 15px;
+            color: #555;
+            font-size: 14px;
+            font-style: italic;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            animation: parilti 3s infinite;
+        }
+
+        @keyframes parilti {
+            0% { color: #555; }
+            50% { color: #aaa; text-shadow: 0 0 5px white; }
+            100% { color: #555; }
+        }
+
+    </style>
+</head>
+<body>
+
+    <div id="bilgi">
+        <span>Skor: <span id="skor">0</span></span>
+        <span>Can: <span id="can">❤️❤️❤️</span></span>
+    </div>
+
+    <canvas id="oyunAlani" width="320" height="450"></canvas>
+
+    <div id="imza">Geliştirici: Serkan Coşan</div>
+
+    <script>
+        const canvas = document.getElementById('oyunAlani');
+        const ctx = canvas.getContext('2d');
+        const skorEl = document.getElementById('skor');
+        const canEl = document.getElementById('can');
+
+        // Oyun Değişkenleri
+        let skor = 0;
+        let can = 3;
+        let oyunDevam = true;
+
+        // Top Özellikleri
+        const topYaricap = 6;
+        let x = canvas.width / 2;
+        let y = canvas.height - 30;
+        let dx = 3;
+        let dy = -3;
+
+        // Pedal Özellikleri
+        const pedalYukseklik = 10;
+        const pedalGenislik = 75;
+        let pedalX = (canvas.width - pedalGenislik) / 2;
+
+        // Tuğla Özellikleri
+        const satirSayisi = 5;
+        const sutunSayisi = 5;
+        const tuglaGenislik = 50;
+        const tuglaYukseklik = 20;
+        const tuglaPadding = 10;
+        const tuglaOffsetTop = 30;
+        const tuglaOffsetLeft = 15;
+
+        // Tuğlaları Oluştur
+        let tuglalar = [];
+        for(let c=0; c<sutunSayisi; c++) {
+            tuglalar[c] = [];
+            for(let r=0; r<satirSayisi; r++) {
+                tuglalar[c][r] = { x: 0, y: 0, status: 1 };
+            }
+        }
+
+        // Kontroller (Dokunmatik ve Mouse)
+        document.addEventListener("mousemove", mouseMoveHandler, false);
+        document.addEventListener("touchmove", touchMoveHandler, {passive: false});
+
+        function mouseMoveHandler(e) {
+            const relativeX = e.clientX - canvas.offsetLeft;
+            if(relativeX > 0 && relativeX < canvas.width) {
+                pedalX = relativeX - pedalGenislik/2;
+            }
+        }
+
+        function touchMoveHandler(e) {
+            e.preventDefault(); // Sayfanın kaymasını engelle
+            const relativeX = e.touches[0].clientX - canvas.offsetLeft;
+            if(relativeX > 0 && relativeX < canvas.width) {
+                pedalX = relativeX - pedalGenislik/2;
+            }
+        }
+
+        function carpismaKontrolu() {
+            for(let c=0; c<sutunSayisi; c++) {
+                for(let r=0; r<satirSayisi; r++) {
+                    let b = tuglalar[c][r];
+                    if(b.status == 1) {
+                        if(x > b.x && x < b.x + tuglaGenislik && y > b.y && y < b.y + tuglaYukseklik) {
+                            dy = -dy;
+                            b.status = 0; // Tuğlayı kır
+                            skor++;
+                            skorEl.innerText = skor;
+                            
+                            // Hızlandırma
+                            if(skor % 5 === 0) {
+                                dx = dx > 0 ? dx + 0.5 : dx - 0.5;
+                                dy = dy > 0 ? dy + 0.5 : dy - 0.5;
+                            }
+
+                            if(skor == satirSayisi * sutunSayisi) {
+                                alert("TEBRİKLER SERKAN USTA! Hepsini kırdın!");
+                                document.location.reload();
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        function topuCiz() {
+            ctx.beginPath();
+            ctx.arc(x, y, topYaricap, 0, Math.PI*2);
+            ctx.fillStyle = "#0095DD"; // Top rengi
+            ctx.fill();
+            ctx.closePath();
+        }
+
+        function pedaliCiz() {
+            ctx.beginPath();
+            ctx.rect(pedalX, canvas.height-pedalYukseklik, pedalGenislik, pedalYukseklik);
+            ctx.fillStyle = "#0095DD";
+            ctx.shadowBlur = 10;
+            ctx.shadowColor = "#0095DD";
+            ctx.fill();
+            ctx.shadowBlur = 0;
+            ctx.closePath();
+        }
+
+        function tuglalariCiz() {
+            for(let c=0; c<sutunSayisi; c++) {
+                for(let r=0; r<satirSayisi; r++) {
+                    if(tuglalar[c][r].status == 1) {
+                        const tuglaX = (c*(tuglaGenislik+tuglaPadding)) + tuglaOffsetLeft;
+                        const tuglaY = (r*(tuglaYukseklik+tuglaPadding)) + tuglaOffsetTop;
+                        tuglalar[c][r].x = tuglaX;
+                        tuglalar[c][r].y = tuglaY;
+                        
+                        ctx.beginPath();
+                        ctx.rect(tuglaX, tuglaY, tuglaGenislik, tuglaYukseklik);
+                        // Satıra göre renk değiştirme
+                        if(r === 0) ctx.fillStyle = "#e74c3c"; // Kırmızı
+                        else if(r === 1) ctx.fillStyle = "#e67e22"; // Turuncu
+                        else if(r === 2) ctx.fillStyle = "#f1c40f"; // Sarı
+                        else if(r === 3) ctx.fillStyle = "#2ecc71"; // Yeşil
+                        else ctx.fillStyle = "#3498db"; // Mavi
+                        
+                        ctx.fill();
+                        ctx.closePath();
+                    }
+                }
+            }
+        }
+
+        function ciz() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            tuglalariCiz();
+            topuCiz();
+            pedaliCiz();
+            carpismaKontrolu();
+
+            // Duvarlardan sekme
+            if(x + dx > canvas.width-topYaricap || x + dx < topYaricap) {
+                dx = -dx;
+            }
+            if(y + dy < topYaricap) {
+                dy = -dy;
+            } else if(y + dy > canvas.height-topYaricap) {
+                // Pedala çarpma kontrolü
+                if(x > pedalX && x < pedalX + pedalGenislik) {
+                    // Topun pedala çarptığı yere göre açı ver
+                    let carpmaNoktasi = x - (pedalX + pedalGenislik/2);
+                    dx = carpmaNoktasi * 0.15; // Yön değiştirme etkisi
+                    dy = -dy;
+                }
+                else {
+                    can--;
+                    let canMetni = "";
+                    for(let i=0; i<can; i++) canMetni += "❤️";
+                    canEl.innerText = canMetni;
+
+                    if(!can) {
+                        alert("OYUN BİTTİ! Skorun: " + skor);
+                        document.location.reload();
+                    } else {
+                        // Topu merkeze al ve devam et
+                        x = canvas.width/2;
+                        y = canvas.height-30;
+                        dx = 3;
+                        dy = -3;
+                        pedalX = (canvas.width-pedalGenislik)/2;
+                    }
+                }
+            }
+
+            x += dx;
+            y += dy;
+            
+            if(oyunDevam) {
+                requestAnimationFrame(ciz);
+            }
+        }
+
+        ciz();
+    </script>
+</body>
+</html>

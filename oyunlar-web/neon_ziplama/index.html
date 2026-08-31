@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Neon Zıplama (Sensörlü) - Serkan Coşan</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link rel="icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAABmJLR0QA/wD/AP+gvaeTAAAAdklEQVRogcYyQRCAMAwD8w/8SAU60IE+8g88EAIG3E1m93iH3ZtU3a76iY+4Y48/G2KPP/7YY48/9thjjz/22GOPP/bYY48/9thjjz/22GOPP/bYY48/9thjjz/22GOPP/bYY48/9thjjz/22GOPP/bYEwE+sR9X9YJ7eQAAAABJRU5ErkJggg==">
+
+    <style>
+        body {
+            background-color: #050010;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            font-family: 'Verdana', sans-serif;
+            overflow: hidden;
+            touch-action: none;
+        }
+
+        #oyunAlani {
+            position: relative;
+            box-shadow: 0 0 40px rgba(180, 0, 255, 0.3);
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        canvas {
+            background: linear-gradient(to bottom, #1a0033, #000);
+            border: 2px solid #b0f;
+            display: block;
+        }
+
+        #skorKutusu {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: #fff;
+            font-size: 24px;
+            font-weight: bold;
+            text-shadow: 0 0 10px #b0f;
+            z-index: 10;
+        }
+
+        #baslaEkrani {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.9);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 20;
+        }
+
+        button {
+            background: #b0f;
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 22px;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 0 20px #b0f;
+            touch-action: manipulation;
+        }
+        button:active { transform: scale(0.95); background: #d0f; }
+
+        #imza {
+            margin-top: 15px;
+            color: #666;
+            font-size: 12px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+        }
+        
+        #sensorBilgi {
+            color: #aaa;
+            font-size: 12px;
+            margin-top: 10px;
+            max-width: 250px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="oyunAlani">
+        <div id="skorKutusu">SKOR: 0</div>
+        <canvas id="canvas" width="320" height="500"></canvas>
+        
+        <div id="baslaEkrani">
+            <h1 style="color:#b0f; text-shadow:0 0 10px #b0f; margin-bottom:10px;">NEON ZIPLAMA</h1>
+            <p style="color:#fff; text-align:center; font-weight:bold;">SENSÖRLÜ VERSİYON</p>
+            <p style="color:#aaa; text-align:center; margin-bottom:30px;">
+                Telefonu sağa sola yatırarak oyna.<br>
+                Dokunmak yok!
+            </p>
+            <button id="btnBasla">ZIPLA!</button>
+            <div id="sensorBilgi">Telefonu düz tut ve butona bas.</div>
+        </div>
+    </div>
+
+    <div id="imza">Geliştirici: Serkan Coşan</div>
+
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const skorEl = document.getElementById('skorKutusu');
+        const baslaEkrani = document.getElementById('baslaEkrani');
+        const btnBasla = document.getElementById('btnBasla');
+        const sensorBilgi = document.getElementById('sensorBilgi');
+
+        // Oyun Değişkenleri
+        let oyunAktif = false;
+        let skor = 0;
+        let yerCekimi = 0.4;
+        let kameraY = 0;
+        let maxYukseklik = 0;
+        let animasyonId;
+
+        // Sensör Değişkeni
+        let tiltX = 0;
+
+        // Oyuncu
+        let oyuncu = {
+            x: canvas.width / 2 - 10,
+            y: canvas.height - 150,
+            w: 20,
+            h: 20,
+            dy: 0,
+            ziplamaGucu: -10,
+            renk: '#b0f'
+        };
+
+        // Platformlar
+        let platformlar = [];
+        const platformGenisligi = 60;
+        const platformYuksekligi = 10;
+        let platformSayisi = 7;
+
+        // Başlat Butonu
+        btnBasla.addEventListener('click', izinIsteVeBaslat);
+        btnBasla.addEventListener('touchstart', (e) => { 
+            e.preventDefault(); 
+            e.stopPropagation(); 
+            izinIsteVeBaslat(); 
+        });
+
+        // İzin İsteme Fonksiyonu (Android 10+ ve iOS 13+ için gerekli olabilir)
+        function izinIsteVeBaslat() {
+            if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
+                DeviceOrientationEvent.requestPermission()
+                    .then(permissionState => {
+                        if (permissionState === 'granted') {
+                            baslat();
+                        } else {
+                            alert("Sensör izni reddedildi. Oyun oynanamaz.");
+                        }
+                    })
+                    .catch(console.error);
+            } else {
+                // Android cihazlarda genellikle izin istemeden çalışır
+                baslat();
+            }
+        }
+
+        function baslat() {
+            window.addEventListener('deviceorientation', handleOrientation);
+            oyunuBaslat();
+        }
+
+        // Sensör Verisini İşle
+        function handleOrientation(event) {
+            // Gamma: Telefonun sağa sola yatışı (-90 ile 90 arası)
+            let gamma = event.gamma; 
+            
+            // Hassasiyet ayarı (Çok hızlı gitmesin diye 0.5 ile çarpıyoruz)
+            // Maksimum hızı sınırla
+            if (gamma > 45) gamma = 45;
+            if (gamma < -45) gamma = -45;
+            
+            tiltX = gamma * 0.5; 
+        }
+
+        function oyunuBaslat() {
+            baslaEkrani.style.display = 'none';
+            oyunAktif = true;
+            skor = 0;
+            kameraY = 0;
+            maxYukseklik = 0;
+            skorEl.innerText = "SKOR: 0";
+            
+            oyuncu.x = canvas.width / 2 - 10;
+            oyuncu.y = canvas.height - 150;
+            oyuncu.dy = 0;
+
+            platformlar = [];
+            platformlar.push({ x: canvas.width/2 - platformGenisligi/2, y: canvas.height - 50 });
+            
+            for(let i=1; i<platformSayisi; i++) {
+                platformlar.push({
+                    x: Math.random() * (canvas.width - platformGenisligi),
+                    y: canvas.height - 50 - (i * 80)
+                });
+            }
+
+            if(animasyonId) cancelAnimationFrame(animasyonId);
+            animasyon();
+        }
+
+        function animasyon() {
+            if(!oyunAktif) return;
+
+            // Temizle
+            ctx.fillStyle = '#050010';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // Arka Plan Yıldızları
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
+            for(let i=0; i<15; i++) {
+                let yildizY = ((i * 50) + kameraY * 0.3) % canvas.height;
+                let yildizX = (i * 40) % canvas.width;
+                ctx.fillRect(yildizX, yildizY, 2, 2);
+            }
+
+            // 1. OYUNCU HAREKETİ (SENSÖR)
+            // Tilt değerine göre X konumunu değiştir
+            oyuncu.x += tiltX;
+
+            oyuncu.dy += yerCekimi;
+            oyuncu.y += oyuncu.dy;
+
+            // Ekranın kenarlarından geçiş
+            if (oyuncu.x > canvas.width) oyuncu.x = -oyuncu.w;
+            if (oyuncu.x < -oyuncu.w) oyuncu.x = canvas.width;
+
+            // 2. KAMERA VE PLATFORMLAR
+            if (oyuncu.y < canvas.height / 2) {
+                let fark = (canvas.height / 2) - oyuncu.y;
+                oyuncu.y = canvas.height / 2;
+                
+                platformlar.forEach(p => {
+                    p.y += fark;
+                    if (p.y > canvas.height) {
+                        p.y = -10;
+                        p.x = Math.random() * (canvas.width - platformGenisligi);
+                    }
+                });
+                
+                maxYukseklik += fark;
+                skor = Math.floor(maxYukseklik / 10);
+                skorEl.innerText = "SKOR: " + skor;
+            }
+
+            // 3. PLATFORMLARLA ETKİLEŞİM
+            platformlar.forEach(p => {
+                ctx.fillStyle = '#0f0'; 
+                ctx.shadowBlur = 10;
+                ctx.shadowColor = '#0f0';
+                ctx.fillRect(p.x, p.y, platformGenisligi, platformYuksekligi);
+                ctx.shadowBlur = 0;
+
+                if (oyuncu.dy > 0 &&
+                    oyuncu.x + oyuncu.w > p.x &&
+                    oyuncu.x < p.x + platformGenisligi &&
+                    oyuncu.y + oyuncu.h > p.y &&
+                    oyuncu.y + oyuncu.h < p.y + platformYuksekligi + 10) {
+                        
+                        oyuncu.dy = oyuncu.ziplamaGucu; 
+                        ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+                        ctx.fillRect(p.x, p.y, platformGenisligi, platformYuksekligi);
+                }
+            });
+
+            // 4. OYUNCUYU ÇİZ
+            ctx.fillStyle = oyuncu.renk;
+            ctx.shadowBlur = 15;
+            ctx.shadowColor = oyuncu.renk;
+            ctx.beginPath();
+            ctx.arc(oyuncu.x + oyuncu.w/2, oyuncu.y + oyuncu.h/2, oyuncu.w/2, 0, Math.PI*2);
+            ctx.fill();
+            ctx.shadowBlur = 0;
+            
+            ctx.fillStyle = 'white';
+            // Gözler dönsün (Tilt yönüne baksın)
+            let gozKaymasi = tiltX > 0 ? 2 : -2;
+            if(Math.abs(tiltX) < 1) gozKaymasi = 0;
+            
+            ctx.fillRect(oyuncu.x + 4 + gozKaymasi, oyuncu.y + 5, 4, 4);
+            ctx.fillRect(oyuncu.x + 12 + gozKaymasi, oyuncu.y + 5, 4, 4);
+
+            // 5. OYUN BİTİŞİ
+            if (oyuncu.y > canvas.height) {
+                oyunBitti();
+                return;
+            }
+
+            animasyonId = requestAnimationFrame(animasyon);
+        }
+
+        function oyunBitti() {
+            oyunAktif = false;
+            window.removeEventListener('deviceorientation', handleOrientation); // Sensörü durdur
+            
+            baslaEkrani.style.display = 'flex';
+            baslaEkrani.innerHTML = `
+                <h1 style="color:red; margin:0; text-shadow:0 0 10px red;">DÜŞTÜN!</h1>
+                <h2 style="color:white; font-size:40px;">SKOR: ${skor}</h2>
+                <button id="btnTekrar" style="margin-top:20px;">TEKRAR DENE</button>
+                <div style="margin-top:20px; color:#aaa; font-size:12px;">Geliştirici: Serkan Coşan</div>
+            `;
+            
+            let btn = document.getElementById('btnTekrar');
+            btn.addEventListener('click', izinIsteVeBaslat);
+            btn.addEventListener('touchstart', (e) => { e.preventDefault(); e.stopPropagation(); izinIsteVeBaslat(); });
+        }
+
+    </script>
+</body>
+</html>

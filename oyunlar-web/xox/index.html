@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Neon XOX - Serkan Coşan</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link rel="icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAABmJLR0QA/wD/AP+gvaeTAAAAdklEQVRogcYyQRCAMAwD8w/8SAU60IE+8g88EAIG3E1m93iH3ZtU3a76iY+4Y48/G2KPP/7YY48/9thjjz/22GOPP/bYY48/9thjjz/22GOPP/bYY48/9thjjz/22GOPP/bYY48/9thjjz/22GOPP/bYEwE+sR9X9YJ7eQAAAABJRU5ErkJggg==">
+
+    <style>
+        body {
+            background-color: #050505;
+            color: white;
+            font-family: 'Verdana', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+            touch-action: none;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            font-size: 40px;
+            letter-spacing: 5px;
+            text-shadow: 0 0 10px #fff;
+        }
+
+        .skor-tablosu {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .oyuncu-skor { color: #0ff; text-shadow: 0 0 10px #0ff; }
+        .pc-skor { color: #f0f; text-shadow: 0 0 10px #f0f; }
+
+        .oyun-alani {
+            display: grid;
+            grid-template-columns: repeat(3, 90px);
+            grid-template-rows: repeat(3, 90px);
+            gap: 10px;
+            background-color: #111;
+            padding: 10px;
+            border-radius: 10px;
+            box-shadow: 0 0 30px rgba(255, 255, 255, 0.1);
+        }
+
+        .kutu {
+            width: 90px;
+            height: 90px;
+            background-color: #1a1a1a;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 60px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
+        }
+
+        .kutu:active { transform: scale(0.95); }
+
+        /* X Stili (Mavi Neon) */
+        .x {
+            color: #0ff;
+            text-shadow: 0 0 15px #0ff, 0 0 30px #0ff;
+        }
+
+        /* O Stili (Pembe Neon) */
+        .o {
+            color: #f0f;
+            text-shadow: 0 0 15px #f0f, 0 0 30px #f0f;
+        }
+
+        #imza {
+            margin-top: 30px;
+            color: #555;
+            font-size: 12px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            animation: parilti 3s infinite alternate;
+        }
+
+        @keyframes parilti {
+            from { color: #555; text-shadow: none; }
+            to { color: #fff; text-shadow: 0 0 10px #fff; }
+        }
+
+        /* Kazanma Çizgisi Animasyonu */
+        .kazanan-kutu {
+            background-color: #333;
+            animation: yanipSon 0.5s infinite alternate;
+        }
+        @keyframes yanipSon {
+            from { background-color: #333; }
+            to { background-color: #555; }
+        }
+
+        #durumMesaji {
+            margin-top: 20px;
+            height: 30px;
+            font-size: 18px;
+            color: #aaa;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>X O X</h1>
+
+    <div class="skor-tablosu">
+        <div class="oyuncu-skor">SEN (X): <span id="skorX">0</span></div>
+        <div class="pc-skor">CPU (O): <span id="skorO">0</span></div>
+    </div>
+
+    <div class="oyun-alani" id="tahta">
+        <div class="kutu" onclick="hamleYap(0)"></div>
+        <div class="kutu" onclick="hamleYap(1)"></div>
+        <div class="kutu" onclick="hamleYap(2)"></div>
+        <div class="kutu" onclick="hamleYap(3)"></div>
+        <div class="kutu" onclick="hamleYap(4)"></div>
+        <div class="kutu" onclick="hamleYap(5)"></div>
+        <div class="kutu" onclick="hamleYap(6)"></div>
+        <div class="kutu" onclick="hamleYap(7)"></div>
+        <div class="kutu" onclick="hamleYap(8)"></div>
+    </div>
+
+    <div id="durumMesaji">Sıra sende...</div>
+
+    <div id="imza">Geliştirici: Serkan Coşan</div>
+
+    <script>
+        let tahtaDurumu = ["", "", "", "", "", "", "", "", ""];
+        let oyunAktif = true;
+        let sira = "X"; // X her zaman insan
+        let skorX = 0;
+        let skorO = 0;
+
+        const kutular = document.querySelectorAll('.kutu');
+        const durumMesaji = document.getElementById('durumMesaji');
+        const skorXEl = document.getElementById('skorX');
+        const skorOEl = document.getElementById('skorO');
+
+        const kazanmaKombinasyonlari = [
+            [0, 1, 2], [3, 4, 5], [6, 7, 8], // Yatay
+            [0, 3, 6], [1, 4, 7], [2, 5, 8], // Dikey
+            [0, 4, 8], [2, 4, 6]             // Çapraz
+        ];
+
+        function hamleYap(index) {
+            // Eğer kutu doluysa veya oyun bittiyse veya sıra bilgisayardaysa işlem yapma
+            if (tahtaDurumu[index] !== "" || !oyunAktif || sira === "O") return;
+
+            // İnsan Hamlesi
+            isaretle(index, "X");
+            
+            if (kontrolEt("X")) {
+                oyunBitti("X");
+            } else if (beraberlikKontrol()) {
+                oyunBitti("Berabere");
+            } else {
+                sira = "O";
+                durumMesaji.innerText = "Bilgisayar düşünüyor...";
+                // Bilgisayarın hamlesini biraz geciktir (Doğallık için)
+                setTimeout(bilgisayarHamlesi, 500);
+            }
+        }
+
+        function bilgisayarHamlesi() {
+            if (!oyunAktif) return;
+
+            let hamleIndex = enIyiHamle();
+            isaretle(hamleIndex, "O");
+
+            if (kontrolEt("O")) {
+                oyunBitti("O");
+            } else if (beraberlikKontrol()) {
+                oyunBitti("Berabere");
+            } else {
+                sira = "X";
+                durumMesaji.innerText = "Sıra sende...";
+            }
+        }
+
+        function isaretle(index, oyuncu) {
+            tahtaDurumu[index] = oyuncu;
+            kutular[index].innerText = oyuncu;
+            kutular[index].classList.add(oyuncu.toLowerCase()); // Class ekle (renk için)
+        }
+
+        // Basit Yapay Zeka (Mantıklı Oynayan)
+        function enIyiHamle() {
+            // 1. KAZANMA ŞANSI VAR MI? Varsa kazan.
+            for (let i = 0; i < kazanmaKombinasyonlari.length; i++) {
+                const [a, b, c] = kazanmaKombinasyonlari[i];
+                if (tahtaDurumu[a] === "O" && tahtaDurumu[b] === "O" && tahtaDurumu[c] === "") return c;
+                if (tahtaDurumu[a] === "O" && tahtaDurumu[c] === "O" && tahtaDurumu[b] === "") return b;
+                if (tahtaDurumu[b] === "O" && tahtaDurumu[c] === "O" && tahtaDurumu[a] === "") return a;
+            }
+
+            // 2. RAKİBİ ENGELLEME VAR MI? Varsa engelle.
+            for (let i = 0; i < kazanmaKombinasyonlari.length; i++) {
+                const [a, b, c] = kazanmaKombinasyonlari[i];
+                if (tahtaDurumu[a] === "X" && tahtaDurumu[b] === "X" && tahtaDurumu[c] === "") return c;
+                if (tahtaDurumu[a] === "X" && tahtaDurumu[c] === "X" && tahtaDurumu[b] === "") return b;
+                if (tahtaDurumu[b] === "X" && tahtaDurumu[c] === "X" && tahtaDurumu[a] === "") return a;
+            }
+
+            // 3. ORTA BOŞ MU? Boşsa al (En stratejik kare).
+            if (tahtaDurumu[4] === "") return 4;
+
+            // 4. RASTGELE BOŞ BİR YER SEÇ
+            let boslar = [];
+            for (let i = 0; i < 9; i++) {
+                if (tahtaDurumu[i] === "") boslar.push(i);
+            }
+            return boslar[Math.floor(Math.random() * boslar.length)];
+        }
+
+        function kontrolEt(oyuncu) {
+            return kazanmaKombinasyonlari.some(kombinasyon => {
+                const [a, b, c] = kombinasyon;
+                if (tahtaDurumu[a] === oyuncu && tahtaDurumu[b] === oyuncu && tahtaDurumu[c] === oyuncu) {
+                    // Kazanan kutuları parlat
+                    kutular[a].classList.add('kazanan-kutu');
+                    kutular[b].classList.add('kazanan-kutu');
+                    kutular[c].classList.add('kazanan-kutu');
+                    return true;
+                }
+                return false;
+            });
+        }
+
+        function beraberlikKontrol() {
+            return !tahtaDurumu.includes("");
+        }
+
+        function oyunBitti(sonuc) {
+            oyunAktif = false;
+            if (sonuc === "X") {
+                durumMesaji.innerText = "TEBRİKLER! KAZANDIN! 🎉";
+                durumMesaji.style.color = "#0ff";
+                skorX++;
+                skorXEl.innerText = skorX;
+            } else if (sonuc === "O") {
+                durumMesaji.innerText = "BİLGİSAYAR KAZANDI! 🤖";
+                durumMesaji.style.color = "#f0f";
+                skorO++;
+                skorOEl.innerText = skorO;
+            } else {
+                durumMesaji.innerText = "BERABERE! 🤝";
+                durumMesaji.style.color = "#fff";
+            }
+            setTimeout(resetle, 2000); // 2 saniye sonra yeni oyun
+        }
+
+        function resetle() {
+            tahtaDurumu = ["", "", "", "", "", "", "", "", ""];
+            oyunAktif = true;
+            sira = "X";
+            durumMesaji.innerText = "Sıra sende...";
+            durumMesaji.style.color = "#aaa";
+            kutular.forEach(kutu => {
+                kutu.innerText = "";
+                kutu.className = "kutu"; // Class'ları temizle
+            });
+        }
+    </script>
+</body>
+</html>

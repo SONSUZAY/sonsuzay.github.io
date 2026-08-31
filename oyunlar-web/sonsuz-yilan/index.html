@@ -1,0 +1,1305 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Yılan Oyunu | SONSUZ.AY | SON SÜRÜM V5.2 (CAN RESET DÜZELTME)</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    
+    <style>
+        /* CSS TEMEL RENKLER */
+        :root {
+            --neon-yesil: #00ff7f; 
+            --neon-mavi: #00bfff;  
+            --neon-kirmizi: #ff007f; 
+            --neon-altin: #ffcc00; 
+            --neon-govde-varsayilan: #00e673; 
+            --neon-mor: #bb00ff; 
+            --arka-alan: #101010; 
+            --arka-plan: #101010; 
+            --engel-renk: #444; 
+            --buton-hata: #ff5252; 
+        }
+
+        body {
+            background-color: var(--arka-alan); 
+            color: var(--neon-yesil);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            font-family: 'Courier New', monospace; 
+            overflow: hidden;
+            touch-action: none; 
+        }
+        canvas {
+            border: 4px solid var(--neon-yesil);
+            background-color: black;
+            box-shadow: 0 0 10px var(--neon-yesil), 0 0 30px var(--neon-yesil), inset 0 0 5px var(--neon-yesil);
+            border-radius: 5px;
+            display: none; 
+            position: relative; 
+        }
+        #bilgi-paneli {
+            font-size: 20px;
+            margin-bottom: 15px;
+            font-weight: bold;
+            display: none; 
+            gap: 20px;
+            text-shadow: 0 0 5px var(--neon-yesil); 
+        }
+        
+        /* CAN SAYACI STİLİ */
+        #can-sayaci {
+            color: var(--neon-kirmizi);
+            text-shadow: 0 0 5px var(--neon-kirmizi);
+            margin-left: 20px;
+        }
+
+        #yuksek-skor, #son-yuksek-skor {
+            color: var(--neon-altin);
+            text-shadow: 0 0 5px var(--neon-altin); 
+        }
+        
+        .score-popup {
+            position: absolute;
+            font-size: 1.5em; 
+            font-weight: bold;
+            text-shadow: 0 0 5px #fff;
+            opacity: 0;
+            z-index: 500;
+            pointer-events: none; 
+            animation: scoreFade 0.8s ease-out forwards;
+        }
+
+        .score-popup.altin {
+            color: #FFCC00; 
+            text-shadow: 0 0 10px #FFCC00;
+        }
+        .score-popup.normal {
+            color: #FF007F; 
+            text-shadow: 0 0 10px #FF007F;
+        }
+        .score-popup.ceza {
+            color: #AAAAAA; 
+            text-shadow: 0 0 10px #AAAAAA;
+        }
+
+        @keyframes scoreFade {
+            0% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-40px);
+            }
+        }
+        .kontrol-paneli {
+            margin-top: 25px;
+            display: none; 
+            grid-template-columns: 70px 70px 70px;
+            grid-template-rows: 70px 70px;
+            gap: 10px;
+            background-color: var(--arka-alan); 
+            padding: 10px;
+        }
+        
+        .tus {
+            width: 70px;
+            height: 70px;
+            background-color: #333;
+            border-radius: 15px;
+            border: 2px solid var(--neon-yesil);
+            box-shadow: 0 0 5px var(--neon-yesil);
+            color: var(--neon-yesil);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            user-select: none;
+            cursor: pointer;
+            transition: all 0.1s;
+             -webkit-tap-highlight-color: transparent;
+        }
+        .tus:active { 
+            background-color: var(--neon-yesil);
+            color: var(--arka-alan); 
+            transform: scale(0.95);
+            box-shadow: 0 0 10px var(--neon-yesil);
+        }
+        .yukari { grid-column: 2; grid-row: 1; }
+        .sol { grid-column: 1; grid-row: 2; }
+        .asagi { grid-column: 2; grid-row: 2; }
+        .sag { grid-column: 3; grid-row: 2; }
+        
+        #oyun-sonu {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.95);
+            display: none; 
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            text-align: center;
+        }
+
+        .oyun-sonu-buton-alani {
+            display: flex;
+            flex-direction: column;
+            gap: 15px; 
+            margin-top: 30px;
+        }
+        .oyun-sonu-buton {
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-size: 1.2em;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            font-weight: bold;
+            border: none;
+        }
+        .oyun-sonu-buton:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        .tekrar-oyna-btn-sade {
+            background-color: var(--neon-yesil);
+            color: var(--arka-alan);
+            box-shadow: 0 0 10px var(--neon-yesil);
+        }
+        .yeni-ayarlar-btn {
+            background-color: var(--neon-mavi);
+            color: var(--arka-alan);
+            box-shadow: 0 0 10px var(--neon-mavi);
+        }
+        
+        /* ÇILGIN MOD RENGİ */
+        .level-cilgin {
+            background-color: var(--neon-mor); 
+            box-shadow: 0 0 10px var(--neon-mor);
+        }
+
+        #zamanlayici {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 24px;
+            font-weight: bold;
+            color: #FFCC00; 
+            text-shadow: 0 0 5px #FFCC00;
+        }
+        
+        /* HAYAT MODU EKRANI */
+        #hayat-modu-ekrani {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--arka-alan); 
+            display: flex; /* Varsayılan olarak göster */
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 3000;
+            text-align: center;
+        }
+
+        #baslangic-ekrani {
+            display: none; 
+            z-index: 2000;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--arka-alan);
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+        
+        .mod-secim-kutusu {
+            background-color: var(--arka-alan); 
+            border: 5px solid var(--neon-yesil); 
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 0 20px var(--neon-yesil), 0 0 40px rgba(0, 255, 127, 0.5);
+            max-width: 400px;
+        }
+        .mod-buton {
+            width: 80%;
+            padding: 15px 20px;
+            margin-top: 15px;
+            border-radius: 10px;
+            font-size: 1.4em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: var(--arka-alan);
+            text-shadow: none;
+            border: none;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+        .mod-klasik {
+            background-color: var(--neon-kirmizi);
+            box-shadow: 0 0 15px var(--neon-kirmizi);
+        }
+        .mod-direncli {
+            background-color: var(--neon-mavi);
+            box-shadow: 0 0 15px var(--neon-mavi);
+        }
+        .mod-buton:hover {
+            transform: scale(1.05);
+        }
+        
+        /* Zorluk/Renk Seçim ekranı stilleri */
+        .sonuc-kutusu {
+            background-color: var(--arka-alan); 
+            border: 5px solid var(--neon-kirmizi); 
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 0 20px var(--neon-kirmizi), 0 0 40px rgba(255, 0, 127, 0.5);
+        }
+        .baslik {
+            font-size: 3em;
+            margin-bottom: 20px;
+            color: var(--neon-yesil);
+            text-shadow: 0 0 10px var(--neon-yesil);
+        }
+        .level-buton {
+            width: 120px;
+            height: 50px;
+            padding: 10px 15px;
+            margin-top: 15px;
+            border-radius: 10px;
+            font-size: 1.2em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: var(--arka-alan);
+            text-shadow: none;
+            border: none;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+        .level-buton:hover {
+            transform: scale(1.05);
+        }
+        .level-kolay {
+            background-color: var(--neon-yesil);
+        }
+        .level-zor {
+            background-color: var(--buton-hata);
+        }
+
+        .renk-secenekleri {
+            display: flex;
+            gap: 30px;
+            margin-top: 20px;
+        }
+        .renk-buton {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2em;
+            cursor: pointer;
+            border: 3px solid white;
+            transition: all 0.2s;
+            color: #1a1a1a;
+            font-weight: bold;
+        }
+        .renk-buton:hover {
+            transform: scale(1.05);
+            border-width: 5px;
+        }
+        .renk-yesil {
+            background-color: var(--neon-govde-varsayilan);
+            box-shadow: 0 0 15px var(--neon-govde-varsayilan);
+        }
+        .renk-mavi {
+            background-color: var(--neon-mavi);
+            box-shadow: 0 0 15px var(--neon-mavi);
+        }
+        .renk-mor { 
+            background-color: var(--neon-mor);
+            box-shadow: 0 0 15px var(--neon-mor);
+        }
+        
+        /* KOMPAKT MENÜ STİLİ */
+        #bilgi-menusu {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.95);
+            display: none; 
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 1500;
+            text-align: center;
+            padding: 20px;
+        }
+        .bilgi-kutusu {
+            background-color: var(--arka-alan); 
+            border: 5px solid var(--neon-yesil); 
+            padding: 20px; 
+            border-radius: 20px;
+            box-shadow: 0 0 20px var(--neon-yesil);
+            max-width: 450px;
+            width: 90%;
+        }
+        .yem-listesi {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr); 
+            gap: 10px; 
+            margin-top: 15px;
+            margin-bottom: 25px;
+        }
+        .yem-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start; 
+            padding: 5px;
+            border: 1px solid #222; 
+            border-radius: 8px;
+            height: 80px; 
+            font-size: 0.8em;
+        }
+        .yem-cubugu {
+            width: 30px; 
+            height: 30px; 
+            border-radius: 5px;
+            margin-bottom: 5px;
+            box-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+        }
+        .yem-isim {
+            line-height: 1.2;
+        }
+        .baslat-btn {
+            padding: 15px 40px;
+            font-size: 1.5em;
+            font-weight: bold;
+            border-radius: 10px;
+            background-color: var(--neon-yesil);
+            color: var(--arka-alan);
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 0 15px var(--neon-yesil);
+            transition: transform 0.2s;
+        }
+        .baslat-btn:hover {
+            transform: scale(1.05);
+        }
+
+    </style>
+</head>
+<body onload="skoruYukle()">
+
+    <div id="hayat-modu-ekrani">
+        <div class="mod-secim-kutusu">
+            <div class="baslik">SONSUZ.AY YILAN</div>
+            <p style="color: var(--neon-yesil); font-size: 1.2em; margin-bottom: 10px;">Hayat Modu Seçin:</p>
+
+            <button class="mod-buton mod-direncli" onclick="hayatModuSec('direncli')">
+                ❤️ DİRENÇLİ (3 CAN)
+            </button>
+            <p style="color: #ccc; font-size: 0.9em; margin: 5px 0 20px 0;">Çarpışmalarda can kaybeder, oyun devam eder.</p>
+
+            <button class="mod-buton mod-klasik" onclick="hayatModuSec('klasik')">
+                💀 KLASİK (TEK CAN)
+            </button>
+             <p style="color: #ccc; font-size: 0.9em; margin: 5px 0 20px 0;">Tek bir çarpışma oyunu bitirir.</p>
+             
+            <p id="yuksek-skor" style="font-size: 1.2em; margin-top: 30px;">EN İYİ: 0</p>
+        </div>
+    </div>
+    
+    <div id="baslangic-ekrani">
+        <div class="sonuc-kutusu" style="border-color: var(--neon-mavi); box-shadow: 0 0 20px rgba(0, 191, 255, 1), 0 0 40px rgba(0, 191, 255, 0.5);">
+            <div class="baslik">ZORLUK SEÇİN</div>
+            
+            <p id="secilen-mod-bilgisi" style="font-size: 1.2em; color: var(--neon-mavi);"></p>
+            
+            <p style="color: var(--neon-yesil); font-size: 1.2em; margin-bottom: 0;">Zorluk Seviyesi:</p>
+            
+            <div class="level-secenekleri" style="display: flex; justify-content: center; gap: 10px;">
+                <button class="level-buton level-kolay" onclick="zorlukSec('kolay')">KOLAY</button>
+                <button class="level-buton level-zor" onclick="zorlukSec('zor')">ZOR</button>
+                <button class="level-buton level-cilgin" onclick="zorlukSec('cilgin')">ÇILGIN</button> 
+            </div>
+            
+            <div id="renk-secim-alani" style="display: none;">
+                <p style="color: var(--neon-yesil); font-size: 1.2em; margin-top: 20px;">Yılanınızın Rengini Seçin:</p>
+                <div class="renk-secenekleri">
+                    <div class="renk-buton renk-yesil" onclick="renkSec('#00e673')">YEŞİL</div>
+                    <div class="renk-buton renk-mavi" onclick="renkSec('#00bfff')">MAVİ</div>
+                    <div class="renk-buton renk-mor" onclick="renkSec('#bb00ff')">MOR</div>
+                </div>
+            </div>
+            
+            <p id="uyari-yazisi" style="color: var(--buton-hata); font-size: 0.9em; margin-top: 15px; display: none;">Lütfen önce zorluk seviyesi ve renk seçin!</p>
+            
+            <p style="color: #bbb; font-size: 0.9em; margin-top: 30px;">(Bonus elmalar için süreye dikkat edin!)</p>
+        </div>
+    </div>
+    
+    <div id="bilgi-menusu">
+        <div class="bilgi-kutusu">
+            <h2 style="color: var(--neon-yesil); text-shadow: 0 0 5px var(--neon-yesil); font-size: 1.8em;">OYUN BİLGİSİ</h2>
+            <p style="color: #bbb; font-size: 1.1em; margin-bottom: 15px;">Seçilen Zorluk ve Yemler:</p>
+
+            <div class="yem-listesi" id="yem-listesi">
+                </div>
+
+            <div id="zorluk-bilgisi" style="color: var(--neon-kirmizi); font-weight: bold; margin-bottom: 20px; font-size: 0.9em;"></div>
+
+            <button class="baslat-btn" onclick="oyunuBaslat()">OYUNA BAŞLA</button>
+        </div>
+    </div>
+
+
+    <div id="bilgi-paneli">
+        <span id="skor">SKOR: 0</span>
+        <span id="can-sayaci"></span> 
+    </div>
+    
+    <canvas id="oyunAlani" width="300" height="300"></canvas>
+
+    <div id="oyun-sonu">
+        <div class="sonuc-kutusu">
+            <h2>OYUN BİTTİ!</h2>
+            <div id="nihai-skor">SKOR: 0</div>
+            <div id="son-yuksek-skor" style="color: var(--neon-altin); margin-top: 10px;">EN İYİ SKORUN: 0</div>
+            
+            <div class="oyun-sonu-buton-alani">
+                <button class="oyun-sonu-buton tekrar-oyna-btn-sade" onclick="oyunuYenidenBaslat()">
+                    AYNI AYARLARLA TEKRAR OYNA
+                </button>
+                
+                <button class="oyun-sonu-buton yeni-ayarlar-btn" onclick="anaMenuyeDon()">
+                    YENİ ZORLUK/RENK SEÇ
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="kontrol-paneli">
+        <div class="tus yukari" data-yon="yukari">⬆️</div>
+        <div class="tus sol" data-yon="sol">⬅️</div>
+        <div class="tus asagi" data-yon="asagi">⬇️</div>
+        <div class="tus sag" data-yon="sag">➡️</div>
+    </div>
+    
+    <div id="zamanlayici"></div>
+
+    <script>
+        // SES TANIMLAMALARI (Kısaltıldı)
+        const yemSesiUrl = 'data:audio/mp3;base64,...';
+        const altinSesiUrl = 'data:audio/mp3;base64,...';
+        const gameOverSesiUrl = 'data:audio/mp3;base64,...';
+
+
+        let yemSesi = new Audio(yemSesiUrl);
+        let altinSesi = new Audio(altinSesiUrl);
+        let gameOverSesi = new Audio(gameOverSesiUrl);
+
+        function sesiCal(audioElement) {
+            audioElement.currentTime = 0;
+            audioElement.play().catch(e => {}); 
+        }
+        
+        function titre(pattern) {
+            if (window.navigator && window.navigator.vibrate) {
+                window.navigator.vibrate(pattern);
+            }
+        }
+
+
+        const canvas = document.getElementById('oyunAlani');
+        const ctx = canvas.getContext('2d');
+        const oyunSonuEkran = document.getElementById('oyun-sonu');
+        const nihaiSkorSpan = document.getElementById('nihai-skor');
+        const zamanlayiciDiv = document.getElementById('zamanlayici');
+        const hayatModuEkran = document.getElementById('hayat-modu-ekrani');
+        const baslangicEkran = document.getElementById('baslangic-ekrani'); 
+        const bilgiPaneli = document.getElementById('bilgi-paneli');
+        const kontrolPaneli = document.querySelector('.kontrol-paneli');
+        const bilgiMenusu = document.getElementById('bilgi-menusu'); 
+        const yemListesi = document.getElementById('yem-listesi'); 
+        const zorlukBilgisi = document.getElementById('zorluk-bilgisi'); 
+        const canSayaciDiv = document.getElementById('can-sayaci');
+
+
+        let tileCount = 20; 
+        let tileSize = canvas.width / tileCount; 
+        
+        let basX = 10;
+        let basY = 10;
+        let yilanParcalari = [];
+        let yilanUzunlugu = 2;
+        
+        let yilanRengi = ''; 
+        let secilenZorluk = ''; 
+        let secilenHayatModu = ''; 
+        let canSayisi = 0; 
+
+        // YEM RENKLERİ SABİT HEX KODLARI
+        const RENK_NORMAL = '#FF007F'; 
+        const RENK_ALTIN = '#FFCC00'; 
+        const RENK_HIZ = '#00FFFF'; 
+        const RENK_ZEHIR = '#AAAAAA'; 
+        const RENK_ENGEL = '#444444'; 
+
+        let elmaX = 5;
+        let elmaY = 5;
+
+        let altinElmaX = -1; 
+        let altinElmaY = -1;
+        let altinSure = 0; 
+        let altinDongusu; 
+        
+        let hizX = -1; 
+        let hizY = -1; 
+        let zehirX = -1; 
+        let zehirY = -1; 
+
+        let hizliMod = false; 
+        let orijinalOyunHizi = 3.5; 
+        let hizBonusDongusu; 
+        const hizBonusSuresiBaslangic = 5; 
+
+        const altinSureBaslangic = 10;
+        const altinSureMinimum = 6;
+        let cikanAltinElmaSayisi = 0; 
+
+        const altinElmaEsigiNormal = 5; 
+        const ozelYemKontrolEsigi = 3; 
+        let yenilenNormalElmaSayisi = 0; 
+        let normalYemKontrolSayaci = 0; 
+
+
+        let engeller = [];
+
+        let xHizi = 0;
+        let yHizi = 0;
+        let skor = 0;
+        
+        let baslangicHizi = 3.5; 
+        let oyunHizi = baslangicHizi; 
+        let skorHiziArtirmaEsiği = 30; 
+        
+        let oyunDongusu;
+        let tusBasiliDongu; 
+        
+        // KALICI SKOR DEĞİŞKENLERİ
+        let yuksekSkor = 0;
+        const YUKSEK_SKOR_ANAHTARI = 'sonsuzAyYuksekSkor';
+        
+        function skoruYukle() {
+            const kaydedilenSkor = localStorage.getItem(YUKSEK_SKOR_ANAHTARI);
+            yuksekSkor = kaydedilenSkor ? parseInt(kaydedilenSkor) : 0;
+            const yuksekSkorElementi = document.getElementById('yuksek-skor');
+            if(yuksekSkorElementi) {
+                yuksekSkorElementi.innerText = "EN İYİ: " + yuksekSkor;
+            }
+        }
+        
+        function skoruKaydet() {
+            if (skor > yuksekSkor) {
+                yuksekSkor = skor;
+                localStorage.setItem(YUKSEK_SKOR_ANAHTARI, yuksekSkor);
+            }
+        }
+
+
+        function skorPopupGoster(x, y, puan, tip) {
+            const popup = document.createElement('div');
+            popup.classList.add('score-popup', tip);
+            popup.innerText = (puan > 0 ? `+${puan}` : `${puan}`); 
+            
+            const canvasRect = canvas.getBoundingClientRect();
+            
+            popup.style.left = `${canvasRect.left + x * tileSize + tileSize / 2}px`;
+            popup.style.top = `${canvasRect.top + y * tileSize + tileSize / 2}px`;
+
+            popup.style.transform = `translate(-50%, -50%)`;
+
+            document.body.appendChild(popup);
+
+            setTimeout(() => {
+                popup.remove();
+            }, 800); 
+        }
+
+        function hizBonusBaslat() {
+            if (hizliMod) {
+                clearInterval(hizBonusDongusu);
+            } else {
+                orijinalOyunHizi = oyunHizi; 
+            }
+            oyunHizi = orijinalOyunHizi * 2; 
+            hizliMod = true;
+
+            clearInterval(oyunDongusu);
+            oyunDongusu = setInterval(oyunuCiz, 1000 / oyunHizi);
+
+            let kalanSure = hizBonusSuresiBaslangic;
+            zamanlayiciDiv.innerText = 'HIZ BONUS: ' + kalanSure;
+            zamanlayiciDiv.style.color = RENK_HIZ; 
+
+            hizBonusDongusu = setInterval(() => {
+                kalanSure--;
+                zamanlayiciDiv.innerText = 'HIZ BONUS: ' + kalanSure;
+                
+                if (kalanSure <= 0) {
+                    clearInterval(hizBonusDongusu);
+                    hizBonusBitir();
+                }
+            }, 1000);
+        }
+
+        function hizBonusBitir() {
+            if (!hizliMod) return; 
+            
+            hizliMod = false;
+            oyunHizi = orijinalOyunHizi; 
+            
+            clearInterval(oyunDongusu);
+            oyunDongusu = setInterval(oyunuCiz, 1000 / oyunHizi);
+
+            if (altinElmaX !== -1) {
+                 zamanlayiciDiv.style.color = RENK_ALTIN;
+            } else {
+                zamanlayiciDiv.innerText = '';
+                zamanlayiciDiv.style.color = RENK_ALTIN; 
+            }
+        }
+        
+        // YENİ FONKSİYON: CAN KAYBI SONRASI SIFIRLAMA (HAFİF RESET)
+        function oyunuCanKaybiSonrasiSifirla() {
+             // Oyun alanını temizle (Can ve Skor dokunulmaz)
+             yilanUzunlugu = 2;
+             basX = 10;
+             basY = 10;
+             xHizi = 1; 
+             yHizi = 0;
+             yilanParcalari = [];
+             
+             // Tüm yemleri tekrar oluştur
+             altinElmaX = -1; altinElmaY = -1; altinSure = 0; clearInterval(altinDongusu);
+             hizX = -1; hizY = -1;
+             zehirX = -1; zehirY = -1;
+             
+             // Engelleri yeniden yerleştir (eğer modda varsa)
+             if (secilenZorluk === 'zor' || secilenZorluk === 'cilgin') { 
+                 engelleriOlustur();
+             } else {
+                 engeller = []; 
+             }
+             
+             yeniElmaOlustur();
+             
+             clearInterval(oyunDongusu);
+             oyunDongusu = setInterval(oyunuCiz, 1000 / oyunHizi);
+        }
+
+
+        function anaMenuyeDon() {
+            oyunSonuEkran.style.display = 'none'; 
+            hayatModuEkran.style.display = 'flex'; 
+            
+            document.getElementById('oyunAlani').style.display = 'none';
+            bilgiPaneli.style.display = 'none';
+            kontrolPaneli.style.display = 'none';
+            bilgiMenusu.style.display = 'none'; 
+
+            secilenZorluk = '';
+            yilanRengi = '';
+            secilenHayatModu = '';
+            document.getElementById('renk-secim-alani').style.display = 'none'; 
+            document.getElementById('uyari-yazisi').style.display = 'none';
+            
+            skoruYukle(); 
+        }
+
+        function hayatModuSec(mod) {
+            secilenHayatModu = mod;
+            hayatModuEkran.style.display = 'none'; 
+            baslangicEkran.style.display = 'flex'; 
+            
+            const modBilgisi = document.getElementById('secilen-mod-bilgisi');
+            if (mod === 'direncli') {
+                modBilgisi.innerText = 'SEÇİM: DİRENÇLİ (Canlı Oyun)';
+                modBilgisi.style.color = 'var(--neon-mavi)';
+            } else {
+                 modBilgisi.innerText = 'SEÇİM: KLASİK (Tek Can)';
+                 modBilgisi.style.color = 'var(--neon-kirmizi)';
+            }
+        }
+
+        function zorlukSec(zorluk) {
+            secilenZorluk = zorluk;
+            document.getElementById('renk-secim-alani').style.display = 'block';
+            document.getElementById('uyari-yazisi').style.display = 'none';
+        }
+        
+        function renkSec(renkKod) {
+            if (!secilenZorluk) {
+                document.getElementById('uyari-yazisi').style.display = 'block';
+                document.getElementById('uyari-yazisi').innerText = 'Lütfen önce zorluk seviyesi seçin!';
+                return;
+            }
+
+            yilanRengi = renkKod; 
+            
+            sesiCal(yemSesi);
+            sesiCal(altinSesi);
+            sesiCal(gameOverSesi);
+
+            baslangicEkran.style.display = 'none'; 
+            bilgiMenusu.style.display = 'flex'; 
+            
+            bilgiMenusuOlustur(); 
+        }
+        
+        function oyunuBaslat() {
+             bilgiMenusu.style.display = 'none'; 
+
+             document.getElementById('oyunAlani').style.display = 'block'; 
+             bilgiPaneli.style.display = 'flex'; 
+             kontrolPaneli.style.display = 'grid'; 
+             
+             canSayaciDiv.style.display = (secilenHayatModu === 'direncli') ? 'inline' : 'none';
+
+             oyunuSifirlaVeBaslat(); 
+        }
+
+        function bilgiMenusuOlustur() {
+             yemListesi.innerHTML = ''; 
+             
+             const yemler = [
+                 { renk: RENK_NORMAL, isim: 'NORMAL ELMA', puan: '+10' },
+                 { renk: RENK_ALTIN, isim: 'ALTIN ELMA', puan: '+50' },
+                 { renk: RENK_HIZ, isim: 'HIZ YEMİ', puan: 'HIZ x2' },
+                 { renk: RENK_ZEHIR, isim: 'ZEHİR YEMİ', puan: '-20' }
+             ];
+
+             yemler.forEach(yem => {
+                 const item = document.createElement('div');
+                 item.classList.add('yem-item');
+                 item.innerHTML = `
+                     <div class="yem-cubugu" style="background-color: ${yem.renk}; box-shadow: 0 0 10px ${yem.renk};"></div>
+                     <span class="yem-isim" style="color: ${yem.renk};">${yem.isim}</span>
+                     <span style="color: #aaa; font-weight: normal; margin-top: 2px;">(${yem.puan})</span>
+                 `;
+                 yemListesi.appendChild(item);
+             });
+             
+             const engelItem = document.createElement('div');
+             engelItem.classList.add('yem-item');
+             engelItem.innerHTML = `
+                 <div class="yem-cubugu" style="background-color: ${RENK_ENGEL}; box-shadow: 0 0 10px ${RENK_ENGEL};"></div>
+                 <span class="yem-isim" style="color: ${RENK_ENGEL};">ENGEL/DUVAR</span>
+                 <span style="color: #aaa; font-weight: normal; margin-top: 2px;">(ÖLÜM)</span>
+             `;
+             yemListesi.appendChild(engelItem);
+
+             
+             let zorlukMetni = '';
+             let zorlukRengi = '';
+             
+             if (secilenZorluk === 'kolay') {
+                 zorlukMetni = 'KOLAY: Engeller yok, kenarlardan geçiş serbest.';
+                 zorlukRengi = "var(--neon-yesil)";
+             } else if (secilenZorluk === 'zor') {
+                 zorlukMetni = 'ZOR: Sabit engeller var, kenarlardan geçiş serbest.';
+                 zorlukRengi = "var(--neon-kirmizi)";
+             } else if (secilenZorluk === 'cilgin') { 
+                 zorlukMetni = 'ÇILGIN: Sabit engeller var, **ekran kenarlarına çarpınca ölürsün**!';
+                 zorlukRengi = "var(--neon-mor)";
+             }
+             
+             zorlukBilgisi.innerHTML = `<span style="color: ${zorlukRengi};">${zorlukMetni}</span>`;
+        }
+
+        function engelleriOlustur() {
+            engeller = []; 
+            engeller.push({x: 3, y: 3}, {x: 4, y: 3}, {x: 3, y: 4}, {x: 4, y: 4}); 
+            engeller.push({x: tileCount - 4, y: 3}, {x: tileCount - 3, y: 3}, {x: tileCount - 4, y: 4}, {x: tileCount - 3, y: 4});
+            engeller.push({x: 3, y: tileCount - 4}, {x: 4, y: tileCount - 4}, {x: 3, y: tileCount - 3}, {x: 4, y: tileCount - 3});
+            engeller.push({x: tileCount - 4, y: tileCount - 4}, {x: tileCount - 3, y: tileCount - 4}, {x: tileCount - 4, y: tileCount - 3}, {x: tileCount - 3, y: tileCount - 3});
+        }
+        
+        function oyunuSifirlaVeBaslat() {
+            skor = 0;
+            yilanUzunlugu = 2;
+            basX = 10;
+            basY = 10;
+            xHizi = 1; 
+            yHizi = 0;
+            yilanParcalari = [];
+            
+            orijinalOyunHizi = baslangicHizi;
+            oyunHizi = baslangicHizi;
+            
+            yenilenNormalElmaSayisi = 0; 
+            cikanAltinElmaSayisi = 0; 
+            normalYemKontrolSayaci = 0; 
+            
+            // CAN SİSTEMİ SIFIRLAMA
+            canSayisi = (secilenHayatModu === 'direncli') ? 3 : 1;
+            canSayaciDiv.innerText = (secilenHayatModu === 'direncli') ? `❤️ x${canSayisi}` : '';
+
+
+            altinElmaX = -1;
+            altinElmaY = -1;
+            altinSure = 0;
+            clearInterval(altinDongusu);
+            
+            hizX = -1;
+            hizY = -1;
+            zehirX = -1;
+            zehirY = -1;
+            
+            hizliMod = false;
+            clearInterval(hizBonusDongusu);
+
+
+            zamanlayiciDiv.innerText = '';
+            zamanlayiciDiv.style.color = RENK_ALTIN;
+
+
+            if (secilenZorluk === 'zor' || secilenZorluk === 'cilgin') { 
+                 engelleriOlustur();
+            } else {
+                 engeller = []; 
+            }
+
+            oyunSonuEkran.style.display = 'none'; 
+            document.getElementById('skor').innerText = "SKOR: 0";
+            
+            yeniElmaOlustur();
+
+            clearInterval(oyunDongusu);
+            oyunDongusu = setInterval(oyunuCiz, 1000 / oyunHizi);
+        }
+
+        function oyunuYenidenBaslat() {
+            // "AYNI AYARLARLA TEKRAR OYNA" düğmesi her zaman tam sıfırlamayı çağırır.
+            oyunuSifirlaVeBaslat(); 
+            document.getElementById('oyunAlani').style.display = 'block';
+            bilgiPaneli.style.display = 'flex';
+            kontrolPaneli.style.display = 'grid';
+        }
+
+        function altinZamanlayiciBaslat() {
+            clearInterval(altinDongusu);
+            
+            cikanAltinElmaSayisi++; 
+
+            let sureDususu = cikanAltinElmaSayisi - 1;
+            altinSure = altinSureBaslangic - sureDususu;
+            if (altinSure < altinSureMinimum) {
+                altinSure = altinSureMinimum;
+            }
+            
+            if (!hizliMod) {
+                 zamanlayiciDiv.innerText = 'BONUS: ' + altinSure;
+                 zamanlayiciDiv.style.color = RENK_ALTIN;
+            }
+            
+            altinDongusu = setInterval(() => {
+                altinSure--;
+                if (!hizliMod) {
+                     zamanlayiciDiv.innerText = 'BONUS: ' + altinSure;
+                }
+
+                if (altinSure <= 0) {
+                    clearInterval(altinDongusu);
+                    altinElmaX = -1;
+                    altinElmaY = -1;
+                    if (!hizliMod) zamanlayiciDiv.innerText = '';
+                }
+            }, 1000);
+        }
+
+        function rastgeleBosKonumBul() {
+             let x, y;
+             do {
+                 x = Math.floor(Math.random() * tileCount);
+                 y = Math.floor(Math.random() * tileCount);
+             } while (
+                 (x === elmaX && y === elmaY) || 
+                 (x === altinElmaX && y === altinElmaY) ||
+                 (x === hizX && y === hizY) ||
+                 (x === zehirX && y === zehirY) ||
+                 engeller.some(e => e.x === x && e.y === y) || 
+                 yilanParcalari.some(p => p.x === x && p.y === y)
+             );
+             return {x, y};
+        }
+
+
+        function yeniElmaOlustur() {
+            let pos = rastgeleBosKonumBul();
+            elmaX = pos.x;
+            elmaY = pos.y;
+            
+            if (yenilenNormalElmaSayisi % altinElmaEsigiNormal === 0 && yenilenNormalElmaSayisi !== 0 && altinElmaX === -1) { 
+                 pos = rastgeleBosKonumBul();
+                 altinElmaX = pos.x;
+                 altinElmaY = pos.y;
+                 altinZamanlayiciBaslat(); 
+            }
+            
+            if (normalYemKontrolSayaci % ozelYemKontrolEsigi === 0 && normalYemKontrolSayaci !== 0) {
+                 
+                 if (zehirX === -1) {
+                      pos = rastgeleBosKonumBul();
+                      zehirX = pos.x;
+                      zehirY = pos.y;
+                 } else {
+                      pos = rastgeleBosKonumBul();
+                      zehirX = pos.x;
+                      zehirY = pos.y;
+                 }
+
+                 if (hizX === -1) {
+                      pos = rastgeleBosKonumBul();
+                      hizX = pos.x;
+                      hizY = pos.y;
+                 } else {
+                      pos = rastgeleBosKonumBul();
+                      hizX = pos.x;
+                      hizY = pos.y;
+                 }
+                 
+                 normalYemKontrolSayaci = 0; 
+            }
+        }
+        
+        function oyunuCiz() {
+            hareketEt();
+            
+            if(oyunBittiMi()) {
+                
+                // Dirençli Modda Çarpışma: Can kontrolü
+                if (secilenHayatModu === 'direncli' && canSayisi > 1) {
+                    canSayisi--;
+                    canSayaciDiv.innerText = `❤️ x${canSayisi}`;
+                    
+                    // Can kaybedince yılanı kısalt ve puan azalt
+                    const cezaPuani = -50;
+                    const kisalma = 5; 
+                    skor += cezaPuani;
+                    yilanUzunlugu = Math.max(2, yilanUzunlugu - kisalma); 
+                    
+                    titre([50, 50, 50]); 
+                    skorPopupGoster(basX, basY, cezaPuani, 'ceza');
+                    
+                    // Oyun alanını hafifçe sıfırla (Can ve skoru koruyarak)
+                    oyunuCanKaybiSonrasiSifirla(); 
+                    return;
+                }
+                
+                // Klasik Mod veya Dirençli Modda Son Canı Kaybetme (Game Over)
+                clearInterval(oyunDongusu);
+                clearInterval(altinDongusu); 
+                clearInterval(hizBonusDongusu);
+                clearInterval(tusBasiliDongu); 
+                
+                sesiCal(gameOverSesi); 
+                titre([200, 100, 200]); 
+                
+                skoruKaydet();
+                document.getElementById('son-yuksek-skor').innerText = `EN İYİ SKORUN: ${yuksekSkor} (Yeni skorunuz: ${skor})`;
+                
+                nihaiSkorSpan.innerText = "SKOR: " + skor;
+                oyunSonuEkran.style.display = 'flex'; 
+                document.getElementById('oyunAlani').style.display = 'none';
+                bilgiPaneli.style.display = 'none';
+                kontrolPaneli.style.display = 'none';
+                return;
+            }
+
+            // RENKLİ ZEMİN ÇİZİMİ
+            ctx.fillStyle = yilanRengi + '30'; 
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = 'black'; 
+            ctx.fillRect(4, 4, canvas.width - 8, canvas.height - 8);
+            
+            if (secilenZorluk === 'zor' || secilenZorluk === 'cilgin') {
+                 ctx.fillStyle = RENK_ENGEL; 
+                 for(let i = 0; i < engeller.length; i++) {
+                     let engel = engeller[i];
+                     ctx.fillRect(engel.x * tileSize, engel.y * tileSize, tileSize - 2, tileSize - 2);
+                 }
+            }
+
+            ctx.fillStyle = yilanRengi; 
+            for(let i = 0; i < yilanParcalari.length; i++) {
+                let parca = yilanParcalari[i];
+                ctx.fillRect(parca.x * tileSize, parca.y * tileSize, tileSize - 2, tileSize - 2);
+            }
+
+            yilanParcalari.push({x: basX, y: basY});
+            while(yilanParcalari.length > yilanUzunlugu) {
+                yilanParcalari.shift();
+            }
+
+            ctx.fillStyle = RENK_NORMAL; 
+            ctx.shadowBlur = 0;
+            ctx.fillRect(elmaX * tileSize, elmaY * tileSize, tileSize - 2, tileSize - 2);
+            
+            if (altinElmaX !== -1) {
+                 ctx.fillStyle = RENK_ALTIN; 
+                 ctx.shadowColor = RENK_ALTIN;
+                 ctx.shadowBlur = 8;
+                 ctx.fillRect(altinElmaX * tileSize, altinElmaY * tileSize, tileSize - 2, tileSize - 2);
+                 ctx.shadowBlur = 0;
+            }
+
+            if (hizX !== -1) {
+                 ctx.fillStyle = RENK_HIZ; 
+                 ctx.shadowColor = RENK_HIZ;
+                 ctx.shadowBlur = 8;
+                 ctx.fillRect(hizX * tileSize, hizY * tileSize, tileSize - 2, tileSize - 2);
+                 ctx.shadowBlur = 0;
+            }
+            
+            if (zehirX !== -1) {
+                 ctx.fillStyle = RENK_ZEHIR; 
+                 ctx.shadowColor = RENK_ZEHIR;
+                 ctx.shadowBlur = 8;
+                 ctx.fillRect(zehirX * tileSize, zehirY * tileSize, tileSize - 2, tileSize - 2);
+                 ctx.shadowBlur = 0;
+            }
+            
+            
+
+            document.getElementById('skor').innerText = "SKOR: " + skor;
+            
+            if (basX === hizX && basY === hizY) {
+                hizBonusBaslat();
+                hizX = -1;
+                hizY = -1;
+            }
+            
+            if (basX === zehirX && basY === zehirY) {
+                const cezaPuani = -20;
+                const kisalma = 3; 
+
+                skor += cezaPuani;
+                yilanUzunlugu = Math.max(2, yilanUzunlugu - kisalma); 
+                
+                sesiCal(gameOverSesi); 
+                titre([10, 10, 10, 10]); 
+                skorPopupGoster(zehirX, zehirY, cezaPuani, 'ceza');
+                
+                zehirX = -1;
+                zehirY = -1;
+            }
+
+
+            if(basX === altinElmaX && basY === altinElmaY) {
+                yilanUzunlugu++;
+                let eskiSkor = skor;
+                skor += 50; 
+                
+                sesiCal(altinSesi); 
+                titre(100); 
+                skorPopupGoster(altinElmaX, altinElmaY, 50, 'altin');
+                
+                yenilenNormalElmaSayisi++; 
+                normalYemKontrolSayaci++; 
+
+                altinElmaX = -1;
+                altinElmaY = -1;
+                clearInterval(altinDongusu);
+                
+                if (!hizliMod) {
+                    zamanlayiciDiv.innerText = ''; 
+                }
+                
+                if (!hizliMod && skor >= skorHiziArtirmaEsiği && Math.floor(eskiSkor / skorHiziArtirmaEsiği) < Math.floor(skor / skorHiziArtirmaEsiği)) {
+                    oyunHizi += 1; 
+                    orijinalOyunHizi = oyunHizi; 
+                    clearInterval(oyunDongusu);
+                    oyunDongusu = setInterval(oyunuCiz, 1000 / oyunHizi);
+                }
+                
+                yeniElmaOlustur();
+            }
+
+            if(basX === elmaX && basY === elmaY) {
+                yilanUzunlugu++;
+                let eskiSkor = skor;
+                skor += 10; 
+
+                sesiCal(yemSesi); 
+                titre(50); 
+                skorPopupGoster(elmaX, elmaY, 10, 'normal');
+                
+                yenilenNormalElmaSayisi++; 
+                normalYemKontrolSayaci++; 
+                
+                if (!hizliMod && skor >= skorHiziArtirmaEsiği && Math.floor(eskiSkor / skorHiziArtirmaEsiği) < Math.floor(skor / skorHiziArtirmaEsiği)) {
+                    oyunHizi += 1; 
+                    orijinalOyunHizi = oyunHizi; 
+                    clearInterval(oyunDongusu);
+                    oyunDongusu = setInterval(oyunuCiz, 1000 / oyunHizi);
+                }
+                
+                yeniElmaOlustur();
+            }
+        }
+
+        function hareketEt() {
+            basX += xHizi;
+            basY += yHizi;
+            
+            if (secilenZorluk !== 'cilgin') { 
+                if(basX < 0) basX = tileCount - 1;
+                if(basX > tileCount - 1) basX = 0;
+                if(basY < 0) basY = tileCount - 1;
+                if(basY > tileCount - 1) basY = 0;
+            }
+        }
+
+        function oyunBittiMi() {
+            if(xHizi === 0 && yHizi === 0) return false; 
+            
+            for(let i = 0; i < yilanParcalari.length - 1; i++) {
+                if(yilanParcalari[i].x === basX && yilanParcalari[i].y === basY) {
+                    return true;
+                }
+            }
+            
+            if (secilenZorluk === 'cilgin') { 
+                 if (basX < 0 || basX > tileCount - 1 || basY < 0 || basY > tileCount - 1) {
+                     return true;
+                 }
+            }
+            
+            if (secilenZorluk === 'zor' || secilenZorluk === 'cilgin') { 
+                 for(let i = 0; i < engeller.length; i++) {
+                     if(engeller[i].x === basX && engeller[i].y === basY) {
+                         return true;
+                     }
+                 }
+            }
+            
+            return false;
+        }
+
+        function yonDegistir(yon) {
+            if (xHizi === 0 && yHizi === 0) {
+                 if (yon === 'yukari') { xHizi = 0; yHizi = -1; }
+                 else if (yon === 'asagi') { xHizi = 0; yHizi = 1; }
+                 else if (yon === 'sol') { xHizi = -1; yHizi = 0; }
+                 else if (yon === 'sag') { xHizi = 1; yHizi = 0; }
+                 return;
+            }
+
+            if(yon === 'yukari' && yHizi !== 1) { xHizi = 0; yHizi = -1; }
+            if(yon === 'asagi' && yHizi !== -1) { xHizi = 0; yHizi = 1; }
+            if(yon === 'sol' && xHizi !== 1) { xHizi = -1; yHizi = 0; }
+            if(yon === 'sag' && xHizi !== -1) { xHizi = 1; yHizi = 0; }
+        }
+
+        // --- BASILI TUTMA VE TIKLAMA MANTIĞI ---
+
+        function tusuBasiliTut(yon) {
+            clearInterval(tusBasiliDongu);
+            
+            yonDegistir(yon);
+
+            tusBasiliDongu = setInterval(() => {
+                yonDegistir(yon);
+            }, 1000 / (oyunHizi * 2)); 
+        }
+
+        function tusuBirak() {
+            clearInterval(tusBasiliDongu);
+        }
+        
+        // Klavye Kontrolleri
+        document.addEventListener('keydown', function(e) {
+            if(e.keyCode == 37) yonDegistir('sol');
+            if(e.keyCode == 38) yonDegistir('yukari');
+            if(e.keyCode == 39) yonDegistir('sag');
+            if(e.keyCode == 40) yonDegistir('asagi');
+        });
+
+        // Mobil Tuş Olay Yöneticileri
+        const tuslar = document.querySelectorAll('.kontrol-paneli .tus');
+        
+        tuslar.forEach(tus => {
+            const yon = tus.getAttribute('data-yon');
+
+            tus.addEventListener('touchstart', (e) => {
+                e.preventDefault(); 
+                tusuBasiliTut(yon);
+            }, false);
+
+            tus.addEventListener('touchend', tusuBirak, false);
+
+            tus.addEventListener('mousedown', (e) => {
+                 tusuBasiliTut(yon);
+            });
+            tus.addEventListener('mouseup', tusuBirak);
+            tus.addEventListener('mouseout', tusuBirak); 
+        });
+
+        // Mobil Kaydırma (SWIPE) Kontrolleri
+        let touchstartX = 0;
+        let touchstartY = 0;
+        const minimumKaydirmaMesafesi = 50; 
+
+        canvas.addEventListener('touchstart', function(e) {
+            if (e.touches.length === 1) {
+                touchstartX = e.touches[0].clientX;
+                touchstartY = e.touches[0].clientY;
+            }
+        }, false);
+
+        canvas.addEventListener('touchend', function(e) {
+            const touchendX = e.changedTouches[0].clientX;
+            const touchendY = e.changedTouches[0].clientY;
+
+            const deltaX = touchendX - touchstartX;
+            const deltaY = touchendY - touchstartY;
+
+            if (Math.abs(deltaX) > Math.abs(deltaY)) {
+                if (Math.abs(deltaX) > minimumKaydirmaMesafesi) {
+                    if (deltaX > 0) {
+                        yonDegistir('sag'); 
+                    } else {
+                        yonDegistir('sol'); 
+                    }
+                }
+            } else {
+                if (Math.abs(deltaY) > minimumKaydirmaMesafesi) {
+                    if (deltaY > 0) {
+                        yonDegistir('asagi'); 
+                    } else {
+                        yonDegistir('yukari'); 
+                    }
+                }
+            }
+        }, false);
+    </script>
+</body>
+</html>

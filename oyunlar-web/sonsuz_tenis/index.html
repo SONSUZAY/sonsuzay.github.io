@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>SONSUZ TENİS - SONSUZ.AY</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link rel="icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAABmJLR0QA/wD/AP+gvaeTAAAAdklEQVRogcYyQRCAMAwD8w/8SAU60IE+8g88EAIG3E1m93iH3ZtU3a76iY+4Y48/G2KPP/7YY48/9thjjz/22GOPP/bYYY8/9thjjz/22GOPP/bYY48/9thjjz/22GOPP/bYY48/9thjjz/22GOPP/bYEwE+sR9X9YJ7eQAAAABJRU5ErkJggg==">
+
+    <style>
+        body {
+            background-color: #050505;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            font-family: 'Arial', sans-serif;
+            overflow: hidden;
+            touch-action: none;
+        }
+
+        #oyunKutusu {
+            position: relative;
+            box-shadow: 0 0 30px rgba(0, 255, 255, 0.2);
+            border-radius: 10px;
+        }
+
+        canvas {
+            background: linear-gradient(#111, #000, #111);
+            border: 2px solid #0ff; /* Neon Çerçeve */
+            border-radius: 10px;
+            display: block;
+        }
+
+        #skorTablosu {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: rgba(255, 255, 255, 0.2);
+            font-size: 60px;
+            font-weight: bold;
+            pointer-events: none; /* Tıklamayı engelle */
+            white-space: nowrap;
+        }
+
+        /* İmza Kısmı Kaldırıldı */
+    </style>
+</head>
+<body>
+
+    <div id="oyunKutusu">
+        <div id="skorTablosu">0 - 0</div>
+        <canvas id="tenisTahtasi" width="320" height="480"></canvas>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('tenisTahtasi');
+        const ctx = canvas.getContext('2d');
+        const skorEl = document.getElementById('skorTablosu');
+
+        // Raket Ayarları
+        const raketGenislik = 80;
+        const raketYukseklik = 10;
+        
+        // Oyuncu (Aşağıdaki)
+        let oyuncu = {
+            x: (canvas.width - raketGenislik) / 2,
+            y: canvas.height - 20,
+            skor: 0,
+            renk: '#0f0' // Yeşil Neon
+        };
+
+        // Bilgisayar (Yukarıdaki)
+        let pc = {
+            x: (canvas.width - raketGenislik) / 2,
+            y: 10,
+            skor: 0,
+            hiz: 4, // Bilgisayarın zorluk seviyesi
+            renk: '#f00' // Kırmızı Neon
+        };
+
+        // Top
+        let topNesnesi = {
+            x: canvas.width / 2,
+            y: canvas.height / 2,
+            r: 8,
+            hizX: 4,
+            hizY: 4,
+            renk: '#fff'
+        };
+
+        // Kontroller
+        canvas.addEventListener('touchmove', function(e) {
+            e.preventDefault();
+            let touch = e.touches[0];
+            let rect = canvas.getBoundingClientRect();
+            let relativeX = touch.clientX - rect.left;
+            
+            if(relativeX > 0 && relativeX < canvas.width) {
+                oyuncu.x = relativeX - raketGenislik / 2;
+            }
+        }, {passive: false});
+
+        // Mouse desteği
+        canvas.addEventListener('mousemove', function(e) {
+            let rect = canvas.getBoundingClientRect();
+            let relativeX = e.clientX - rect.left;
+            if(relativeX > 0 && relativeX < canvas.width) {
+                oyuncu.x = relativeX - raketGenislik / 2;
+            }
+        });
+
+        function oyunuGuncelle() {
+            // 1. Top Hareketi
+            topNesnesi.x += topNesnesi.hizX;
+            topNesnesi.y += topNesnesi.hizY;
+
+            // 2. Duvarlardan Sekme (Sağ ve Sol)
+            if(topNesnesi.x - topNesnesi.r < 0 || topNesnesi.x + topNesnesi.r > canvas.width) {
+                topNesnesi.hizX = -topNesnesi.hizX;
+            }
+
+            // 3. Raket Çarpışmaları
+            
+            // Oyuncu (Alt) Raketine Çarpma
+            if(topNesnesi.y + topNesnesi.r > oyuncu.y && 
+               topNesnesi.y - topNesnesi.r < oyuncu.y + raketYukseklik &&
+               topNesnesi.x > oyuncu.x && 
+               topNesnesi.x < oyuncu.x + raketGenislik) {
+                
+                topNesnesi.hizY = -Math.abs(topNesnesi.hizY); // Yukarı fırlat
+                
+                // Topun rakete çarptığı noktaya göre açı ver (False spin etkisi)
+                let carpmaNoktasi = topNesnesi.x - (oyuncu.x + raketGenislik/2);
+                topNesnesi.hizX = carpmaNoktasi * 0.2; 
+                
+                // Hızlandır (Heyecan artsın)
+                topNesnesi.hizY *= 1.05;
+            }
+
+            // Bilgisayar (Üst) Raketine Çarpma
+            if(topNesnesi.y - topNesnesi.r < pc.y + raketYukseklik &&
+               topNesnesi.y + topNesnesi.r > pc.y &&
+               topNesnesi.x > pc.x &&
+               topNesnesi.x < pc.x + raketGenislik) {
+                   
+                topNesnesi.hizY = Math.abs(topNesnesi.hizY); // Aşağı fırlat
+            }
+
+            // 4. Gol Kontrolü
+            if(topNesnesi.y > canvas.height) {
+                // Bilgisayar kazandı
+                pc.skor++;
+                topuSifirla();
+            } else if(topNesnesi.y < 0) {
+                // Oyuncu kazandı
+                oyuncu.skor++;
+                topuSifirla();
+            }
+
+            skorEl.innerText = pc.skor + " - " + oyuncu.skor;
+
+            // 5. Bilgisayar Yapay Zekası (AI)
+            // Bilgisayar topun merkezini takip etmeye çalışır
+            let hedefX = topNesnesi.x - (raketGenislik / 2);
+            // Yumuşak hareket (Lerp benzeri)
+            pc.x += (hedefX - pc.x) * 0.1;
+
+            // Yapay zeka sınırları
+            if(pc.x < 0) pc.x = 0;
+            if(pc.x > canvas.width - raketGenislik) pc.x = canvas.width - raketGenislik;
+        }
+
+        function topuSifirla() {
+            topNesnesi.x = canvas.width / 2;
+            topNesnesi.y = canvas.height / 2;
+            topNesnesi.hizX = 4 * (Math.random() > 0.5 ? 1 : -1);
+            topNesnesi.hizY = 4 * (Math.random() > 0.5 ? 1 : -1); // Yönü rastgele ver
+        }
+
+        function cizim() {
+            // Sahayı Temizle (Hafif iz bırakarak neon efekti verelim)
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.2)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Orta Çizgi
+            ctx.beginPath();
+            ctx.setLineDash([10, 10]);
+            ctx.moveTo(0, canvas.height/2);
+            ctx.lineTo(canvas.width, canvas.height/2);
+            ctx.strokeStyle = '#333';
+            ctx.stroke();
+            ctx.setLineDash([]);
+
+            // Oyuncu Raketi
+            ctx.fillStyle = oyuncu.renk;
+            ctx.shadowBlur = 20;
+            ctx.shadowColor = oyuncu.renk;
+            ctx.fillRect(oyuncu.x, oyuncu.y, raketGenislik, raketYukseklik);
+
+            // Bilgisayar Raketi
+            ctx.fillStyle = pc.renk;
+            ctx.shadowBlur = 20;
+            ctx.shadowColor = pc.renk;
+            ctx.fillRect(pc.x, pc.y, raketGenislik, raketYukseklik);
+
+            // Top
+            ctx.beginPath();
+            ctx.arc(topNesnesi.x, topNesnesi.y, topNesnesi.r, 0, Math.PI*2);
+            ctx.fillStyle = topNesnesi.renk;
+            ctx.shadowBlur = 15;
+            ctx.shadowColor = '#fff';
+            ctx.fill();
+            ctx.closePath();
+            
+            // Gölgeyi sıfırla ki her yer parlamasın
+            ctx.shadowBlur = 0;
+
+            oyunuGuncelle();
+            requestAnimationFrame(cizim);
+        }
+
+        cizim();
+
+    </script>
+</body>
+</html>
