@@ -10,6 +10,7 @@
     <style>
         :root {
             --play-green: #01875f;
+            --beta-orange: #f39c12;
             --bg-dark: #090a0f;
             --card-bg: rgba(255, 255, 255, 0.05);
         }
@@ -58,6 +59,9 @@
             width: 100%;
             max-width: 450px;
             z-index: 2;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
         }
 
         /* GOOGLE PLAY STİLİ KART */
@@ -73,12 +77,31 @@
             align-items: center;
             transition: all 0.3s ease;
             backdrop-filter: blur(10px);
+            position: relative;
+            cursor: pointer;
         }
 
         .app-card:hover {
             background: rgba(255, 255, 255, 0.08);
             transform: translateY(-5px);
             border-color: var(--play-green);
+        }
+
+        .beta-card:hover {
+            border-color: var(--beta-orange) !important;
+        }
+
+        .beta-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: var(--beta-orange);
+            color: #000;
+            font-size: 0.7rem;
+            font-weight: bold;
+            padding: 4px 10px;
+            border-radius: 50px;
+            letter-spacing: 1px;
         }
 
         .app-main-info {
@@ -165,6 +188,55 @@
             .app-icon { margin-right: 0; margin-bottom: 15px; }
             .app-text { text-align: center; }
         }
+
+        /* MODAL STİLLERİ */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background: #161b22;
+            border: 1px solid var(--beta-orange);
+            border-radius: 24px;
+            padding: 30px;
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 0 30px rgba(243, 156, 18, 0.2);
+            animation: modalPop 0.3s ease-out;
+        }
+
+        @keyframes modalPop {
+            from { transform: scale(0.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .modal-title { font-size: 1.4rem; font-weight: bold; margin-bottom: 15px; color: var(--beta-orange); }
+        .modal-desc { font-size: 0.95rem; line-height: 1.5; color: #bbb; margin-bottom: 25px; }
+
+        .modal-btn {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+
+        .btn-group { background: #fff; color: #000; }
+        .btn-download { background: var(--play-green); color: #fff; }
+        .btn-close { background: transparent; color: #888; border: none; cursor: pointer; margin-top: 10px; }
+
+        .modal-btn:hover { transform: scale(1.02); }
     </style>
 </head>
 <body>
@@ -179,10 +251,9 @@
     <div class="apps-container">
 
         <!-- YAPAY ZEKA ARAÇ İÇİ ASİSTAN UYGULAMASI -->
-        <div class="app-card">
+        <div class="app-card" onclick="window.open('https://play.google.com/store/apps/details?id=com.sonsuzay.emniyetkemeri', '_blank')">
             <div class="app-main-info">
                 <div class="app-icon">
-                    <!-- Google Play Store'dan alınan gerçek uygulama simgesi -->
                     <img src="https://play-lh.googleusercontent.com/R0mdPOebtP3YWqRHvMgs2l8NamN5lk2gUY2v6IjUBiobk2xnTUxOO3VsEqXlA8x3pd5FueRjAQP9xP6QFSgLvb8=s180-rw" alt="Yapay Zeka Araç İçi Asistan Simge">
                 </div>
                 <div class="app-text">
@@ -195,11 +266,48 @@
                 </div>
             </div>
 
-            <a href="https://play.google.com/store/apps/details?id=com.sonsuzay.emniyetkemeri" target="_blank" class="badge-link">
+            <div class="badge-link">
                 <img alt="Google Play'den indirin" src="https://play.google.com/intl/en_us/badges/static/images/badges/tr_badge_web_generic.png"/>
-            </a>
+            </div>
         </div>
 
+        <!-- SONSUZ KARTLAR (BETA) UYGULAMASI -->
+        <div class="app-card beta-card" onclick="openBetaModal()">
+            <div class="beta-badge">BETA</div>
+            <div class="app-main-info">
+                <div class="app-icon">
+                    <img src="https://play-lh.googleusercontent.com/9AcxDwBkt9qQiMv9pokMnBVQO9O4NVbTfLQnYD53lmts9_ycQ0GqZjtusdynh7yv1hL4J0wozJR_k_BulwayyLQ=s180-rw" alt="Sonsuz Kartlar Simge">
+                </div>
+                <div class="app-text">
+                    <div class="app-name">Sonsuz Kartlar</div>
+                    <div class="app-dev">SONSUZ.AY</div>
+                    <div class="app-stats">
+                        <span>Beta Testi</span>
+                        <span>Kart Oyunları</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="badge-link">
+                <img alt="Google Play'den indirin" src="https://play.google.com/intl/en_us/badges/static/images/badges/tr_badge_web_generic.png"/>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- BETA TEST MODAL -->
+    <div id="betaModal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-title">Beta Teste Katılın</div>
+            <p class="modal-desc">
+                Bu uygulamayı indirmek için öncelikle Google Play test grubuna katılmanız gerekiyor. <br><br>
+                <b>Adım 1:</b> Gruba katılın. <br>
+                <b>Adım 2:</b> 5 dakika sonra uygulamayı indirin.
+            </p>
+            <a href="https://groups.google.com/g/sonsuzay-test" target="_blank" class="modal-btn btn-group">1. Google Grubuna Katıl</a>
+            <a href="https://play.google.com/store/apps/details?id=com.sonsuzay.sonsuzkartlar" target="_blank" class="modal-btn btn-download">2. Uygulamayı İndir</a>
+            <button class="btn-close" onclick="closeBetaModal()">Kapat</button>
+        </div>
     </div>
 
     <a href="index.html" class="back-link">← Ana Sayfaya Dön</a>
@@ -220,7 +328,24 @@
 
         // Eğer resim yüklenirse emojiyi gizle
         const img = document.querySelector('.app-icon img');
-        img.onload = function() { document.getElementById('emoji-fallback').style.display = 'none'; };
+        img.onload = function() { if(document.getElementById('emoji-fallback')) document.getElementById('emoji-fallback').style.display = 'none'; };
+
+        // BETA MODAL FONKSİYONLARI
+        function openBetaModal() {
+            document.getElementById('betaModal').style.display = 'flex';
+        }
+
+        function closeBetaModal() {
+            document.getElementById('betaModal').style.display = 'none';
+        }
+
+        // Dışarı tıklayınca kapat
+        window.onclick = function(event) {
+            const modal = document.getElementById('betaModal');
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
     </script>
 </body>
 </html>
