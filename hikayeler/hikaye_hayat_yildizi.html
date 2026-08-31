@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hayat Yıldızı - Fragman</title>
+    <style>
+        /* GENEL AYARLAR */
+        body {
+            background-color: #121212;
+            color: #e0e0e0;
+            font-family: 'Georgia', serif;
+            line-height: 1.8;
+            margin: 0;
+            padding: 20px;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #1e1e1e;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            border: 1px solid #333;
+        }
+        h1 {
+            color: #ffd700;
+            text-align: center;
+            font-size: 24px;
+            border-bottom: 2px solid #ffd700;
+            padding-bottom: 10px;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            pointer-events: none;
+        }
+        .meta {
+            text-align: center;
+            font-size: 13px;
+            color: #888;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        /* VİDEO STİLİ */
+        .video-wrapper {
+            width: 100%;
+            margin-bottom: 25px;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 0 15px rgba(0, 191, 255, 0.2);
+            border: 1px solid #333;
+            background-color: #000;
+        }
+        .video-wrapper video {
+            width: 100%;
+            display: block;
+            object-fit: cover;
+        }
+
+        /* METİN VE EFEKTLER */
+        p {
+            margin-bottom: 20px;
+            font-size: 18px;
+        }
+        .highlight { color: #00bfff; font-weight: bold; }
+        .boom {
+            font-size: 28px;
+            font-weight: bold;
+            color: #ff4500;
+            text-align: center;
+            display: block;
+            margin: 30px 0;
+            letter-spacing: 5px;
+        }
+        .sembol {
+            text-align: center;
+            font-size: 40px;
+            margin-top: 20px;
+            color: #ff0000;
+            text-shadow: 0 0 10px red;
+        }
+
+        .fragman-etiketi {
+            margin-top: 30px;
+            padding: 15px;
+            border: 2px dashed #ff0055;
+            color: #ff0055;
+            text-align: center;
+            font-weight: bold;
+            font-family: 'Segoe UI', sans-serif;
+            border-radius: 10px;
+            background: rgba(255, 0, 85, 0.1);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            font-size: 12px;
+            color: #555;
+            padding-top: 20px;
+            border-top: 1px solid #333;
+        }
+
+        .back-to-stories {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            color: #b300ff;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        #uyari-kutusu {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #ff0055;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-weight: bold;
+            opacity: 0;
+            transition: opacity 0.5s;
+            pointer-events: none;
+            z-index: 1000;
+        }
+    </style>
+</head>
+
+<body oncontextmenu="return false" onselectstart="return false" ondragstart="return false">
+
+    <div class="container">
+        <h1>Hayat Yıldızı</h1>
+
+        <div class="meta">
+            Yazar: <strong style="color: #00bfff; font-size: 1.1em; letter-spacing: 1px;">SERKAN COŞAN</strong><br>
+            Yayıncı: <strong>SONSUZ.AY</strong> | Tür: <strong>Bilim Kurgu / Gizem</strong>
+        </div>
+
+        <div class="video-wrapper">
+            <video autoplay loop muted playsinline>
+                <source src="Video_Hayat_Yildizi.mp4" type="video/mp4">
+                Tarayıcınız bu videoyu desteklemiyor.
+            </video>
+        </div>
+
+        <p>Gecenin yarısıydı ama gökyüzü uyanıktı.</p>
+
+        <p>Dışarıda kıyameti andıran bir fırtına kopuyordu. Rüzgar, evin camlarını kıracakmış gibi dövüyor, gök gürültüsü ise sanki yerin altından geliyormuşçasına tüm binayı titretiyordu. Elektrikler kesileli saatler olmuştu. Kasaba zifiri karanlığa gömülmüş, herkes yorganının altına saklanıp bu öfkenin dinmesini bekliyordu.</p>
+
+        <p>Herkes uyuyordu... <strong>YıldızAY</strong> hariç.</p>
+
+        <p>Gözlerini açtığında içinde tuhaf bir huzursuzluk değil, aksine açıklanamaz bir merak vardı. Sanki fırtına onu çağırıyordu. Yatağından kalktı, karanlık koridoru geçip balkona çıktı. Rüzgar yüzüne bir tokat gibi çarptı, yağmur damlaları tenini iğne gibi deliyordu.</p>
+
+        <p>Aşağıda, evin hemen bitiminde başlayan o sık ormanlık alan, şimşekler çaktıkça bir görünüp bir kaybolan devasa gölgeler gibiydi. Tam o sırada, şimşeklerin ışığından bağımsız, yerde sabit bir <span class="highlight">parıltı</span> gördü.</p>
+
+        <p>Ağaçların arasında, ıslak toprağın üzerinde maviye çalan, elmasa benzeyen bir ışık hüzmesi...</p>
+
+        <p>Mantığı ona <em>"İçeri gir"</em> diyordu ama kalbi çoktan merdivenleri inmeye başlamıştı bile. YıldızAY, sağanak yağmurun altında sırılsıklam olarak ormana daldı. Çamurlara bata çıka o ışığa doğru yürüdü. Yaklaştıkça parıltının kaynağını daha net seçebiliyordu. Bu dünyadan değilmiş gibi duran, kristalize bir taştı bu.</p>
+
+        <p>Nefesini tuttu. Elini yavaşça uzattı.</p>
+
+        <p>Parmak uçları o soğuk taşa değdiği an, zaman durdu.</p>
+
+        <span class="boom">GÜM!</span>
+
+        <p>Gökyüzü tam tepesinde yarıldı. Milyonlarca voltluk bir yıldırım, karanlığı yırtarak doğrudan YıldızAY'ın üzerine düştü. Acı yoktu, sadece kör edici bir beyazlık ve kulakları sağır eden bir çınlama vardı.</p>
+
+        <hr style="border-color:#333; margin: 30px 0;">
+
+        <p>Gözlerini açtığında yatağındaydı.</p>
+
+        <p>Nefes nefese doğruldu. Ter içindeydi. Dışarıda güneş açmış, kuşlar ötüyordu. <em>"Hepsi rüya mıydı?"</em> diye mırıldandı kendi kendine. Balkona çıkmış, ormana gitmiş ve yıldırım çarpmış olması imkansızdı.</p>
+
+        <p>Ta ki sağ kolunda sızlayan o yanma hissini fark edene kadar.</p>
+
+        <p>Kolunu çevirip baktığında kanı dondu. Bileğinin hemen üzerinde, daha önce orada olmayan, derisine kazınmış gibi duran kıpkırmızı bir iz vardı.</p>
+
+        <p>Kusursuz bir <strong>Yıldız Sembolü.</strong></p>
+
+        <div class="sembol">★</div>
+
+        <div class="fragman-etiketi">
+            🎬 BU BİR FRAGMANDIR<br>
+            <span style="font-size: 0.8em; color: #ccc;">ASIL HİKAYE ÇOK YAKINDA SONSUZ.AY'DA</span>
+        </div>
+
+        <div class="footer">
+            <div style="margin-bottom: 8px; font-style: italic; font-size: 14px;">
+                Yazan ve Tasarlayan: <strong style="color: #ffd700; letter-spacing: 1px;">SERKAN COŞAN</strong>
+            </div>
+            © 2025 SONSUZ.AY - Tüm Hakları Saklıdır.
+        </div>
+
+        <a href="index.html" class="back-to-stories">⬅ Hikayelere Dön</a>
+    </div>
+
+    <div id="uyari-kutusu">⚠️ Bu içerik SONSUZ.AY'a aittir, kopyalanamaz!</div>
+
+    <script>
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+            uyariGoster();
+        });
+        function uyariGoster() {
+            var kutu = document.getElementById("uyari-kutusu");
+            kutu.style.opacity = "1";
+            setTimeout(function(){ kutu.style.opacity = "0"; }, 2000);
+        }
+    </script>
+
+</body>
+</html>

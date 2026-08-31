@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SONSUZ.AY - Hikayeler (Mor)</title>
+
+    <link rel="icon" type="image/png" href="../site_simge.png">
+
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1819947444660683"
+         crossorigin="anonymous"></script>
+
+    <style>
+        /* GENEL SAYFA AYARLARI */
+        body {
+            background-color: #050505;
+            background-image: radial-gradient(circle, #1a002b 0%, #000000 90%); /* Hafif morumsu siyah geçiş */
+            color: white;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            text-align: center;
+        }
+
+        /* BAŞLIK TASARIMI */
+        h1 {
+            color: #b300ff; /* Parlak Mor */
+            text-shadow: 0 0 20px #b300ff, 0 0 40px #550080;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            margin-top: 20px;
+        }
+
+        p.aciklama {
+            color: #dcb3ff; /* Açık lila yazı */
+            margin-bottom: 40px;
+            font-size: 1rem;
+        }
+
+        .hikaye-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        /* MOR HİKAYE KARTI */
+        .hikaye-kart {
+            background: rgba(30, 0, 45, 0.8); /* Çok koyu mor zemin */
+            border: 2px solid #9900ff; /* Neon Mor Çerçeve */
+            border-radius: 20px;
+            padding: 20px;
+            width: 100%;
+            max-width: 350px;
+            box-shadow: 0 0 15px rgba(153, 0, 255, 0.3);
+            transition: transform 0.3s, box-shadow 0.3s;
+            text-align: left;
+        }
+
+        .hikaye-kart:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 0 30px rgba(153, 0, 255, 0.6);
+        }
+
+        .hikaye-baslik {
+            font-size: 1.5rem;
+            color: #d180ff; /* Başlık rengi */
+            margin-top: 0;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .hikaye-ozet {
+            font-size: 0.95rem;
+            color: #e0ccff;
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
+
+        /* MOR BUTON */
+        .oku-buton {
+            display: block;
+            background: linear-gradient(90deg, #6600cc, #9933ff);
+            color: white;
+            text-decoration: none;
+            padding: 10px;
+            border-radius: 10px;
+            text-align: center;
+            font-weight: bold;
+            transition: 0.3s;
+            box-shadow: 0 0 10px rgba(102, 0, 204, 0.4);
+        }
+
+        .oku-buton:hover {
+            background: #a64dff;
+            box-shadow: 0 0 20px rgba(166, 77, 255, 0.8);
+        }
+
+        .geri-don {
+            display: inline-block;
+            margin-top: 50px;
+            color: #9966cc;
+            text-decoration: none;
+            border: 1px solid #443355;
+            padding: 10px 20px;
+            border-radius: 30px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>SONSUZ HİKAYELER</h1>
+    <p class="aciklama">Bilinmezin sınırında dolaşan hikayeler.</p>
+
+    <div class="hikaye-container">
+
+        <div class="hikaye-kart">
+            <div class="hikaye-baslik">⭐ HAYAT YILDIZI</div>
+            <div class="hikaye-ozet">
+                Yalnız bir genç kız, hayatın anlamını ararken gökyüzündeki gizli pusulayı keşfediyor. Bir fırtına, gizemli bir yabancı ve parlayan bir mühür...
+            </div>
+            <a href="hikaye_hayat_yildizi.html" class="oku-buton">📖 OKUMAYA BAŞLA</a>
+        </div>
+
+        <div class="hikaye-kart">
+            <div class="hikaye-baslik">🦋 KARA KELEBEK EFSANESİ</div>
+            <div class="hikaye-ozet">
+                Eski haritaların hepsi Hayalet Ormanı'nı gösteriyordu. Başak, kuraklık getiren kelebek efsanesinin peşine düştü. Ancak karanlığın içinde onu ışık dolu bir sürpriz bekliyordu.
+            </div>
+            <a href="kara_kelebek_efsanesi.html" class="oku-buton">📖 OKUMAYA BAŞLA</a>
+        </div>
+
+        <div class="hikaye-kart">
+            <div class="hikaye-baslik">🚜 YOZGAT ÇAMUR FESTİVALİ</div>
+            <div class="hikaye-ozet">
+                Sabah sadece "Sarıkaya'ya gideyim" dedim, bahçe iş makineleri mezarlığına döndü! 🤣 Traktör, kepçe, kurye... Herkes battı! Tam bir kaos ve komedi. 🚧😂
+            </div>
+            <a href="hikaye_yozgat_camur-festivali.html" class="oku-buton">📖 OKUMAYA BAŞLA</a>
+        </div>
+
+        <div class="hikaye-kart">
+            <div class="hikaye-baslik">🔮 Mor Kristal</div>
+            <div class="hikaye-ozet">
+                Eski bir tapınakta bulunan mor taş, dokunan kişiye geleceği gösteriyor. Ancak görülen gelecek değiştirilebilir mi?
+            </div>
+            <a href="hikaye_mor_kristal.html" class="oku-buton">📖 OKUMAYA BAŞLA</a>
+        </div>
+
+        <div class="hikaye-kart">
+            <div class="hikaye-baslik">🌌 Paralel Evren</div>
+            <div class="hikaye-ozet">
+                Yozgat'taki bir saat kulesinin altındaki gizli geçit, bambaşka bir boyuta açılıyor.
+            </div>
+            <a href="hikaye_paralel_evren.html" class="oku-buton">📖 OKUMAYA BAŞLA</a>
+        </div>
+    </div>
+
+    <a href="../index.html" class="geri-don">⬅ Ana Sayfaya Dön</a>
+
+</body>
+</html>
