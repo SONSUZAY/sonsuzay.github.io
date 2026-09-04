@@ -35,7 +35,8 @@
     <h3>Gerekli İzinler ve Kullanım Amaçları</h3>
     <ul>
         <li><strong>Bluetooth ve Yakındaki Cihazlar:</strong> Aracınızın Bluetooth sistemine bağlandığınızı tespit etmek için kullanılır.</li>
-        <li><strong>Konum Bilgisi (Hassas ve Yaklaşık):</strong> Hızınızı en doğru şekilde ölçmek (Hız Göstergesi) ve bulunduğunuz bölgenin hava durumunu çekmek için kullanılır. Bu veriler sadece anlık işlem için kullanılır, geçmiş takibi yapılmaz.</li>
+        <li><strong>Konum Bilgisi (Hassas ve Yaklaşık):</strong> Hızınızı en doğru şekilde ölçmek (Hız Göstergesi), bulunduğunuz bölgenin hava durumunu çekmek ve <strong>Radar Takibi</strong> özelliği ile yakındaki hız radarlarını tespit etmek için kullanılır. Bu veriler sadece anlık işlem için kullanılır, konum geçmişiniz kaydedilmez ve hiçbir sunucuya gönderilmez.</li>
+        <li><strong>Radar Takibi:</strong> Yakındaki sabit radarları tespit etmek için konumunuz yerel radar veritabanıyla karşılaştırılır. Bu işlem tamamen cihaz üzerinde gerçekleşir; konum veriniz paylaşılmaz veya depolanmaz.</li>
         <li><strong>NFC (Yakın Alan İletişimi):</strong> Uygulamanın bir etikete dokunarak otomatik başlatılabilmesi için kullanılır.</li>
         <li><strong>Kilit Ekranında Görüntüleme ve Tam Ekran:</strong> Hız göstergesi panelinin telefon kilitliyken veya sürüş sırasında dikkatiniz dağılmadan tam ekran olarak sunulabilmesi için gereklidir.</li>
         <li><strong>Bildirimler ve Ön Plan Servisi:</strong> Uygulamanın arka planda kesintisiz çalışması ve sesli uyarıların iletilmesi için kullanılır.</li>
@@ -96,7 +97,8 @@
     <h3>Required Permissions and Usage</h3>
     <ul>
         <li><strong>Bluetooth & Nearby Devices:</strong> Used to detect connection to your car's Bluetooth system.</li>
-        <li><strong>Location Information (Precise & Coarse):</strong> Required to measure your speed accurately (Speedometer) and fetch current weather data. This data is used only for real-time processing; no tracking history is maintained.</li>
+        <li><strong>Location Information (Precise & Coarse):</strong> Required to measure your speed accurately (Speedometer), fetch current weather data, and detect nearby speed cameras via the <strong>Radar Tracking</strong> feature. This data is used only for real-time processing; no location history is maintained or sent to any server.</li>
+        <li><strong>Radar Tracking:</strong> Your location is compared with a local radar database to identify fixed speed cameras. This process is entirely local to the device; your location data is not shared or stored.</li>
         <li><strong>NFC (Near Field Communication):</strong> Used to automatically launch the app by tapping a tag.</li>
         <li><strong>Show on Lock Screen & Full Screen:</strong> Necessary to present the speedometer panel while the phone is locked or as a distraction-free full-screen experience during driving.</li>
         <li><strong>Notifications & Foreground Service:</strong> Required for the app to function seamlessly in the background and deliver voice alerts.</li>
